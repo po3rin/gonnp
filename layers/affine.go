@@ -1,0 +1,47 @@
+package layers
+
+import (
+	"github.com/po3rin/gonlp/matutils"
+	"gonum.org/v1/gonum/mat"
+)
+
+type Affine struct {
+	X      mat.Matrix
+	Weight mat.Matrix
+	Bias   mat.Matrix
+	Grads  mat.Matrix
+}
+
+// InitAffineLayer inits affine layer.
+func InitAffineLayer(weight mat.Matrix, bias mat.Matrix) *Affine {
+	return &Affine{
+		Weight: weight,
+		Bias:   bias,
+	}
+}
+
+func (a *Affine) Forward(x mat.Matrix) mat.Matrix {
+	var b mat.Dense
+	b.Product(x, a.Weight)
+
+	var c mat.Dense
+	c.Add(&b, a.Bias)
+
+	a.X = &c
+	return &c
+}
+
+func (a *Affine) Backward(x, dout mat.Matrix) mat.Matrix {
+	var dw mat.Dense
+	dw.Product(a.X.T(), dout)
+
+	db := matutils.SumCol(dout)
+	_, dimy := db.Dims()
+	grads := mat.NewDense(2, dimy, nil)
+	grads.SetRow(0, matutils.MatToFloat64(&dw))
+	grads.SetRow(1, matutils.MatToFloat64(db))
+
+	var dx mat.Dense
+	dx.Product(dout, a.Weight.T())
+	return &dx
+}
