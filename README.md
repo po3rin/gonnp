@@ -4,4 +4,5 @@ in development ...
 
 ## TODO
 
-add test for backward.
+impliments softmax backward.
+adds test for backward.

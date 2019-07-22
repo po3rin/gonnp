@@ -36,8 +36,8 @@ func (a *Affine) Backward(x, dout mat.Matrix) mat.Matrix {
 	dw.Product(a.X.T(), dout)
 
 	db := matutils.SumCol(dout)
-	_, dimy := db.Dims()
-	grads := mat.NewDense(2, dimy, nil)
+	_, c := db.Dims()
+	grads := mat.NewDense(2, c, nil)
 	grads.SetRow(0, matutils.MatToFloat64(&dw))
 	grads.SetRow(1, matutils.MatToFloat64(db))
 

@@ -7,27 +7,8 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-// type Softmax struct {
-// 	// prepare type insted of interface.
-// 	Params interface{}
-// 	Grads  interface{}
-// 	Output mat.Matrix
-// }
-
-// InitSoftmaxLayer inits softmax layer.
-// func InitSoftmaxLayer() *Softmax {
-// 	return &Softmax{}
-// }
-
-// func (s *Softmax) Forward(x mat.Matrix) mat.Matrix {
-// 	s.Output = softmax(x)
-// 	return s.Output
-// }
-
 type SoftmaxWithLoss struct {
 	// prepare type insted of interface.
-	Params  interface{}
-	Grads   interface{}
 	Output  mat.Matrix
 	Teacher mat.Matrix
 }

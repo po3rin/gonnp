@@ -11,4 +11,5 @@ type Layer interface {
 
 type LossLayer interface {
 	Forward(x mat.Matrix) float64
+	Backward(x mat.Matrix) float64
 }
