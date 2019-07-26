@@ -5,6 +5,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+// Affine layers perform the linear transformation
 type Affine struct {
 	X      mat.Matrix
 	Weight mat.Matrix
@@ -20,6 +21,7 @@ func InitAffineLayer(weight mat.Matrix, bias mat.Matrix) *Affine {
 	}
 }
 
+// Forward for affine layer.
 func (a *Affine) Forward(x mat.Matrix) mat.Matrix {
 	var b mat.Dense
 	b.Product(x, a.Weight)
@@ -31,6 +33,7 @@ func (a *Affine) Forward(x mat.Matrix) mat.Matrix {
 	return &c
 }
 
+// Backward for affine layer.
 func (a *Affine) Backward(x, dout mat.Matrix) mat.Matrix {
 	var dw mat.Dense
 	dw.Product(a.X.T(), dout)

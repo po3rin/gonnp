@@ -7,8 +7,8 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+// SoftmaxWithLoss is layer for computing the multinomial logistic loss of the softmax of its inputs
 type SoftmaxWithLoss struct {
-	// prepare type insted of interface.
 	Output  mat.Matrix
 	Teacher mat.Matrix
 }
@@ -18,16 +18,19 @@ func InitSoftmaxWithLossLayer() *SoftmaxWithLoss {
 	return &SoftmaxWithLoss{}
 }
 
-func (s *SoftmaxWithLoss) Forward(x mat.Matrix) float64 {
-	y := softmax(x)
-	return functions.CrossEntropyErr(y, s.Teacher)
+// Forward for softmax layer.
+func (s *SoftmaxWithLoss) Forward(x mat.Matrix, teacher mat.Matrix) float64 {
+	s.Output = Softmax(x)
+	s.Teacher = teacher
+	return functions.CrossEntropyErr(s.Output, teacher)
 }
 
+// Backward for softmax layer.
 func (s *SoftmaxWithLoss) Backward(x mat.Matrix) float64 {
-	return 0
+	panic("no impliments")
 }
 
-func softmax(x mat.Matrix) mat.Matrix {
+func Softmax(x mat.Matrix) mat.Matrix {
 	c := mat.Max(x)
 	f := func(i, j int, v float64) float64 {
 		return math.Exp(v - c)

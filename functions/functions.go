@@ -6,6 +6,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+// CrossEntropyErr measures the performance of a classification model whose output is a probability value between 0 and 1.
 func CrossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
 	// TODO: if teacher data is one-hot, ignore 0 in teacher data.
 	batchSize, _ := data.Dims()
