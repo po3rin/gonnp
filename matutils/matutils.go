@@ -1,9 +1,12 @@
 package matutils
 
 import (
+	"math/rand"
+
 	"gonum.org/v1/gonum/mat"
 )
 
+// SumCol calcurates sum each of columns.
 func SumCol(x mat.Matrix) mat.Matrix {
 	r, c := x.Dims()
 	A := mat.NewDense(1, c, nil)
@@ -16,19 +19,29 @@ func SumCol(x mat.Matrix) mat.Matrix {
 	return A
 }
 
-func MatToFloat64(x mat.Matrix) []float64 {
-	r, c := x.Dims()
-	result := make([]float64, 0, r*c)
+// NewRandMatrixWithSND creates random matrix according to standard normal distribution.
+func NewRandMatrixWithSND(r, c int) mat.Matrix {
+	a := make([]float64, 0, r*c)
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {
-			result = append(result, x.At(i, j))
+			a = append(a, rand.NormFloat64())
 		}
 	}
-	return result
+	return mat.NewDense(r, c, a)
 }
 
-func Add(a mat.Matrix, b mat.Matrix) mat.Matrix {
-	var B mat.Dense
-	B.Add(a, b)
-	return &B
+// ThinCol thins out rows.
+// TODO: rm type assertion.
+func ThinCol(x mat.Matrix, targets []int) mat.Matrix {
+	_, c := x.Dims()
+	result := mat.NewDense(len(targets), c, nil)
+
+	for i, v := range targets {
+		d, ok := x.(*mat.Dense)
+		if !ok {
+			panic("gonlp: failed to transpose matrix to dense")
+		}
+		result.SetRow(i, d.RawRowView(v))
+	}
+	return result
 }

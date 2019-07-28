@@ -7,44 +7,44 @@ import (
 
 // Affine layers perform the linear transformation
 type Affine struct {
-	X      mat.Matrix
-	Weight mat.Matrix
-	Bias   mat.Matrix
-	Grads  mat.Matrix
+	X     mat.Matrix
+	Param Param
+	Grad  Grad
 }
 
 // InitAffineLayer inits affine layer.
 func InitAffineLayer(weight mat.Matrix, bias mat.Matrix) *Affine {
 	return &Affine{
-		Weight: weight,
-		Bias:   bias,
+		Param: Param{
+			Weight: weight,
+			Bias:   bias,
+		},
 	}
 }
 
 // Forward for affine layer.
 func (a *Affine) Forward(x mat.Matrix) mat.Matrix {
 	var b mat.Dense
-	b.Product(x, a.Weight)
+	b.Product(x, a.Param.Weight)
 
 	var c mat.Dense
-	c.Add(&b, a.Bias)
+	c.Add(&b, a.Param.Bias)
 
 	a.X = &c
 	return &c
 }
 
 // Backward for affine layer.
-func (a *Affine) Backward(x, dout mat.Matrix) mat.Matrix {
+func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
 	var dw mat.Dense
-	dw.Product(a.X.T(), dout)
+	dw.Product(a.X.T(), x)
 
-	db := matutils.SumCol(dout)
-	_, c := db.Dims()
-	grads := mat.NewDense(2, c, nil)
-	grads.SetRow(0, matutils.MatToFloat64(&dw))
-	grads.SetRow(1, matutils.MatToFloat64(db))
+	db := matutils.SumCol(x)
+
+	a.Grad.Weight = &dw
+	a.Grad.Bias = db
 
 	var dx mat.Dense
-	dx.Product(dout, a.Weight.T())
+	dx.Product(x, a.Param.Weight.T())
 	return &dx
 }

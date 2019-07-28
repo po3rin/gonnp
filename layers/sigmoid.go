@@ -7,7 +7,9 @@ import (
 )
 
 type Sigmoid struct {
-	Output mat.Matrix
+	X     mat.Matrix
+	Param Param
+	Grad  Grad
 }
 
 // InitSigmoidLayer inits sigmoid layer.
@@ -19,17 +21,21 @@ func (s *Sigmoid) Forward(x mat.Matrix) mat.Matrix {
 	sigmoid := func(i, j int, v float64) float64 {
 		return 1 / (1 + math.Exp(-v))
 	}
-	var result mat.Dense
+
+	r, c := x.Dims()
+	result := mat.NewDense(r, c, nil)
 	result.Apply(sigmoid, x)
-	s.Output = &result
-	return &result
+	s.X = result
+	return result
 }
 
-func (s *Sigmoid) Backward(x, dout mat.Matrix) mat.Matrix {
+func (s *Sigmoid) Backward(x mat.Matrix) mat.Matrix {
 	backward := func(i, j int, v float64) float64 {
-		return dout.At(i, j) * (1 - v) * v
+		return x.At(i, j) * (1 - v) * v
 	}
-	var result mat.Dense
-	result.Apply(backward, s.Output)
-	return &result
+
+	r, c := x.Dims()
+	result := mat.NewDense(r, c, nil)
+	result.Apply(backward, s.X)
+	return result
 }
