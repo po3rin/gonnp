@@ -7,12 +7,14 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+// NodeSize has node size (input, hidden, output)
 type NodeSize struct {
 	Input  int
 	Hideen int
 	Output int
 }
 
+// TowLayerNet has layer net config.
 type TowLayerNet struct {
 	NodeSize  NodeSize
 	Layers    []layers.Layer
@@ -40,7 +42,8 @@ func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TowLayerNet {
 		grads  []entity.Grad
 	)
 	for _, l := range ls {
-		p, g := l.GetParamAndGrad()
+		p := l.GetParam()
+		g := l.GetGrad()
 		params = append(params, p)
 		grads = append(grads, g)
 	}
@@ -83,14 +86,17 @@ func (t *TowLayerNet) Backward(x mat.Matrix) mat.Matrix {
 	return dout
 }
 
+// GetParams gets layer net params.
 func (t *TowLayerNet) GetParams() []entity.Param {
 	return t.Params
 }
 
+// GetGrads gets layer net gradient.
 func (t *TowLayerNet) GetGrads() []entity.Grad {
 	return t.Grads
 }
 
+// SetParams updates params.
 func (t *TowLayerNet) SetParams(params []entity.Param) {
 	t.Params = params
 }

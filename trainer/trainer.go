@@ -1,6 +1,7 @@
 package trainer
 
 import (
+	"fmt"
 	"math/rand"
 
 	"github.com/po3rin/gonlp/matutils"
@@ -33,6 +34,7 @@ func InitTrainer(model nn.NeuralNet, opt optimizers.Optimizer, options ...Option
 		EvalInterval: 20,
 	}
 
+	fmt.Println(len(options))
 	for _, option := range options {
 		option(t)
 	}
@@ -48,6 +50,7 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 
 	for i := 0; i < maxEpoch; i++ {
 
+		// shuffle
 		idx := rand.Perm(dataSize)
 		tx := matutils.ThinCol(x, idx)
 		tt := matutils.ThinCol(teacher, idx)
@@ -63,7 +66,14 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 
 		for j := 0; j < maxIters; j++ {
 			bx := dx.Slice(j*batchSize, (j+1)*batchSize, 0, c)
-			bt := dt.Slice(j*batchSize, (j+1)*batchSize, 0, c)
+			bt := dt.Slice(j*batchSize, (j+1)*batchSize, 0, 1)
+
+			// a, s := bx.Dims()
+			// b, n := bt.Dims()
+			// println(a)
+			// println(s)
+			// println(b)
+			// println(n)
 
 			loss := t.Model.Forward(bx, bt)
 			t.Model.Backward(nil)

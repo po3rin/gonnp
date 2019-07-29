@@ -8,7 +8,7 @@ import (
 type Layer interface {
 	Forward(x mat.Matrix) mat.Matrix
 	Backward(x mat.Matrix) mat.Matrix
-	GetParamAndGrad() (entity.Param, entity.Grad)
+	entity.ParamManager
 }
 
 type LossLayer interface {

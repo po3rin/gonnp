@@ -25,6 +25,13 @@ func InitAffineLayer(weight mat.Matrix, bias mat.Matrix) *Affine {
 
 // Forward for affine layer.
 func (a *Affine) Forward(x mat.Matrix) mat.Matrix {
+	a1, a2 := x.Dims()
+	a3, a4 := a.Param.Weight.Dims()
+	println(a1)
+	println(a2)
+	println(a3)
+	println(a4)
+
 	var b mat.Dense
 	b.Product(x, a.Param.Weight)
 
@@ -50,6 +57,10 @@ func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
 	return &dx
 }
 
-func (a *Affine) GetParamAndGrad() (entity.Param, entity.Grad) {
-	return a.Param, a.Grad
+func (a *Affine) GetParam() entity.Param {
+	return a.Param
+}
+
+func (a *Affine) GetGrad() entity.Grad {
+	return a.Grad
 }

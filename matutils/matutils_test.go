@@ -43,18 +43,51 @@ func TestThinCol(t *testing.T) {
 		want   mat.Matrix
 	}{
 		{
-			name:   "2*2",
+			name:   "4*2",
 			input:  mat.NewDense(4, 2, []float64{1, 2, 3, 4, 5, 6, 7, 8}),
 			target: []int{0, 3},
 			want:   mat.NewDense(2, 2, []float64{1, 2, 7, 8}),
+		},
+		{
+			name:   "4*2 with no sort",
+			input:  mat.NewDense(4, 2, []float64{1, 2, 3, 4, 5, 6, 7, 8}),
+			target: []int{3, 0},
+			want:   mat.NewDense(2, 2, []float64{7, 8, 1, 2}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.ThinCol(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+			}
+		})
+	}
+}
+
+func TestNewRandMatrixWithSND(t *testing.T) {
+	tests := []struct {
+		name string
+		r, c int
+	}{
+		{
+			name: "3*3",
+			r:    3,
+			c:    3,
+		},
+		{
+			name: "2*3",
+			r:    2,
+			c:    3,
 		},
 	}
 
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.ThinCol(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d", tt.want, got)
+			got := matutils.NewRandMatrixWithSND(tt.r, tt.c)
+			if r, c := got.Dims(); r != tt.r || c != tt.c {
+				t.Fatalf("want = [%v, %v], got = [%v, %v]\n", tt.r, tt.c, r, c)
 			}
 		})
 	}

@@ -41,6 +41,10 @@ func (s *Sigmoid) Backward(x mat.Matrix) mat.Matrix {
 	return result
 }
 
-func (s *Sigmoid) GetParamAndGrad() (entity.Param, entity.Grad) {
-	return s.Param, s.Grad
+func (s *Sigmoid) GetParam() entity.Param {
+	return s.Param
+}
+
+func (s *Sigmoid) GetGrad() entity.Grad {
+	return s.Grad
 }

@@ -22,3 +22,9 @@ type ParamsManager interface {
 	GetGrads() []Grad
 	SetParams(params []Param)
 }
+
+// ParamManager manages param.
+type ParamManager interface {
+	GetParam() Param
+	GetGrad() Grad
+}

@@ -33,6 +33,7 @@ func NewRandMatrixWithSND(r, c int) mat.Matrix {
 // ThinCol thins out rows.
 // TODO: rm type assertion.
 func ThinCol(x mat.Matrix, targets []int) mat.Matrix {
+	// 	sort.Ints(targets)
 	_, c := x.Dims()
 	result := mat.NewDense(len(targets), c, nil)
 

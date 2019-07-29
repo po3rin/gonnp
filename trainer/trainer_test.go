@@ -11,7 +11,8 @@ import (
 func Test_Fit(t *testing.T) {
 	n := nn.NewTwoLayerNet(2, 30, 10)
 	o := optimizers.InitSDG(1)
-	trainer := trainer.InitTrainer(n, o)
+	trainer := trainer.InitTrainer(n, o, trainer.EvalInterval(10))
 
+	// TODO: assert
 	_ = trainer
 }
