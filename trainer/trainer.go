@@ -10,22 +10,22 @@ import (
 )
 
 type Train struct {
-	Model         nn.NeralNet
-	Optimizer     optimizers.Optimizer
-	LossList      []interface{}
-	EvalInterval  int
-	Current_epoch float64
+	Model        nn.NeuralNet
+	Optimizer    optimizers.Optimizer
+	LossList     []interface{}
+	EvalInterval int
+	CurrentEpoch float64
 }
 
 type OptionFunc func(t *Train)
 
-func SetEvalInterval(i int) func(*Train) {
+func EvalInterval(i int) func(*Train) {
 	return func(t *Train) {
 		t.EvalInterval = i
 	}
 }
 
-func InitTrainer(model nn.NeralNet, opt optimizers.Optimizer, options ...OptionFunc) *Train {
+func InitTrainer(model nn.NeuralNet, opt optimizers.Optimizer, options ...OptionFunc) *Train {
 	t := &Train{
 		Model:     model,
 		Optimizer: opt,
@@ -43,8 +43,8 @@ func InitTrainer(model nn.NeralNet, opt optimizers.Optimizer, options ...OptionF
 func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 	dataSize, c := x.Dims()
 	maxIters := int(dataSize / batchSize)
-	// var totalLoss int
-	// var loss_count int
+	var totalLoss float64
+	var lossCount int
 
 	for i := 0; i < maxEpoch; i++ {
 
@@ -67,6 +67,12 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 
 			loss := t.Model.Forward(bx, bt)
 			t.Model.Backward(nil)
+			t.Model.SetParams(t.Optimizer.Update(t.Model.GetParams(), t.Model.GetGrads()))
+
+			totalLoss += loss
+			lossCount++
 		}
+
+		t.CurrentEpoch++
 	}
 }

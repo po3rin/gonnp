@@ -3,13 +3,14 @@ package layers
 import (
 	"math"
 
+	"github.com/po3rin/gonlp/entity"
 	"gonum.org/v1/gonum/mat"
 )
 
 type Sigmoid struct {
 	X     mat.Matrix
-	Param Param
-	Grad  Grad
+	Param entity.Param
+	Grad  entity.Grad
 }
 
 // InitSigmoidLayer inits sigmoid layer.
@@ -38,4 +39,8 @@ func (s *Sigmoid) Backward(x mat.Matrix) mat.Matrix {
 	result := mat.NewDense(r, c, nil)
 	result.Apply(backward, s.X)
 	return result
+}
+
+func (s *Sigmoid) GetParamAndGrad() (entity.Param, entity.Grad) {
+	return s.Param, s.Grad
 }

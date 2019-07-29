@@ -1,6 +1,7 @@
 package layers
 
 import (
+	"github.com/po3rin/gonlp/entity"
 	"github.com/po3rin/gonlp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
@@ -8,14 +9,14 @@ import (
 // Affine layers perform the linear transformation
 type Affine struct {
 	X     mat.Matrix
-	Param Param
-	Grad  Grad
+	Param entity.Param
+	Grad  entity.Grad
 }
 
 // InitAffineLayer inits affine layer.
 func InitAffineLayer(weight mat.Matrix, bias mat.Matrix) *Affine {
 	return &Affine{
-		Param: Param{
+		Param: entity.Param{
 			Weight: weight,
 			Bias:   bias,
 		},
@@ -47,4 +48,8 @@ func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
 	var dx mat.Dense
 	dx.Product(x, a.Param.Weight.T())
 	return &dx
+}
+
+func (a *Affine) GetParamAndGrad() (entity.Param, entity.Grad) {
+	return a.Param, a.Grad
 }

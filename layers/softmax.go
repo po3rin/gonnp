@@ -3,6 +3,7 @@ package layers
 import (
 	"math"
 
+	"github.com/po3rin/gonlp/entity"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -10,8 +11,8 @@ import (
 type SoftmaxWithLoss struct {
 	X       mat.Matrix
 	Teacher mat.Matrix
-	Param   Param
-	Grad    Grad
+	Param   entity.Param
+	Grad    entity.Grad
 }
 
 // InitSoftmaxWithLossLayer inits softmax layer.
@@ -35,6 +36,10 @@ func (s *SoftmaxWithLoss) Backward(x mat.Matrix) mat.Matrix {
 	var dx mat.Dense
 	dx.Apply(f, x)
 	return &dx
+}
+
+func (s *SoftmaxWithLoss) GetParamAndGrad() (entity.Param, entity.Grad) {
+	return s.Param, s.Grad
 }
 
 func softmax(x mat.Matrix) mat.Matrix {

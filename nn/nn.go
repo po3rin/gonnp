@@ -1,9 +1,14 @@
 package nn
 
-import "gonum.org/v1/gonum/mat"
+import (
+	"github.com/po3rin/gonlp/entity"
+	"gonum.org/v1/gonum/mat"
+)
 
-type NeralNet interface {
+// NeuralNet is neural network interface.
+type NeuralNet interface {
 	Predict(x mat.Matrix) mat.Matrix
 	Forward(x mat.Matrix, teacher mat.Matrix) float64
 	Backward(x mat.Matrix) mat.Matrix
+	entity.ParamsManager
 }

@@ -1,7 +1,7 @@
 package optimizers
 
-import "gonum.org/v1/gonum/mat"
+import "github.com/po3rin/gonlp/entity"
 
 type Optimizer interface {
-	Update(params []mat.Matrix, grad []mat.Matrix) []mat.Matrix
+	Update(params []entity.Param, grads []entity.Grad) []entity.Param
 }
