@@ -1,3 +1,4 @@
+// Package trainer impliments shorhand of training for deep lerning.
 package trainer
 
 import (

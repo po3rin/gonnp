@@ -1,3 +1,4 @@
+// Package matutils has utility functions of gonum matrix.
 package matutils
 
 import (

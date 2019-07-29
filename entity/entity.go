@@ -1,3 +1,4 @@
+// Package entity has common parametors type.
 package entity
 
 import (
