@@ -16,12 +16,17 @@ func TestSumCol(t *testing.T) {
 		{
 			name:  "2*2",
 			input: mat.NewDense(2, 2, []float64{2, 2, 2, 2}),
-			want:  mat.NewDense(1, 2, []float64{4, 4}),
+			want:  mat.NewVecDense(2, []float64{4, 4}),
 		},
 		{
 			name:  "2*2 with 0",
 			input: mat.NewDense(2, 2, []float64{0, 0, 0, 0}),
-			want:  mat.NewDense(1, 2, []float64{0, 0}),
+			want:  mat.NewVecDense(2, []float64{0, 0}),
+		},
+		{
+			name:  "3*2",
+			input: mat.NewDense(3, 2, []float64{1, 2, 3, 4, 5, 6}),
+			want:  mat.NewVecDense(2, []float64{9, 12}),
 		},
 	}
 

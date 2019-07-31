@@ -11,7 +11,7 @@ func TestAffineForward(t *testing.T) {
 	type input struct {
 		data   mat.Matrix
 		weight mat.Matrix
-		bias   mat.Matrix
+		bias   mat.Vector
 	}
 	tests := []struct {
 		name  string
@@ -21,11 +21,11 @@ func TestAffineForward(t *testing.T) {
 		{
 			name: "normal",
 			input: input{
-				data:   mat.NewDense(2, 3, []float64{1, 1, 1, 1, 1, 1}),
-				weight: mat.NewDense(3, 2, []float64{1, 2, 3, 4, 5, 6}),
-				bias:   mat.NewDense(2, 2, []float64{1, 0, 0, 1}),
+				data:   mat.NewDense(2, 2, []float64{1, 1, 1, 1}),
+				weight: mat.NewDense(2, 2, []float64{1, 2, 3, 4}),
+				bias:   mat.NewVecDense(2, []float64{1, 1}),
 			},
-			want: mat.NewDense(2, 2, []float64{10, 12, 9, 13}),
+			want: mat.NewDense(2, 2, []float64{5, 7, 5, 7}),
 		},
 	}
 

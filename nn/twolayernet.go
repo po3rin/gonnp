@@ -10,7 +10,7 @@ import (
 // NodeSize has node size (input, hidden, output)
 type NodeSize struct {
 	Input  int
-	Hideen int
+	Hidden int
 	Output int
 }
 
@@ -28,8 +28,8 @@ func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TowLayerNet {
 	w1 := matutils.NewRandMatrixWithSND(inputSize, hiddenSize)
 	w2 := matutils.NewRandMatrixWithSND(hiddenSize, outputSize)
 
-	b1 := mat.NewDense(1, hiddenSize, nil)
-	b2 := mat.NewDense(1, outputSize, nil)
+	b1 := mat.NewVecDense(hiddenSize, nil)
+	b2 := mat.NewVecDense(outputSize, nil)
 
 	ls := []layers.Layer{
 		layers.InitAffineLayer(w1, b1),
@@ -43,15 +43,16 @@ func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TowLayerNet {
 	)
 	for _, l := range ls {
 		p := l.GetParam()
-		g := l.GetGrad()
+		if p.Weight == nil || p.Bias == nil {
+			continue
+		}
 		params = append(params, p)
-		grads = append(grads, g)
 	}
 
 	return &TowLayerNet{
 		NodeSize: NodeSize{
 			Input:  inputSize,
-			Hideen: hiddenSize,
+			Hidden: hiddenSize,
 			Output: outputSize,
 		},
 		Layers:    ls,
@@ -74,26 +75,36 @@ func (t *TowLayerNet) Forward(x mat.Matrix, teacher mat.Matrix) float64 {
 	return loss
 }
 
-func (t *TowLayerNet) Backward(x mat.Matrix) mat.Matrix {
-	if x == nil {
-		// TODO: set correct size
-		x = mat.NewDense(1, 1, []float64{1})
-	}
-	dout := t.LossLayer.Backward(x)
+func (t *TowLayerNet) Backward() mat.Matrix {
+	dout := t.LossLayer.Backward()
 	for i := len(t.Layers) - 1; i >= 0; i-- {
 		dout = t.Layers[i].Backward(dout)
 	}
 	return dout
 }
 
-// GetParams gets layer net params.
+// GetParams gets params that layers have.
 func (t *TowLayerNet) GetParams() []entity.Param {
-	return t.Params
+	params := make([]entity.Param, 0, len(t.Layers))
+	for _, l := range t.Layers {
+		if l.GetParam().Weight == nil {
+			continue
+		}
+		params = append(params, l.GetParam())
+	}
+	return params
 }
 
-// GetGrads gets layer net gradient.
+// GetGrads gets gradient that layers have.
 func (t *TowLayerNet) GetGrads() []entity.Grad {
-	return t.Grads
+	grads := make([]entity.Grad, 0, len(t.Layers))
+	for _, l := range t.Layers {
+		if l.GetGrad().Weight == nil {
+			continue
+		}
+		grads = append(grads, l.GetGrad())
+	}
+	return grads
 }
 
 // SetParams updates params.

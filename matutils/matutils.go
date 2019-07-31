@@ -8,13 +8,13 @@ import (
 )
 
 // SumCol calcurates sum each of columns.
-func SumCol(x mat.Matrix) mat.Matrix {
+func SumCol(x mat.Matrix) mat.Vector {
 	r, c := x.Dims()
-	A := mat.NewDense(1, c, nil)
+	A := mat.NewVecDense(c, nil)
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {
-			sum := A.At(0, j) + x.At(i, j)
-			A.Set(0, j, sum)
+			sum := A.AtVec(j) + x.At(i, j)
+			A.SetVec(j, sum)
 		}
 	}
 	return A

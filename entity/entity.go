@@ -8,13 +8,13 @@ import (
 // Grad is gradient of wight & bias.
 type Grad struct {
 	Weight mat.Matrix
-	Bias   mat.Matrix
+	Bias   mat.Vector
 }
 
 // Param has weight & bias.
 type Param struct {
 	Weight mat.Matrix
-	Bias   mat.Matrix
+	Bias   mat.Vector
 }
 
 // ParamsManager manages params.

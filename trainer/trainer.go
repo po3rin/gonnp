@@ -2,7 +2,6 @@
 package trainer
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/po3rin/gonlp/matutils"
@@ -35,7 +34,6 @@ func InitTrainer(model nn.NeuralNet, opt optimizers.Optimizer, options ...Option
 		EvalInterval: 20,
 	}
 
-	fmt.Println(len(options))
 	for _, option := range options {
 		option(t)
 	}
@@ -45,6 +43,8 @@ func InitTrainer(model nn.NeuralNet, opt optimizers.Optimizer, options ...Option
 
 func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 	dataSize, c := x.Dims()
+	_, tc := teacher.Dims()
+
 	maxIters := int(dataSize / batchSize)
 	var totalLoss float64
 	var lossCount int
@@ -67,17 +67,10 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 
 		for j := 0; j < maxIters; j++ {
 			bx := dx.Slice(j*batchSize, (j+1)*batchSize, 0, c)
-			bt := dt.Slice(j*batchSize, (j+1)*batchSize, 0, 1)
-
-			// a, s := bx.Dims()
-			// b, n := bt.Dims()
-			// println(a)
-			// println(s)
-			// println(b)
-			// println(n)
+			bt := dt.Slice(j*batchSize, (j+1)*batchSize, 0, tc)
 
 			loss := t.Model.Forward(bx, bt)
-			t.Model.Backward(nil)
+			t.Model.Backward()
 			t.Model.SetParams(t.Optimizer.Update(t.Model.GetParams(), t.Model.GetGrads()))
 
 			totalLoss += loss

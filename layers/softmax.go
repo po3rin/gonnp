@@ -28,13 +28,14 @@ func (s *SoftmaxWithLoss) Forward(x mat.Matrix, teacher mat.Matrix) float64 {
 }
 
 // Backward for softmax layer.
-func (s *SoftmaxWithLoss) Backward(x mat.Matrix) mat.Matrix {
+func (s *SoftmaxWithLoss) Backward() mat.Matrix {
 	batchSize, _ := s.Teacher.Dims()
 	f := func(i, j int, v float64) float64 {
-		return (s.X.At(i, j) - s.Teacher.At(i, j)) * x.At(i, j) / float64(batchSize)
+		// return (s.X.At(i, j) - s.Teacher.At(i, j)) * x.At(i, j) / float64(batchSize)
+		return (v - s.Teacher.At(i, j)) / float64(batchSize)
 	}
 	var dx mat.Dense
-	dx.Apply(f, x)
+	dx.Apply(f, s.X)
 	return &dx
 }
 

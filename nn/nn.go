@@ -9,6 +9,6 @@ import (
 type NeuralNet interface {
 	Predict(x mat.Matrix) mat.Matrix
 	Forward(x mat.Matrix, teacher mat.Matrix) float64
-	Backward(x mat.Matrix) mat.Matrix
+	Backward() mat.Matrix
 	entity.ParamsManager
 }

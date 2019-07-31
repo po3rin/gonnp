@@ -14,7 +14,7 @@ type Affine struct {
 }
 
 // InitAffineLayer inits affine layer.
-func InitAffineLayer(weight mat.Matrix, bias mat.Matrix) *Affine {
+func InitAffineLayer(weight mat.Matrix, bias mat.Vector) *Affine {
 	return &Affine{
 		Param: entity.Param{
 			Weight: weight,
@@ -25,42 +25,41 @@ func InitAffineLayer(weight mat.Matrix, bias mat.Matrix) *Affine {
 
 // Forward for affine layer.
 func (a *Affine) Forward(x mat.Matrix) mat.Matrix {
-	a1, a2 := x.Dims()
-	a3, a4 := a.Param.Weight.Dims()
-	println(a1)
-	println(a2)
-	println(a3)
-	println(a4)
-
 	var b mat.Dense
 	b.Product(x, a.Param.Weight)
 
 	var c mat.Dense
-	c.Add(&b, a.Param.Bias)
+	add := func(i, j int, v float64) float64 {
+		return v + a.Param.Bias.At(j, 0)
+	}
+	c.Apply(add, &b)
 
 	a.X = &c
 	return &c
 }
 
 // Backward for affine layer.
+// TODO: invalid dimention...
 func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
 	var dw mat.Dense
-	dw.Product(a.X.T(), x)
+	var dx mat.Dense
 
+	dx.Product(x, a.Param.Weight.T())
+	dw.Product(a.X.T(), x)
 	db := matutils.SumCol(x)
 
 	a.Grad.Weight = &dw
 	a.Grad.Bias = db
 
-	var dx mat.Dense
-	dx.Product(x, a.Param.Weight.T())
 	return &dx
 }
 
+// GetParam gets param.
 func (a *Affine) GetParam() entity.Param {
 	return a.Param
 }
 
+// GetGrad gets gradient.
 func (a *Affine) GetGrad() entity.Grad {
 	return a.Grad
 }
