@@ -23,12 +23,14 @@ type Train struct {
 // OptionFunc for set option for trainer
 type OptionFunc func(t *Train)
 
+// EvalInterval sets EvalInterval option.
 func EvalInterval(i int) func(*Train) {
 	return func(t *Train) {
 		t.EvalInterval = i
 	}
 }
 
+// InitTrainer inits Trainer.
 func InitTrainer(model nn.NeuralNet, opt optimizers.Optimizer, options ...OptionFunc) *Train {
 	t := &Train{
 		Model:     model,
@@ -44,6 +46,7 @@ func InitTrainer(model nn.NeuralNet, opt optimizers.Optimizer, options ...Option
 	return t
 }
 
+// Fit traims from data.
 func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 	dataSize, c := x.Dims()
 	_, tc := teacher.Dims()
