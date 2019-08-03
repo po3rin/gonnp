@@ -21,8 +21,7 @@ type Param struct {
 type ParamsManager interface {
 	GetParams() []Param
 	GetGrads() []Grad
-	SetParams(params []Param)
-	UpdateParams()
+	UpdateParams([]Param)
 }
 
 // ParamManager manages param.
