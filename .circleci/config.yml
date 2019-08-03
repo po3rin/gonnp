@@ -14,6 +14,7 @@ jobs:
       - run:
           command: |
             go test -coverprofile=c.out
+            go test go test ./... -tags=e2e
             go tool cover -html=c.out -o coverage.html
             mv coverage.html /tmp/artifacts
       - store_artifacts:

@@ -23,5 +23,6 @@ func Test_Fit(t *testing.T) {
 	_ = trainer
 	_ = mnist
 
+	// checks no panic ...
 	trainer.Fit(mnist.TestData, mnist.TestLabels, 1, 1)
 }

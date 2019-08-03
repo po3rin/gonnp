@@ -25,21 +25,20 @@ func InitAffineLayer(weight mat.Matrix, bias mat.Vector) *Affine {
 
 // Forward for affine layer.
 func (a *Affine) Forward(x mat.Matrix) mat.Matrix {
+	a.X = x
+
 	var b mat.Dense
 	b.Product(x, a.Param.Weight)
 
 	var c mat.Dense
 	add := func(i, j int, v float64) float64 {
-		return v + a.Param.Bias.At(j, 0)
+		return v + a.Param.Bias.AtVec(j)
 	}
 	c.Apply(add, &b)
-
-	a.X = &c
 	return &c
 }
 
 // Backward for affine layer.
-// TODO: invalid dimention...
 func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
 	var dw mat.Dense
 	var dx mat.Dense
@@ -62,4 +61,8 @@ func (a *Affine) GetParam() entity.Param {
 // GetGrad gets gradient.
 func (a *Affine) GetGrad() entity.Grad {
 	return a.Grad
+}
+
+func (a *Affine) SetParam(p entity.Param) {
+	a.Param = p
 }

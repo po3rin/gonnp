@@ -2,6 +2,7 @@
 package trainer
 
 import (
+	"fmt"
 	"math/rand"
 
 	"github.com/po3rin/gonlp/matutils"
@@ -10,14 +11,16 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+// Train has trainer config.
 type Train struct {
 	Model        nn.NeuralNet
 	Optimizer    optimizers.Optimizer
-	LossList     []interface{}
+	LossList     []float64
 	EvalInterval int
 	CurrentEpoch float64
 }
 
+// OptionFunc for set option for trainer
 type OptionFunc func(t *Train)
 
 func EvalInterval(i int) func(*Train) {
@@ -72,11 +75,18 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 			loss := t.Model.Forward(bx, bt)
 			t.Model.Backward()
 			t.Model.SetParams(t.Optimizer.Update(t.Model.GetParams(), t.Model.GetGrads()))
+			t.Model.UpdateParams()
 
 			totalLoss += loss
 			lossCount++
-		}
 
-		t.CurrentEpoch++
+			if j%t.EvalInterval == 0 {
+				avgLoss := totalLoss / float64(lossCount)
+				fmt.Printf("| epoch %v |  iter %v / %v | loss %.4f\n", t.CurrentEpoch, j, maxIters, avgLoss)
+				t.LossList = append(t.LossList, float64(avgLoss))
+				totalLoss, lossCount = 0, 0
+			}
+			t.CurrentEpoch++
+		}
 	}
 }

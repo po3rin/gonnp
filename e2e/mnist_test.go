@@ -1,3 +1,5 @@
+// +build e2e
+
 package e2e_test
 
 import (
@@ -23,5 +25,5 @@ func TestMNITS(t *testing.T) {
 	_ = trainer
 	_ = mnist
 
-	// trainer.Fit(mnist.TestData, mnist.TestLabels, 100, 30)
+	trainer.Fit(mnist.TestData, mnist.TestLabels, 100, 30)
 }

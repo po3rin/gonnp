@@ -111,3 +111,16 @@ func (t *TowLayerNet) GetGrads() []entity.Grad {
 func (t *TowLayerNet) SetParams(params []entity.Param) {
 	t.Params = params
 }
+
+// UpdateParams updates lyaers params using TwoLayerMet's params.
+func (t *TowLayerNet) UpdateParams() {
+	var i int
+	for _, l := range t.Layers {
+		p := l.GetParam()
+		if p.Weight == nil || p.Bias == nil {
+			continue
+		}
+		l.SetParam(t.Params[i])
+		i++
+	}
+}

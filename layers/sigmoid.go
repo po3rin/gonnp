@@ -48,3 +48,7 @@ func (s *Sigmoid) GetParam() entity.Param {
 func (s *Sigmoid) GetGrad() entity.Grad {
 	return s.Grad
 }
+
+func (s *Sigmoid) SetParam(p entity.Param) {
+	s.Param = p
+}
