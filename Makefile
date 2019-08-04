@@ -1,3 +1,5 @@
+all: test e2e staticcheck
+
 .PHONY: test
 test:
 	go test ./...

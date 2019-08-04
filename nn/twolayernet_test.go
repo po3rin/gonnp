@@ -1,3 +1,5 @@
+// +build !e2e
+
 package nn_test
 
 import (

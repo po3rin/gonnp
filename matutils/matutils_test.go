@@ -1,3 +1,5 @@
+// +build !e2e
+
 package matutils_test
 
 import (

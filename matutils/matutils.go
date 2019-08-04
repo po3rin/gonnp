@@ -2,6 +2,7 @@
 package matutils
 
 import (
+	"fmt"
 	"math/rand"
 
 	"gonum.org/v1/gonum/mat"
@@ -46,4 +47,10 @@ func ThinCol(x mat.Matrix, targets []int) mat.Matrix {
 		result.SetRow(i, d.RawRowView(v))
 	}
 	return result
+}
+
+// PrintDims prints dimensions.
+func PrintDims(x mat.Matrix) {
+	r, c := x.Dims()
+	fmt.Printf("[%v, %v]\n", r, c)
 }
