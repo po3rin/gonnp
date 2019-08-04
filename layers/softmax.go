@@ -61,12 +61,12 @@ func softmax(x mat.Matrix) mat.Matrix {
 // CrossEntropyErr measures the performance of a classification model whose output is a probability value between 0 and 1.
 func crossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
 	// TODO: if teacher data is one-hot, ignore 0 in teacher data.
-	batchSize, _ := data.Dims()
-	var ce mat.Dense
+	batchSize, c := data.Dims()
+	ce := mat.NewDense(batchSize, c, nil)
 	ce.Apply(crossEnrtopy, data)
 
 	var mul mat.Dense
-	mul.MulElem(teacher, &ce)
+	mul.MulElem(teacher, ce)
 
 	sum := mat.Sum(&mul)
 	return -sum / float64(batchSize)

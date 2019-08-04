@@ -90,7 +90,7 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 				t.LossList = append(t.LossList, float64(avgLoss))
 				totalLoss, lossCount = 0, 0
 			}
-			t.CurrentEpoch++
 		}
+		t.CurrentEpoch++
 	}
 }

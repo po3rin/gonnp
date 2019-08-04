@@ -22,5 +22,5 @@ func TestMNITS(t *testing.T) {
 		t.Fatalf("unexpected error: %v\n", err)
 	}
 
-	trainer.Fit(mnist.TestData, mnist.TestLabels, 20, 100)
+	trainer.Fit(mnist.TestData, mnist.TestLabels, 30, 100)
 }

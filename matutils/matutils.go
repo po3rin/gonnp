@@ -49,7 +49,7 @@ func ThinCol(x mat.Matrix, targets []int) mat.Matrix {
 	return result
 }
 
-// PrintDims prints dimensions.
+// PrintDims prints dimensions for debug.
 func PrintDims(x mat.Matrix) {
 	r, c := x.Dims()
 	fmt.Printf("[%v, %v]\n", r, c)
