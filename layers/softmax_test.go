@@ -67,14 +67,14 @@ func TestCrossEntropyErr(t *testing.T) {
 	}{
 		{
 			name:    "one-hot-1",
-			input:   mat.NewDense(1, 10, []float64{0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0, 0.1, 0, 0}),
+			input:   mat.NewDense(1, 10, []float64{0.1, 0.05, 0.6, 0, 0.05, 0.1, 0, 0.1, 0, 0}),
 			teacher: mat.NewDense(1, 10, []float64{0, 0, 1, 0, 0, 0, 0, 0, 0, 0}),
 			want:    0.51082545709933802,
 		},
 
 		{
 			name:    "one-hot-2",
-			input:   mat.NewDense(1, 10, []float64{0.1, 0.05, 0.1, 0.0, 0.05, 0.1, 0, 0.6, 0, 0}),
+			input:   mat.NewDense(1, 10, []float64{0.1, 0.05, 0.1, 0, 0.05, 0.1, 0, 0.6, 0, 0}),
 			teacher: mat.NewDense(1, 10, []float64{0, 0, 1, 0, 0, 0, 0, 0, 0, 0}),
 			want:    2.3025840929945458,
 		},

@@ -4,6 +4,7 @@ package trainer
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/po3rin/gonlp/matutils"
 	"github.com/po3rin/gonlp/nn"
@@ -58,6 +59,7 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 	for i := 0; i < maxEpoch; i++ {
 
 		// shuffle
+		rand.Seed(time.Now().UnixNano())
 		idx := rand.Perm(dataSize)
 		tx := matutils.ThinCol(x, idx)
 		tt := matutils.ThinCol(teacher, idx)
