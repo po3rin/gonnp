@@ -25,16 +25,27 @@ func InitAffineLayer(weight mat.Matrix, bias mat.Vector) *Affine {
 
 // Forward for affine layer.
 func (a *Affine) Forward(x mat.Matrix) mat.Matrix {
+	// matutils.CheckNaNOrInf(x, "x in for")
 	a.X = x
 
+	// matutils.CheckNaNOrInf(a.Param.Weight, "w in for")
+
 	var b mat.Dense
+	// fmt.Println("=================")
+	// fmt.Println(mat.Max(a.Param.Weight))
+	// fmt.Println(mat.Max(x))
+
 	b.Product(x, a.Param.Weight)
+
+	// matutils.CheckNaNOrInf(&b, "b in for")
 
 	var c mat.Dense
 	add := func(i, j int, v float64) float64 {
 		return v + a.Param.Bias.AtVec(j)
 	}
 	c.Apply(add, &b)
+
+	// matutils.CheckNaNOrInf(&c, "c in for")
 	return &c
 }
 

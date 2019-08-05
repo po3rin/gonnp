@@ -79,7 +79,11 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 
 			loss := t.Model.Forward(bx, bt)
 			t.Model.Backward()
-			t.Model.UpdateParams(t.Optimizer.Update(t.Model.GetParams(), t.Model.GetGrads()))
+			t.Model.UpdateParams(
+				t.Optimizer.Update(
+					t.Model.GetParams(), t.Model.GetGrads(),
+				),
+			)
 
 			totalLoss += loss
 			lossCount++

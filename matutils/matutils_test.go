@@ -72,6 +72,28 @@ func TestThinCol(t *testing.T) {
 	}
 }
 
+func TestOneHotVec2Index(t *testing.T) {
+	tests := []struct {
+		name  string
+		input mat.Matrix
+		want  mat.Matrix
+	}{
+		{
+			name:  "4*2",
+			input: mat.NewDense(4, 2, []float64{1, 0, 1, 0, 0, 1, 0, 1}),
+			want:  mat.NewVecDense(4, []float64{0, 0, 1, 1}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.OneHotVec2Index(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+			}
+		})
+	}
+}
+
 func TestNewRandMatrixWithSND(t *testing.T) {
 	tests := []struct {
 		name string

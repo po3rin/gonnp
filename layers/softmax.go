@@ -3,7 +3,6 @@ package layers
 import (
 	"math"
 
-	"github.com/po3rin/gonlp/entity"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -11,8 +10,6 @@ import (
 type SoftmaxWithLoss struct {
 	X       mat.Matrix
 	Teacher mat.Matrix
-	Param   entity.Param
-	Grad    entity.Grad
 }
 
 // InitSoftmaxWithLossLayer inits softmax layer.
@@ -31,16 +28,11 @@ func (s *SoftmaxWithLoss) Forward(x mat.Matrix, teacher mat.Matrix) float64 {
 func (s *SoftmaxWithLoss) Backward() mat.Matrix {
 	batchSize, c := s.Teacher.Dims()
 	f := func(i, j int, v float64) float64 {
-		// return (s.X.At(i, j) - s.Teacher.At(i, j)) * x.At(i, j) / float64(batchSize)
 		return (v - s.Teacher.At(i, j)) / float64(batchSize)
 	}
 	dx := mat.NewDense(batchSize, c, nil)
 	dx.Apply(f, s.X)
 	return dx
-}
-
-func (s *SoftmaxWithLoss) GetParamAndGrad() (entity.Param, entity.Grad) {
-	return s.Param, s.Grad
 }
 
 func softmax(x mat.Matrix) mat.Matrix {
@@ -60,19 +52,28 @@ func softmax(x mat.Matrix) mat.Matrix {
 
 // CrossEntropyErr measures the performance of a classification model whose output is a probability value between 0 and 1.
 func crossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
-	// TODO: if teacher data is one-hot, ignore 0 in teacher data.
-	batchSize, c := data.Dims()
-	ce := mat.NewDense(batchSize, c, nil)
-	ce.Apply(crossEnrtopy, data)
+	batchSize, _ := data.Dims()
+	tr, tc := teacher.Dims()
 
-	var mul mat.Dense
-	mul.MulElem(teacher, ce)
-
-	sum := mat.Sum(&mul)
-	return -sum / float64(batchSize)
-}
-
-func crossEnrtopy(i, j int, v float64) float64 {
 	delta := 0.0000001
-	return math.Log(v + delta)
+	crossEnrtopy := func(i, j int, v float64) float64 {
+		return -1 * v * math.Log(data.At(i, j)+delta)
+	}
+
+	if batchSize == 1 {
+		ce := mat.NewDense(tr, tc, nil)
+		ce.Apply(crossEnrtopy, teacher)
+		return mat.Sum(ce)
+	}
+
+	// TODO: if teacher data is one-hot, ignore 0 in teacher data.
+
+	// if batchSize == tr && c == tc {
+	// 	teacher = matutils.OneHotVec2Index(teacher)
+	// 	tr, tc = teacher.Dims()
+	// }
+
+	ce := mat.NewDense(tr, tc, nil)
+	ce.Apply(crossEnrtopy, teacher)
+	return mat.Sum(ce) / float64(batchSize)
 }

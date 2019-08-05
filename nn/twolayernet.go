@@ -19,34 +19,26 @@ type TowLayerNet struct {
 	NodeSize  NodeSize
 	Layers    []layers.Layer
 	LossLayer layers.LossLayer
-	Params    []entity.Param
-	Grads     []entity.Grad
 }
+
+var (
+	weightGenerator = matutils.NewRandMatrixWithSND
+	biasGenerator   = mat.NewVecDense
+)
 
 // NewTwoLayerNet inits 2-layer-network.
 func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TowLayerNet {
-	w1 := matutils.NewRandMatrixWithSND(inputSize, hiddenSize)
-	w2 := matutils.NewRandMatrixWithSND(hiddenSize, outputSize)
+	w1 := weightGenerator(inputSize, hiddenSize)
+	w2 := weightGenerator(hiddenSize, outputSize)
 
-	b1 := mat.NewVecDense(hiddenSize, nil)
-	b2 := mat.NewVecDense(outputSize, nil)
+	b1 := biasGenerator(hiddenSize, nil)
+	b2 := biasGenerator(outputSize, nil)
 
 	ls := []layers.Layer{
 		layers.InitAffineLayer(w1, b1),
-		layers.InitSigmoidLayer(),
+		layers.InitReluLayer(),
+		// layers.InitSigmoidLayer(),
 		layers.InitAffineLayer(w2, b2),
-	}
-
-	var (
-		params []entity.Param
-		grads  []entity.Grad
-	)
-	for _, l := range ls {
-		p := l.GetParam()
-		if p.Weight == nil || p.Bias == nil {
-			continue
-		}
-		params = append(params, p)
 	}
 
 	return &TowLayerNet{
@@ -57,14 +49,13 @@ func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TowLayerNet {
 		},
 		Layers:    ls,
 		LossLayer: layers.InitSoftmaxWithLossLayer(),
-		Params:    params,
-		Grads:     grads,
 	}
 }
 
 func (t *TowLayerNet) Predict(x mat.Matrix) mat.Matrix {
-	for _, l := range t.Layers {
+	for i, l := range t.Layers {
 		x = l.Forward(x)
+		t.Layers[i] = l
 	}
 	return x
 }
@@ -87,6 +78,7 @@ func (t *TowLayerNet) Backward() mat.Matrix {
 func (t *TowLayerNet) GetParams() []entity.Param {
 	params := make([]entity.Param, 0, len(t.Layers))
 	for _, l := range t.Layers {
+		// ignore if weight is empty.
 		if l.GetParam().Weight == nil {
 			continue
 		}
@@ -99,6 +91,7 @@ func (t *TowLayerNet) GetParams() []entity.Param {
 func (t *TowLayerNet) GetGrads() []entity.Grad {
 	grads := make([]entity.Grad, 0, len(t.Layers))
 	for _, l := range t.Layers {
+		// ignore if weight is empty.
 		if l.GetGrad().Weight == nil {
 			continue
 		}
@@ -110,12 +103,14 @@ func (t *TowLayerNet) GetGrads() []entity.Grad {
 // UpdateParams updates lyaers params using TwoLayerMet's params.
 func (t *TowLayerNet) UpdateParams(params []entity.Param) {
 	var i int
-	for _, l := range t.Layers {
+	for j, l := range t.Layers {
 		p := l.GetParam()
+		// ignore if weight is nil.
 		if p.Weight == nil || p.Bias == nil {
 			continue
 		}
 		l.SetParam(params[i])
+		t.Layers[j] = l
 		i++
 	}
 }
