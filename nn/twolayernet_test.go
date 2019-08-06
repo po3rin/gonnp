@@ -190,7 +190,7 @@ func TestTwoLayer(t *testing.T) {
 			}
 
 			// update params
-			optimizer := optimizers.InitSDG(0.1)
+			optimizer := optimizers.InitSDG(0.01)
 			nn.UpdateParams(
 				optimizer.Update(
 					nn.GetParams(), nn.GetGrads(),

@@ -13,7 +13,7 @@ import (
 
 func Test_Fit(t *testing.T) {
 	model := nn.NewTwoLayerNet(784, 50, 10)
-	optimizer := optimizers.InitSDG(0.1)
+	optimizer := optimizers.InitSDG(0.01)
 	trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(10))
 
 	l := gomnist.NewLoader("./../testdata", gomnist.OneHotLabel(true))
