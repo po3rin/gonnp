@@ -8,6 +8,7 @@ import (
 	"github.com/po3rin/gonlp/entity"
 	"github.com/po3rin/gonlp/layers"
 	"github.com/po3rin/gonlp/nn"
+	"github.com/po3rin/gonlp/optimizers"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -42,6 +43,7 @@ func TestTwoLayer(t *testing.T) {
 		data         mat.Matrix
 		teacher      mat.Matrix
 		beforeParams []entity.Param
+		afterParams  []entity.Param
 		afterGrads   []entity.Grad
 		loss         float64
 		outs         []mat.Matrix
@@ -82,6 +84,20 @@ func TestTwoLayer(t *testing.T) {
 						-1.66666027e+00, 2.48279917e-03, 3.30519702e-01,
 						-2.99998724e+00, 4.96484751e-03, 6.61024323e-01,
 					}),
+					Bias: mat.NewVecDense(3, []float64{
+						-0.66666449, 0.0008297, -0.00083188,
+					}),
+				},
+			},
+			afterParams: []entity.Param{
+				entity.Param{
+					Weight: mat.NewDense(3, 2, []float64{1, 1, 1, 2, 1, 3}),
+					Bias: mat.NewVecDense(3, []float64{
+						-0.66666449, 0.0008297, -0.00083188,
+					}),
+				},
+				entity.Param{
+					Weight: mat.NewDense(2, 3, []float64{1, 1, 1, 1, 2, 3}),
 					Bias: mat.NewVecDense(3, []float64{
 						-0.66666449, 0.0008297, -0.00083188,
 					}),
@@ -174,6 +190,23 @@ func TestTwoLayer(t *testing.T) {
 			}
 
 			// update params
+			optimizer := optimizers.InitSDG(0.1)
+			nn.UpdateParams(
+				optimizer.Update(
+					nn.GetParams(), nn.GetGrads(),
+				),
+			)
+
+			// checks after params
+			params = nn.GetParams()
+			for i := 0; i < len(params); i++ {
+				if !mat.EqualApprox(params[i].Weight, tt.afterParams[i].Weight, 1e-14) {
+					t.Errorf("after param.Weight\nwant = %v\ngot = %v\n", tt.afterParams[i].Weight, params[i].Weight)
+				}
+				if !mat.EqualApprox(params[i].Bias, tt.afterParams[i].Bias, 1e-6) {
+					t.Errorf("after param.Bias\nwant = %v\ngot = %v\n", tt.afterParams[i].Bias, params[i].Bias)
+				}
+			}
 		})
 	}
 }
