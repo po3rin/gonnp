@@ -4,7 +4,7 @@
 </p>
 
 ---
-<img src="https://img.shields.io/badge/go-v1.12-blue.svg"/> [![CircleCI](https://circleci.com/gh/po3rin/gonlp.svg?style=shield)](https://circleci.com/gh/po3rin/gonlp)
+<img src="https://img.shields.io/badge/go-v1.12-blue.svg"/> [![CircleCI](https://circleci.com/gh/po3rin/gonlp.svg?style=shield&circle-token=d2ad1b26978ffeb0f6aa43b9a517ec7e5180d474)](https://circleci.com/gh/po3rin/gonlp)
 
 in impliments ...
 
