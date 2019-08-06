@@ -11,3 +11,11 @@ func UseCustomWightGenerator(f func(i, j int) mat.Matrix) (resetFunc func()) {
 		weightGenerator = tmp
 	}
 }
+
+func UseCustomBiasGenerator(f func(i int, v []float64) *mat.VecDense) (resetFunc func()) {
+	var tmp func(i int, v []float64) *mat.VecDense
+	tmp, biasGenerator = biasGenerator, f
+	return func() {
+		biasGenerator = tmp
+	}
+}

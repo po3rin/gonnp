@@ -124,7 +124,7 @@ func TestTwoLayer(t *testing.T) {
 		},
 	}
 
-	// sets weight generator to init constant value for test.
+	// sets generator to init constant value for test.
 	weightGenerator := func(r, c int) mat.Matrix {
 		a := make([]float64, 0, r*c)
 		for i := 0; i < r; i++ {
@@ -135,6 +135,9 @@ func TestTwoLayer(t *testing.T) {
 		return mat.NewDense(r, c, a)
 	}
 	defer nn.UseCustomWightGenerator(weightGenerator)()
+
+	biasGenerator := mat.NewVecDense
+	defer nn.UseCustomBiasGenerator(biasGenerator)()
 
 	for _, tt := range tests {
 		tt := tt

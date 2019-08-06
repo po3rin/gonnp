@@ -2,7 +2,13 @@ package nn
 
 import (
 	"github.com/po3rin/gonlp/entity"
+	"github.com/po3rin/gonlp/matutils"
 	"gonum.org/v1/gonum/mat"
+)
+
+var (
+	weightGenerator = matutils.NewRandMatrixWithSND
+	biasGenerator   = matutils.NewRandVecWithSND
 )
 
 // NeuralNet is neural network interface.

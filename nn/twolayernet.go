@@ -3,28 +3,14 @@ package nn
 import (
 	"github.com/po3rin/gonlp/entity"
 	"github.com/po3rin/gonlp/layers"
-	"github.com/po3rin/gonlp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
-// NodeSize has node size (input, hidden, output)
-type NodeSize struct {
-	Input  int
-	Hidden int
-	Output int
-}
-
 // TowLayerNet has layer net config.
 type TowLayerNet struct {
-	NodeSize  NodeSize
 	Layers    []layers.Layer
 	LossLayer layers.LossLayer
 }
-
-var (
-	weightGenerator = matutils.NewRandMatrixWithSND
-	biasGenerator   = mat.NewVecDense
-)
 
 // NewTwoLayerNet inits 2-layer-network.
 func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TowLayerNet {
@@ -42,11 +28,6 @@ func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TowLayerNet {
 	}
 
 	return &TowLayerNet{
-		NodeSize: NodeSize{
-			Input:  inputSize,
-			Hidden: hiddenSize,
-			Output: outputSize,
-		},
 		Layers:    ls,
 		LossLayer: layers.InitSoftmaxWithLossLayer(),
 	}

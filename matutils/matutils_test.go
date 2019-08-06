@@ -115,8 +115,36 @@ func TestNewRandMatrixWithSND(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			got := matutils.NewRandMatrixWithSND(tt.r, tt.c)
+			matutils.PrintMat(got)
 			if r, c := got.Dims(); r != tt.r || c != tt.c {
 				t.Fatalf("want = [%v, %v], got = [%v, %v]\n", tt.r, tt.c, r, c)
+			}
+		})
+	}
+}
+
+func TestNewRandVecWithSND(t *testing.T) {
+	tests := []struct {
+		name string
+		r, c int
+	}{
+		{
+			name: "3",
+			r:    3,
+		},
+		{
+			name: "2",
+			r:    2,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got := matutils.NewRandVecWithSND(tt.r, nil)
+			matutils.PrintMat(got)
+			if r, _ := got.Dims(); r != tt.r {
+				t.Fatalf("want = %v, got = %v\n", tt.r, r)
 			}
 		})
 	}
