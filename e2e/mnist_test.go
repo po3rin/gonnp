@@ -12,11 +12,11 @@ import (
 )
 
 func TestMNITS(t *testing.T) {
-	model := nn.NewTwoLayerNet(784, 50, 10)
+	model := nn.NewTwoLayerNet(784, 100, 10)
 	optimizer := optimizers.InitSDG(0.01)
 	trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(20))
 
-	l := gomnist.NewLoader("./../testdata", gomnist.OneHotLabel(true))
+	l := gomnist.NewLoader("./../testdata", gomnist.OneHotLabel(true), gomnist.Normalization(true))
 	// l := gomnist.NewLoader("./../testdata")
 	mnist, err := l.Load()
 	if err != nil {

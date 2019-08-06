@@ -25,7 +25,7 @@ func SumCol(x mat.Matrix) mat.Vector {
 
 var (
 	// DsiredStdDev used in NewRandMatrixWithSND & NewRandVecWithSND
-	DsiredStdDev = 0.1
+	DsiredStdDev = 0.01
 	// DesiredMean used in NewRandMatrixWithSND & NewRandVecWithSND
 	DesiredMean = 0.0
 )

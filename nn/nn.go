@@ -9,6 +9,7 @@ import (
 var (
 	weightGenerator = matutils.NewRandMatrixWithSND
 	biasGenerator   = matutils.NewRandVecWithSND
+	// biasGenerator = mat.NewVecDense
 )
 
 // NeuralNet is neural network interface.
