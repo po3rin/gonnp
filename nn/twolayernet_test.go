@@ -91,15 +91,22 @@ func TestTwoLayer(t *testing.T) {
 			},
 			afterParams: []entity.Param{
 				entity.Param{
-					Weight: mat.NewDense(3, 2, []float64{1, 1, 1, 2, 1, 3}),
-					Bias: mat.NewVecDense(3, []float64{
-						-0.66666449, 0.0008297, -0.00083188,
+					Weight: mat.NewDense(3, 2, []float64{
+						1.00666667, 1.00667501,
+						1.00333642, 1.99668421,
+						1.00333349, 3.00334214,
+					}),
+					Bias: mat.NewVecDense(2, []float64{
+						0.00666667, 0.00667501,
 					}),
 				},
 				entity.Param{
-					Weight: mat.NewDense(2, 3, []float64{1, 1, 1, 1, 2, 3}),
+					Weight: mat.NewDense(2, 3, []float64{
+						1.0166666, 0.99997517, 0.9966948,
+						1.02999987, 1.99995035, 2.99338976,
+					}),
 					Bias: mat.NewVecDense(3, []float64{
-						-0.66666449, 0.0008297, -0.00083188,
+						6.66664487e-03, -8.29699349e-06, 8.31879353e-06,
 					}),
 				},
 			},
@@ -200,10 +207,10 @@ func TestTwoLayer(t *testing.T) {
 			// checks after params
 			params = nn.GetParams()
 			for i := 0; i < len(params); i++ {
-				if !mat.EqualApprox(params[i].Weight, tt.afterParams[i].Weight, 1e-14) {
+				if !mat.EqualApprox(params[i].Weight, tt.afterParams[i].Weight, 1e-7) {
 					t.Errorf("after param.Weight\nwant = %v\ngot = %v\n", tt.afterParams[i].Weight, params[i].Weight)
 				}
-				if !mat.EqualApprox(params[i].Bias, tt.afterParams[i].Bias, 1e-6) {
+				if !mat.EqualApprox(params[i].Bias, tt.afterParams[i].Bias, 1e-7) {
 					t.Errorf("after param.Bias\nwant = %v\ngot = %v\n", tt.afterParams[i].Bias, params[i].Bias)
 				}
 			}
