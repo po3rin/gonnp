@@ -92,6 +92,20 @@ func TestSoftmaxWithLossBackward(t *testing.T) {
 			teacher: mat.NewDense(1, 3, []float64{0, 1, 0}),
 			want:    mat.NewDense(1, 3, []float64{0.01, -0.01, 0}),
 		},
+		{
+			name: "real float",
+			input: mat.NewDense(3, 3, []float64{
+				3.04847074443256e-07, 1.6644086307618e-05, 0.00090873632138,
+				1.12146971388934e-07, 2.2525321346561e-06, 4.5243317361302e-05,
+				6.12301716965576e-06, 0.002470201429289, 0.9965503823023,
+			}),
+			teacher: mat.NewDense(3, 3, []float64{0, 0, 1, 1, 0, 0, 1, 0, 0}),
+			want: mat.NewDense(3, 3, []float64{
+				1.01615691e-07, 5.54802877e-06, -3.33030421e-01,
+				-3.33333296e-01, 7.50844045e-07, 1.50811058e-05,
+				-3.33331292e-01, 8.23400476e-04, 3.32183461e-01,
+			}),
+		},
 	}
 
 	l := layers.InitSoftmaxWithLossLayer()
@@ -99,7 +113,7 @@ func TestSoftmaxWithLossBackward(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			l.X = tt.input
 			l.Teacher = tt.teacher
-			if got := l.Backward(); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := l.Backward(); !mat.EqualApprox(got, tt.want, 1e-7) {
 				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})

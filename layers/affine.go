@@ -51,6 +51,12 @@ func (a *Affine) Forward(x mat.Matrix) mat.Matrix {
 
 // Backward for affine layer.
 func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
+	// fmt.Println("=======before======")
+	// matutils.PrintMat(x)
+	// matutils.PrintMat(a.Param.Weight)
+	// matutils.PrintMat(a.X)
+	// matutils.PrintMat(a.Param.Bias)
+	// fmt.Println("======after=======")
 	var dw mat.Dense
 	var dx mat.Dense
 
@@ -61,6 +67,7 @@ func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
 	a.Grad.Weight = &dw
 	a.Grad.Bias = db
 
+	// matutils.PrintMat(&dx)
 	return &dx
 }
 
