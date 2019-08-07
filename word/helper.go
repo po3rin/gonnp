@@ -9,7 +9,7 @@ package word
 // 	return false
 // }
 
-func containsString(ss map[string]int, s string) bool {
+func containsString(ss map[string]float64, s string) bool {
 	for v := range ss {
 		if s == v {
 			return true
