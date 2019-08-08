@@ -60,6 +60,9 @@ func (s *SimpleCbow) Backward() mat.Matrix {
 
 	d.Scale(0.5, d)
 
+	// fmt.Println("===============")
+	// matutils.PrintMat(d)
+
 	_ = s.Layers[0].Backward(d)
 	_ = s.Layers[1].Backward(d)
 	return nil
