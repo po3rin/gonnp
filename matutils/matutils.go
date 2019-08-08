@@ -83,6 +83,21 @@ func OneHotVec2Index(x mat.Matrix) mat.Matrix {
 	return mat.NewVecDense(r, a)
 }
 
+// At3D returns matrix. example: (6,2,7) => (6,7)
+func At3D(x []mat.Matrix, i int) mat.Matrix {
+	_, c := x[0].Dims()
+	result := mat.NewDense(len(x), c, nil)
+	for n, m := range x {
+		// r, c := m.Dims()
+		d, ok := m.(*mat.Dense)
+		if !ok {
+			panic("gonlp: failed to transpose matrix to dense")
+		}
+		result.SetRow(n, d.RawRowView(i))
+	}
+	return result
+}
+
 // PrintDims prints dimensions for debug.
 func PrintDims(x mat.Matrix) {
 	r, c := x.Dims()

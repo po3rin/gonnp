@@ -115,7 +115,6 @@ func TestNewRandMatrixWithSND(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			got := matutils.NewRandMatrixWithSND(tt.r, tt.c)
-			matutils.PrintMat(got)
 			if r, c := got.Dims(); r != tt.r || c != tt.c {
 				t.Fatalf("want = [%v, %v], got = [%v, %v]\n", tt.r, tt.c, r, c)
 			}
@@ -142,9 +141,98 @@ func TestNewRandVecWithSND(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			got := matutils.NewRandVecWithSND(tt.r, nil)
-			matutils.PrintMat(got)
 			if r, _ := got.Dims(); r != tt.r {
 				t.Fatalf("want = %v, got = %v\n", tt.r, r)
+			}
+		})
+	}
+}
+
+func TestAt3D(t *testing.T) {
+	tests := []struct {
+		name string
+		at   int
+		x    []mat.Matrix
+		want mat.Matrix
+	}{
+		{
+			name: "simple",
+			at:   0,
+			x: []mat.Matrix{
+				mat.NewDense(1, 7, []float64{
+					0, 1, 0, 0, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 1, 0, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 0, 1, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 0, 0, 1, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 1, 0, 0, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 0, 0, 0, 1, 0,
+				}),
+			},
+			want: mat.NewDense(6, 7, []float64{
+				0, 1, 0, 0, 0, 0, 0,
+				0, 0, 1, 0, 0, 0, 0,
+				0, 0, 0, 1, 0, 0, 0,
+				0, 0, 0, 0, 1, 0, 0,
+				0, 1, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 1, 0,
+			}),
+		},
+		{
+			name: "3 dimention",
+			at:   1,
+			x: []mat.Matrix{
+				mat.NewDense(2, 7, []float64{
+					1, 0, 0, 0, 0, 0, 0,
+					0, 0, 1, 0, 0, 0, 0,
+				}),
+				mat.NewDense(2, 7, []float64{
+					0, 1, 0, 0, 0, 0, 0,
+					0, 0, 0, 1, 0, 0, 0,
+				}),
+				mat.NewDense(2, 7, []float64{
+					0, 0, 1, 0, 0, 0, 0,
+					0, 0, 0, 0, 1, 0, 0,
+				}),
+				mat.NewDense(2, 7, []float64{
+					0, 0, 0, 1, 0, 0, 0,
+					0, 1, 0, 0, 0, 0, 0,
+				}),
+				mat.NewDense(2, 7, []float64{
+					0, 0, 0, 0, 1, 0, 0,
+					0, 0, 0, 0, 0, 1, 0,
+				}),
+				mat.NewDense(2, 7, []float64{
+					0, 1, 0, 0, 0, 0, 0,
+					0, 0, 0, 0, 0, 0, 1,
+				}),
+			},
+			want: mat.NewDense(6, 7, []float64{
+				0, 0, 1, 0, 0, 0, 0,
+				0, 0, 0, 1, 0, 0, 0,
+				0, 0, 0, 0, 1, 0, 0,
+				0, 1, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 1, 0,
+				0, 0, 0, 0, 0, 0, 1,
+			}),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got := matutils.At3D(tt.x, tt.at)
+			if !mat.EqualApprox(got, tt.want, 1e-7) {
+				t.Errorf("x:\nwant = %d\ngot = %d", tt.want, got)
 			}
 		})
 	}

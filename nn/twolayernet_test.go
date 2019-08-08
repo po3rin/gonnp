@@ -154,7 +154,7 @@ func TestTwoLayer(t *testing.T) {
 			}
 
 			// forward
-			loss := nn.Forward(tt.data, tt.teacher)
+			loss := nn.Forward(tt.teacher, tt.data)
 
 			// assert loss
 			if loss != tt.loss {

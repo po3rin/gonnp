@@ -41,8 +41,13 @@ func (t *TowLayerNet) Predict(x mat.Matrix) mat.Matrix {
 	return x
 }
 
-func (t *TowLayerNet) Forward(x mat.Matrix, teacher mat.Matrix) float64 {
-	score := t.Predict(x)
+func (t *TowLayerNet) Forward(teacher mat.Matrix, x ...mat.Matrix) float64 {
+	m := x[0]
+	for i, l := range t.Layers {
+		m = l.Forward(m)
+		t.Layers[i] = l
+	}
+	score := m
 	loss := t.LossLayer.Forward(score, teacher)
 	return loss
 }

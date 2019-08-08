@@ -7,48 +7,11 @@ import (
 	"time"
 
 	"github.com/po3rin/gonlp/matutils"
-	"github.com/po3rin/gonlp/nn"
-	"github.com/po3rin/gonlp/optimizers"
 	"gonum.org/v1/gonum/mat"
 )
 
-// Train has trainer config.
-type Train struct {
-	Model        nn.NeuralNet
-	Optimizer    optimizers.Optimizer
-	LossList     []float64
-	EvalInterval int
-	CurrentEpoch float64
-}
-
-// OptionFunc for set option for trainer
-type OptionFunc func(t *Train)
-
-// EvalInterval sets EvalInterval option.
-func EvalInterval(i int) func(*Train) {
-	return func(t *Train) {
-		t.EvalInterval = i
-	}
-}
-
-// InitTrainer inits Trainer.
-func InitTrainer(model nn.NeuralNet, opt optimizers.Optimizer, options ...OptionFunc) *Train {
-	t := &Train{
-		Model:     model,
-		Optimizer: opt,
-		// set default value.
-		EvalInterval: 20,
-	}
-
-	for _, option := range options {
-		option(t)
-	}
-
-	return t
-}
-
-// Fit traims from data.
-func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
+// Fit3D traims from data using 3 dimentional matrix.
+func (t *Train) Fit3D(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 	dataSize, c := x.Dims()
 	_, tc := teacher.Dims()
 

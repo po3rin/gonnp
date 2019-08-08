@@ -14,8 +14,7 @@ var (
 
 // NeuralNet is neural network interface.
 type NeuralNet interface {
-	Predict(x mat.Matrix) mat.Matrix
-	Forward(x mat.Matrix, teacher mat.Matrix) float64
+	Forward(teacher mat.Matrix, x ...mat.Matrix) float64
 	Backward() mat.Matrix
 	entity.ParamsManager
 }
