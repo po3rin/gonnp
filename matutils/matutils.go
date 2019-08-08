@@ -98,10 +98,31 @@ func At3D(x []mat.Matrix, i int) mat.Matrix {
 	return result
 }
 
+// Shuffle3D shuffles 3 dimentional matrix col.
+func Shuffle3D(x []mat.Matrix) []mat.Matrix {
+	n := len(x)
+	for i := n - 1; i >= 0; i-- {
+		j := rand.Intn(i + 1)
+		x[i], x[j] = x[j], x[i]
+	}
+	return x
+}
+
 // PrintDims prints dimensions for debug.
 func PrintDims(x mat.Matrix) {
 	r, c := x.Dims()
 	fmt.Printf("[%v, %v]\n", r, c)
+}
+
+func Print3D(x []mat.Matrix) {
+	fmt.Println("=====3D Matrix======")
+	for i, m := range x {
+		if i != 0 {
+			fmt.Println("-------------------")
+		}
+		PrintMat(m)
+	}
+	fmt.Println("====================")
 }
 
 // CheckNaNOrInf checks whether matrix has nan or inf element.

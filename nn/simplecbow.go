@@ -3,6 +3,7 @@ package nn
 import (
 	"github.com/po3rin/gonlp/entity"
 	"github.com/po3rin/gonlp/layers"
+	"github.com/po3rin/gonlp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -28,8 +29,8 @@ func InitSimpleCBOW(vocabSize, hiddenSize int) *SimpleCbow {
 }
 
 func (s *SimpleCbow) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 {
-	h0 := s.Layers[0].Forward(contexts[0])
-	h1 := s.Layers[1].Forward(contexts[1])
+	h0 := s.Layers[0].Forward(matutils.At3D(contexts, 0))
+	h1 := s.Layers[1].Forward(matutils.At3D(contexts, 1))
 
 	d0, ok := h0.(*mat.Dense)
 	if !ok {

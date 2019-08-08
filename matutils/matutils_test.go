@@ -3,6 +3,7 @@
 package matutils_test
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/po3rin/gonlp/matutils"
@@ -233,6 +234,69 @@ func TestAt3D(t *testing.T) {
 			got := matutils.At3D(tt.x, tt.at)
 			if !mat.EqualApprox(got, tt.want, 1e-7) {
 				t.Errorf("x:\nwant = %d\ngot = %d", tt.want, got)
+			}
+		})
+	}
+}
+
+func TestSguffle3D(t *testing.T) {
+	tests := []struct {
+		name    string
+		x       []mat.Matrix
+		notwant []mat.Matrix
+	}{
+		{
+			name: "6*1*7 dimention",
+			x: []mat.Matrix{
+				mat.NewDense(1, 7, []float64{
+					1, 0, 0, 0, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 1, 0, 0, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 1, 0, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 0, 1, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 0, 0, 1, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 1, 0, 0, 0, 0, 0,
+				}),
+			},
+			notwant: []mat.Matrix{
+				mat.NewDense(1, 7, []float64{
+					1, 0, 0, 0, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 1, 0, 0, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 1, 0, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 0, 1, 0, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 0, 0, 0, 1, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
+					0, 1, 0, 0, 0, 0, 0,
+				}),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got := matutils.Shuffle3D(tt.x)
+
+			if reflect.DeepEqual(got, tt.notwant) {
+				t.Error("not shuffled")
 			}
 		})
 	}

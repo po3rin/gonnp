@@ -31,5 +31,5 @@ func TestSimpleCBOW(t *testing.T) {
 	trainer := trainer.InitTrainer(model, optimizer)
 
 	// TODO: impliments
-	trainer.Fit(matutils.At3D(co, 0), matutils.At3D(te, 0), maxEpoch, batchSize)
+	trainer.Fit3D(co, matutils.At3D(te, 0), maxEpoch, batchSize)
 }
