@@ -56,3 +56,18 @@ func CreateContextsAndTarget(corpus Corpus) (contexts, target mat.Matrix) {
 	}
 	return mat.NewDense(len(cs)/2, 2, cs), mat.NewVecDense(len(ts), ts)
 }
+
+func ConvertOneHot(corpus mat.Matrix, vocabSize int) []mat.Matrix {
+	r, c := corpus.Dims()
+	ts := make([]mat.Matrix, 0, vocabSize-1)
+
+	for i := 0; i < r; i++ {
+		t := mat.NewDense(c, vocabSize, nil)
+		for j := 0; j < c; j++ {
+			v := corpus.At(i, j)
+			t.Set(j, int(v), 1)
+		}
+		ts = append(ts, t)
+	}
+	return ts
+}
