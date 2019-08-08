@@ -27,7 +27,7 @@ func TestSimpleCBOW(t *testing.T) {
 	co := word.ConvertOneHot(contexts, vocabSize)
 
 	model := nn.InitSimpleCBOW(vocabSize, hiddenSize)
-	optimizer := optimizers.InitAdam(0.01, 0.9, 0.999)
+	optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
 	trainer := trainer.InitTrainer(model, optimizer)
 
 	// TODO: impliments
