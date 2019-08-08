@@ -28,14 +28,16 @@ func InitAdam(lr, beta1, beta2 float64) *Adam {
 	}
 }
 
+func pow(i, j int, v float64) float64 {
+	return math.Pow(v, 2)
+}
+
+func sqrtWithMin(i, j int, v float64) float64 {
+	return math.Sqrt(v) + 1e-7
+}
+
 // Update updates params using Adam argolism. supports weight only.
 func (a *Adam) Update(params []entity.Param, grads []entity.Grad) []entity.Param {
-	pow := func(i, j int, v float64) float64 {
-		return math.Pow(v, 2)
-	}
-	sqrtWithMin := func(i, j int, v float64) float64 {
-		return math.Sqrt(v) + 1e-7
-	}
 
 	if len(a.M) == 0 {
 		for _, p := range params {
@@ -60,22 +62,25 @@ func (a *Adam) Update(params []entity.Param, grads []entity.Grad) []entity.Param
 		m := mb
 
 		// v
-		mb.Apply(pow, grads[i].Weight)
-		mb.Sub(mb, a.V[i])
-		mb.Scale(1-a.Beta2, mb)
-		mb.Add(a.V[i], mb)
-		v := mb
+		r, c = grads[i].Weight.Dims()
+		vb := mat.NewDense(r, c, nil)
+		vb.Apply(pow, grads[i].Weight)
+		vb.Sub(vb, a.V[i])
+		vb.Scale(1-a.Beta2, vb)
+		vb.Add(a.V[i], vb)
+		v := vb
 
 		// set m & v
 		a.M[i] = m
 		a.V[i] = v
 
 		// set new params
-		mb.Apply(sqrtWithMin, a.V[i])
-		mb.DivElem(a.M[i], mb)
-		mb.Scale(lrT, mb)
-		mb.Sub(params[i].Weight, mb)
-		result[i].Weight = mb
+		d := mat.NewDense(r, c, nil)
+		d.Apply(sqrtWithMin, a.V[i])
+		d.DivElem(a.M[i], d)
+		d.Scale(lrT, d)
+		d.Sub(params[i].Weight, d)
+		result[i].Weight = d
 	}
 	return result
 }

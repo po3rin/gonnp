@@ -43,6 +43,92 @@ func TestSumCol(t *testing.T) {
 	}
 }
 
+func TestSumRow(t *testing.T) {
+	tests := []struct {
+		name  string
+		input mat.Matrix
+		want  mat.Matrix
+	}{
+		{
+			name:  "2*2",
+			input: mat.NewDense(2, 2, []float64{2, 2, 2, 2}),
+			want:  mat.NewVecDense(2, []float64{4, 4}),
+		},
+		{
+			name:  "2*2 with 0",
+			input: mat.NewDense(2, 2, []float64{0, 0, 0, 0}),
+			want:  mat.NewVecDense(2, []float64{0, 0}),
+		},
+		{
+			name:  "3*2",
+			input: mat.NewDense(3, 2, []float64{1, 2, 3, 4, 5, 6}),
+			want:  mat.NewVecDense(3, []float64{3, 7, 11}),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.SumRow(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d", tt.want, got)
+			}
+		})
+	}
+}
+
+func TestMat2VecWithColMax(t *testing.T) {
+	tests := []struct {
+		name  string
+		input mat.Matrix
+		want  mat.Matrix
+	}{
+		{
+			name:  "2*2",
+			input: mat.NewDense(2, 2, []float64{2, 4, 4, 2}),
+			want:  mat.NewVecDense(2, []float64{4, 4}),
+		},
+		{
+			name:  "2*2",
+			input: mat.NewDense(3, 3, []float64{1, 4, 2, 2, 7, 3, 8, 2, 1}),
+			want:  mat.NewVecDense(3, []float64{4, 7, 8}),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.Mat2VecWithColMax(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d", tt.want, got)
+			}
+		})
+	}
+}
+
+func TestSubMatVec(t *testing.T) {
+	tests := []struct {
+		name string
+		mat  mat.Matrix
+		vec  mat.Vector
+		want mat.Matrix
+	}{
+		{
+			name: "2*2",
+			mat:  mat.NewDense(2, 2, []float64{2, 4, 4, 2}),
+			vec:  mat.NewVecDense(2, []float64{3, 1}),
+			want: mat.NewDense(2, 2, []float64{-1, 1, 3, 1}),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.SubMatVec(tt.mat, tt.vec); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d", tt.want, got)
+			}
+		})
+	}
+}
+
 func TestThinCol(t *testing.T) {
 	tests := []struct {
 		name   string
@@ -126,7 +212,7 @@ func TestNewRandMatrixWithSND(t *testing.T) {
 func TestNewRandVecWithSND(t *testing.T) {
 	tests := []struct {
 		name string
-		r, c int
+		r    int
 	}{
 		{
 			name: "3",

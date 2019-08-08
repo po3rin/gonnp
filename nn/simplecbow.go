@@ -29,8 +29,11 @@ func InitSimpleCBOW(vocabSize, hiddenSize int) *SimpleCbow {
 }
 
 func (s *SimpleCbow) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 {
-	h0 := s.Layers[0].Forward(matutils.At3D(contexts, 0))
-	h1 := s.Layers[1].Forward(matutils.At3D(contexts, 1))
+	a0 := matutils.At3D(contexts, 0)
+	a1 := matutils.At3D(contexts, 1)
+
+	h0 := s.Layers[0].Forward(a0)
+	h1 := s.Layers[1].Forward(a1)
 
 	d0, ok := h0.(*mat.Dense)
 	if !ok {
@@ -59,7 +62,6 @@ func (s *SimpleCbow) Backward() mat.Matrix {
 
 	_ = s.Layers[0].Backward(d)
 	_ = s.Layers[1].Backward(d)
-
 	return nil
 }
 
@@ -91,15 +93,7 @@ func (s *SimpleCbow) GetGrads() []entity.Grad {
 
 // UpdateParams updates lyaers params using TwoLayerMet's params.
 func (s *SimpleCbow) UpdateParams(params []entity.Param) {
-	var i int
-	for j, l := range s.Layers {
-		p := l.GetParam()
-		// ignore if weight is nil.
-		if p.Weight == nil || p.Bias == nil {
-			continue
-		}
-		l.SetParam(params[i])
-		s.Layers[j] = l
-		i++
-	}
+	s.Layers[0].SetParam(params[0])
+	s.Layers[1].SetParam(params[0])
+	s.Layers[2].SetParam(params[1])
 }

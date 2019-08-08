@@ -3,6 +3,7 @@ package layers
 import (
 	"math"
 
+	"github.com/po3rin/gonlp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -36,18 +37,27 @@ func (s *SoftmaxWithLoss) Backward() mat.Matrix {
 }
 
 func softmax(x mat.Matrix) mat.Matrix {
-	c := mat.Max(x)
-	f := func(i, j int, v float64) float64 {
-		return math.Exp(v - c)
+	r, c := x.Dims()
+	if r == 1 || c == 1 {
+		max := mat.Max(x)
+		f := func(i, j int, v float64) float64 {
+			return math.Exp(v - max)
+		}
+		var result mat.Dense
+		result.Apply(f, x)
+		sum := mat.Sum(&result)
+		result.Scale(1/sum, &result)
+		return &result
 	}
-
-	var result mat.Dense
-	result.Apply(f, x)
-
-	sum := mat.Sum(&result)
-
-	result.Scale(1/sum, &result)
-	return &result
+	d := mat.NewDense(r, c, nil)
+	m := matutils.SubMatVec(x, matutils.Mat2VecWithColMax(x))
+	f := func(i, j int, v float64) float64 {
+		return math.Exp(v)
+	}
+	d.Apply(f, m)
+	v := matutils.SumRow(d)
+	result := matutils.DivMatVec(d, v)
+	return result
 }
 
 // CrossEntropyErr measures the performance of a classification model whose output is a probability value between 0 and 1.
@@ -55,7 +65,16 @@ func crossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
 	batchSize, _ := data.Dims()
 	tr, tc := teacher.Dims()
 
-	delta := 0.0000001
+	// if batchSize == tr && c == tc {
+	// 	teacher = matutils.OneHotVec2Index(teacher)
+	// 	tr, tc = teacher.Dims()
+	// }
+
+	// fmt.Println("==============")
+	// matutils.PrintMat(data)
+	// matutils.PrintMat(teacher)
+
+	delta := 1e-7
 	crossEnrtopy := func(i, j int, v float64) float64 {
 		return -1 * v * math.Log(data.At(i, j)+delta)
 	}
@@ -65,13 +84,6 @@ func crossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
 		ce.Apply(crossEnrtopy, teacher)
 		return mat.Sum(ce)
 	}
-
-	// TODO: if teacher data is one-hot, ignore 0 in teacher data.
-
-	// if batchSize == tr && c == tc {
-	// 	teacher = matutils.OneHotVec2Index(teacher)
-	// 	tr, tc = teacher.Dims()
-	// }
 
 	ce := mat.NewDense(tr, tc, nil)
 	ce.Apply(crossEnrtopy, teacher)

@@ -23,12 +23,61 @@ func SumCol(x mat.Matrix) mat.Vector {
 	return A
 }
 
+// SumRow calcurates sum each of rows.
+func SumRow(x mat.Matrix) mat.Vector {
+	r, c := x.Dims()
+	var fs []float64
+	for i := 0; i < r; i++ {
+		var sum float64
+		for j := 0; j < c; j++ {
+			sum += x.At(i, j)
+		}
+		fs = append(fs, sum)
+	}
+	return mat.NewVecDense(r, fs)
+}
+
 var (
 	// DsiredStdDev used in NewRandMatrixWithSND & NewRandVecWithSND
 	DsiredStdDev = 0.01
 	// DesiredMean used in NewRandMatrixWithSND & NewRandVecWithSND
 	DesiredMean = 0.0
 )
+
+func Mat2VecWithColMax(x mat.Matrix) mat.Vector {
+	r, _ := x.Dims()
+	d, ok := x.(*mat.Dense)
+	if !ok {
+		panic("gonlp: failed to transpose matrix to dense")
+	}
+	maxs := make([]float64, 0, r)
+	for i := 0; i < r; i++ {
+		v := d.RowView(i)
+		max := mat.Max(v)
+		maxs = append(maxs, max)
+	}
+	return mat.NewVecDense(r, maxs)
+}
+
+func SubMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
+	r, c := x.Dims()
+	f := func(i, j int, n float64) float64 {
+		return n - v.AtVec(i)
+	}
+	d := mat.NewDense(r, c, nil)
+	d.Apply(f, x)
+	return d
+}
+
+func DivMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
+	r, c := x.Dims()
+	f := func(i, j int, n float64) float64 {
+		return n / v.AtVec(i)
+	}
+	d := mat.NewDense(r, c, nil)
+	d.Apply(f, x)
+	return d
+}
 
 // NewRandMatrixWithSND creates random matrix according to standard normal distribution.
 func NewRandMatrixWithSND(r, c int) mat.Matrix {
