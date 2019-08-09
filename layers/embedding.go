@@ -1,8 +1,8 @@
 package layers
 
 import (
-	"github.com/po3rin/gonlp/entity"
-	"github.com/po3rin/gonlp/matutils"
+	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -39,7 +39,7 @@ func (e *Embedding) Backward(x mat.Matrix) mat.Matrix {
 
 	d, ok := x.(*mat.Dense)
 	if !ok {
-		panic("gonlp: failed to transpose matrix to dense")
+		panic("gonnp: failed to transpose matrix to dense")
 	}
 
 	r, _ = e.IDx.Dims()

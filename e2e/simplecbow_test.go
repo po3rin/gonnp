@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/po3rin/gonlp/matutils"
-	"github.com/po3rin/gonlp/nn"
-	"github.com/po3rin/gonlp/optimizers"
-	"github.com/po3rin/gonlp/trainer"
-	"github.com/po3rin/gonlp/word"
+	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/nn"
+	"github.com/po3rin/gonnp/optimizers"
+	"github.com/po3rin/gonnp/trainer"
+	"github.com/po3rin/gonnp/word"
 )
 
 func TestSimpleCBOW(t *testing.T) {

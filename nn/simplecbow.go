@@ -1,9 +1,9 @@
 package nn
 
 import (
-	"github.com/po3rin/gonlp/entity"
-	"github.com/po3rin/gonlp/layers"
-	"github.com/po3rin/gonlp/matutils"
+	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/layers"
+	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -37,11 +37,11 @@ func (s *SimpleCbow) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 
 
 	d0, ok := h0.(*mat.Dense)
 	if !ok {
-		panic("gonlp: failed to transpose matrix to dense")
+		panic("gonnp: failed to transpose matrix to dense")
 	}
 	d1, ok := h1.(*mat.Dense)
 	if !ok {
-		panic("gonlp: failed to transpose matrix to dense")
+		panic("gonnp: failed to transpose matrix to dense")
 	}
 	d0.Add(d0, d1)
 	d0.Scale(0.5, d0)
@@ -55,7 +55,7 @@ func (s *SimpleCbow) Backward() mat.Matrix {
 
 	d, ok := da.(*mat.Dense)
 	if !ok {
-		panic("gonlp: failed to transpose matrix to dense")
+		panic("gonnp: failed to transpose matrix to dense")
 	}
 
 	d.Scale(0.5, d)

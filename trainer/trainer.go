@@ -6,9 +6,9 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/po3rin/gonlp/matutils"
-	"github.com/po3rin/gonlp/nn"
-	"github.com/po3rin/gonlp/optimizers"
+	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/nn"
+	"github.com/po3rin/gonnp/optimizers"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -66,11 +66,11 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 
 		dx, ok := tx.(*mat.Dense)
 		if !ok {
-			panic("gonlp: failed to transpose matrix to dense")
+			panic("gonnp: failed to transpose matrix to dense")
 		}
 		dt, ok := tt.(*mat.Dense)
 		if !ok {
-			panic("gonlp: failed to transpose matrix to dense")
+			panic("gonnp: failed to transpose matrix to dense")
 		}
 
 		for j := 0; j < maxIters; j++ {

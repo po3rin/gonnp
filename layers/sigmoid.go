@@ -3,7 +3,7 @@ package layers
 import (
 	"math"
 
-	"github.com/po3rin/gonlp/entity"
+	"github.com/po3rin/gonnp/entity"
 	"gonum.org/v1/gonum/mat"
 )
 

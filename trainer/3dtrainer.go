@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/po3rin/gonlp/entity"
-	"github.com/po3rin/gonlp/matutils"
+	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -65,7 +65,7 @@ func (t *Train) Fit3D(x []mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize in
 		// tt := teacher
 		dt, ok := tt.(*mat.Dense)
 		if !ok {
-			panic("gonlp: failed to transpose matrix to dense")
+			panic("gonnp: failed to transpose matrix to dense")
 		}
 
 		for j := 0; j < maxIters; j++ {

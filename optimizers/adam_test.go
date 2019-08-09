@@ -5,8 +5,8 @@ package optimizers_test
 import (
 	"testing"
 
-	"github.com/po3rin/gonlp/entity"
-	"github.com/po3rin/gonlp/optimizers"
+	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/optimizers"
 	"gonum.org/v1/gonum/mat"
 )
 

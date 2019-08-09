@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/po3rin/gonlp/word"
+	"github.com/po3rin/gonnp/word"
 	"gonum.org/v1/gonum/mat"
 )
 

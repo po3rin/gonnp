@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="./image/gonlp.png" width="60%">
-  <h3 align="center">gonlp</h3>
+  <img src="./image/gonnp.png" width="60%">
+  <h3 align="center">gonnp</h3>
   <p align="center">Deep learning from scratch using Go. Specializes in natural language processing</p>
 </p>
 
 ---
-<img src="https://img.shields.io/badge/go-v1.12-blue.svg"/> [![CircleCI](https://circleci.com/gh/po3rin/gonlp.svg?style=shield&circle-token=d2ad1b26978ffeb0f6aa43b9a517ec7e5180d474)](https://circleci.com/gh/po3rin/gonlp)
+<img src="https://img.shields.io/badge/go-v1.12-blue.svg"/> [![CircleCI](https://circleci.com/gh/po3rin/gonnp.svg?style=shield&circle-token=d2ad1b26978ffeb0f6aa43b9a517ec7e5180d474)](https://circleci.com/gh/po3rin/gonnp)
 
 ## What
 
-Package gonlp is the library of neural network components specialized in natural language processing in Go.　You can assemble a neural network with the necessary components.
+Package gonnp is the library of neural network components specialized in natural language processing in Go.　You can assemble a neural network with the necessary components.
 
 ## Dependencies
 
@@ -44,11 +44,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/po3rin/gonlp/matutils"
-	"github.com/po3rin/gonlp/nn"
-	"github.com/po3rin/gonlp/optimizers"
-	"github.com/po3rin/gonlp/trainer"
-	"github.com/po3rin/gonlp/word"
+	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/nn"
+	"github.com/po3rin/gonnp/optimizers"
+	"github.com/po3rin/gonnp/trainer"
+	"github.com/po3rin/gonnp/word"
 )
 
 func main() {
@@ -106,9 +106,9 @@ package main
 
 import (
         "github.com/po3rin/gomnist"
-        "github.com/po3rin/gonlp/nn"
-        "github.com/po3rin/gonlp/optimizers"
-        "github.com/po3rin/gonlp/trainer"
+        "github.com/po3rin/gonnp/nn"
+        "github.com/po3rin/gonnp/optimizers"
+        "github.com/po3rin/gonnp/trainer"
 )
 
 func main() {

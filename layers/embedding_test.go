@@ -3,7 +3,7 @@ package layers_test
 import (
 	"testing"
 
-	"github.com/po3rin/gonlp/layers"
+	"github.com/po3rin/gonnp/layers"
 	"gonum.org/v1/gonum/mat"
 )
 

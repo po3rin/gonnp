@@ -48,7 +48,7 @@ func Mat2VecWithColMax(x mat.Matrix) mat.Vector {
 	r, _ := x.Dims()
 	d, ok := x.(*mat.Dense)
 	if !ok {
-		panic("gonlp: failed to transpose matrix to dense")
+		panic("gonnp: failed to transpose matrix to dense")
 	}
 	maxs := make([]float64, 0, r)
 	for i := 0; i < r; i++ {
@@ -112,7 +112,7 @@ func ThinRow(x mat.Matrix, targets []int) mat.Matrix {
 	for i, v := range targets {
 		d, ok := x.(*mat.Dense)
 		if !ok {
-			panic("gonlp: failed to transpose matrix to dense")
+			panic("gonnp: failed to transpose matrix to dense")
 		}
 		result.SetRow(i, d.RawRowView(v))
 	}
@@ -128,7 +128,7 @@ func ThinRowWithMat(x mat.Matrix, thin mat.Matrix) mat.Matrix {
 	for i := 0; i < r; i++ {
 		d, ok := x.(*mat.Dense)
 		if !ok {
-			panic("gonlp: failed to transpose matrix to dense")
+			panic("gonnp: failed to transpose matrix to dense")
 		}
 		v := thin.At(i, 0)
 		result.SetRow(i, d.RawRowView(int(v)))
@@ -158,7 +158,7 @@ func At3D(x []mat.Matrix, i int) mat.Matrix {
 		// r, c := m.Dims()
 		d, ok := m.(*mat.Dense)
 		if !ok {
-			panic("gonlp: failed to transpose matrix to dense")
+			panic("gonnp: failed to transpose matrix to dense")
 		}
 		result.SetRow(n, d.RawRowView(i))
 	}

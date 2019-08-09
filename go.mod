@@ -1,4 +1,4 @@
-module github.com/po3rin/gonlp
+module github.com/po3rin/gonnp
 
 go 1.12
 

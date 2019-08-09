@@ -1,8 +1,8 @@
 package nn
 
 import (
-	"github.com/po3rin/gonlp/entity"
-	"github.com/po3rin/gonlp/matutils"
+	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
