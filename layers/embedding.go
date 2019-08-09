@@ -6,13 +6,14 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+// Embedding has Embedding layer param.
 type Embedding struct {
 	IDx   mat.Matrix
 	Param entity.Param
 	Grad  entity.Grad
 }
 
-// InitReluLayer inits Relu layer.
+// InitEmbeddingLayer inits Embedding layer.
 func InitEmbeddingLayer(weight mat.Matrix) *Embedding {
 	r, c := weight.Dims()
 	grad := mat.NewDense(r, c, nil)

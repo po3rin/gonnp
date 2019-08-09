@@ -1,4 +1,5 @@
 <p align="center">
+  <img src="./image/gonlp.png" width="60%">
   <h3 align="center">gonlp</h3>
   <p align="center">Deep learning from scratch using Go. Specializes in natural language processing</p>
 </p>
@@ -125,5 +126,5 @@ func main() {
 
 ## TODO
 
-Improve Word2vec  
-Impliments Seq2Seq
+Impliments Negative Sampling
+Impliments RNN
