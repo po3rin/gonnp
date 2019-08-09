@@ -3,7 +3,6 @@ package matutils
 
 import (
 	"fmt"
-	"math"
 	"math/rand"
 	"time"
 
@@ -44,6 +43,7 @@ var (
 	DesiredMean = 0.0
 )
 
+// Mat2VecWithColMax mat to vec with column's max value.
 func Mat2VecWithColMax(x mat.Matrix) mat.Vector {
 	r, _ := x.Dims()
 	d, ok := x.(*mat.Dense)
@@ -59,6 +59,7 @@ func Mat2VecWithColMax(x mat.Matrix) mat.Vector {
 	return mat.NewVecDense(r, maxs)
 }
 
+// SubMatVec sub mat by vec.
 func SubMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 	r, c := x.Dims()
 	f := func(i, j int, n float64) float64 {
@@ -69,6 +70,7 @@ func SubMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 	return d
 }
 
+// DivMatVec divids mat by vec.
 func DivMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 	r, c := x.Dims()
 	f := func(i, j int, n float64) float64 {
@@ -178,6 +180,7 @@ func PrintDims(x mat.Matrix) {
 	fmt.Printf("[%v, %v]\n", r, c)
 }
 
+// Print3D print 3D matrix (slice of matrix)
 func Print3D(x []mat.Matrix) {
 	fmt.Println("=====3D Matrix======")
 	for i, m := range x {
@@ -187,22 +190,6 @@ func Print3D(x []mat.Matrix) {
 		PrintMat(m)
 	}
 	fmt.Println("====================")
-}
-
-// CheckNaNOrInf checks whether matrix has nan or inf element.
-func CheckNaNOrInf(x mat.Matrix, label interface{}) {
-	d, ok := x.(*mat.Dense)
-	if !ok {
-		panic("gonlp: failed to transpose matrix to dense")
-	}
-	if math.IsNaN(mat.Sum(d)) {
-		fmt.Printf("=====%v====\n", label)
-		panic("nan!!")
-	}
-	if math.IsInf(mat.Sum(d), 0) {
-		fmt.Printf("=====%v====\n", label)
-		panic("inf!!")
-	}
 }
 
 // PrintMat prints matrix formatted.

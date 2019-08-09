@@ -65,15 +65,6 @@ func crossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
 	batchSize, _ := data.Dims()
 	tr, tc := teacher.Dims()
 
-	// if batchSize == tr && c == tc {
-	// 	teacher = matutils.OneHotVec2Index(teacher)
-	// 	tr, tc = teacher.Dims()
-	// }
-
-	// fmt.Println("==============")
-	// matutils.PrintMat(data)
-	// matutils.PrintMat(teacher)
-
 	delta := 1e-7
 	crossEnrtopy := func(i, j int, v float64) float64 {
 		return -1 * v * math.Log(data.At(i, j)+delta)
