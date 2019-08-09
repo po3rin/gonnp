@@ -101,8 +101,8 @@ func NewRandVecWithSND(r int, _ []float64) *mat.VecDense {
 	return mat.NewVecDense(r, a)
 }
 
-// ThinCol thins out rows.
-func ThinCol(x mat.Matrix, targets []int) mat.Matrix {
+// ThinRow thins out rows.
+func ThinRow(x mat.Matrix, targets []int) mat.Matrix {
 	// 	sort.Ints(targets)
 	_, c := x.Dims()
 	result := mat.NewDense(len(targets), c, nil)
@@ -113,6 +113,23 @@ func ThinCol(x mat.Matrix, targets []int) mat.Matrix {
 			panic("gonlp: failed to transpose matrix to dense")
 		}
 		result.SetRow(i, d.RawRowView(v))
+	}
+	return result
+}
+
+// ThinRowWithMat thins out rows.
+func ThinRowWithMat(x mat.Matrix, thin mat.Matrix) mat.Matrix {
+	_, c := x.Dims()
+	r, _ := thin.Dims()
+	result := mat.NewDense(r, c, nil)
+
+	for i := 0; i < r; i++ {
+		d, ok := x.(*mat.Dense)
+		if !ok {
+			panic("gonlp: failed to transpose matrix to dense")
+		}
+		v := thin.At(i, 0)
+		result.SetRow(i, d.RawRowView(int(v)))
 	}
 	return result
 }

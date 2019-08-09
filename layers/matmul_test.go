@@ -13,7 +13,6 @@ func TestMatMulForward(t *testing.T) {
 	type input struct {
 		data   mat.Matrix
 		weight mat.Matrix
-		bias   mat.Vector
 	}
 	tests := []struct {
 		name  string

@@ -61,7 +61,7 @@ func (t *Train) Fit3D(x []mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize in
 		// tx := x
 
 		// shuffle t
-		tt := matutils.ThinCol(teacher, idx)
+		tt := matutils.ThinRow(teacher, idx)
 		// tt := teacher
 		dt, ok := tt.(*mat.Dense)
 		if !ok {

@@ -61,8 +61,8 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 		// shuffle
 		rand.Seed(time.Now().UnixNano())
 		idx := rand.Perm(dataSize)
-		tx := matutils.ThinCol(x, idx)
-		tt := matutils.ThinCol(teacher, idx)
+		tx := matutils.ThinRow(x, idx)
+		tt := matutils.ThinRow(teacher, idx)
 
 		dx, ok := tx.(*mat.Dense)
 		if !ok {
