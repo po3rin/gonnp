@@ -6,6 +6,32 @@
 ---
 <img src="https://img.shields.io/badge/go-v1.12-blue.svg"/> [![CircleCI](https://circleci.com/gh/po3rin/gonlp.svg?style=shield&circle-token=d2ad1b26978ffeb0f6aa43b9a517ec7e5180d474)](https://circleci.com/gh/po3rin/gonlp)
 
+## What
+
+Package gonlp is the library of neural network components specialized in natural language processing in Go.　You can assemble a neural network with the necessary components.
+
+## Dependencies
+
+This component depends on ```gonum.org/v1/gonum/mat```
+https://github.com/gonum/gonum/
+
+## Components
+
+The number of components will increase in the future.
+
+### Layers
+
+* Affine
+* MatuMul
+* Relu
+* Sigmoid
+* Softmax with Loss
+
+### Optimizer
+
+* SDG
+* Adam
+
 ## Quick Start
 
 ### Word2Vec
