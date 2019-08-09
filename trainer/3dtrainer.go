@@ -97,3 +97,8 @@ func (t *Train) Fit3D(x []mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize in
 		t.CurrentEpoch++
 	}
 }
+
+// GetWordDist returns Words Distributed representation.
+func (t *Train) GetWordDist() mat.Matrix {
+	return t.Model.GetParams()[0].Weight
+}

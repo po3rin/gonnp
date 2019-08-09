@@ -57,6 +57,7 @@ func CreateContextsAndTarget(corpus Corpus) (contexts, target mat.Matrix) {
 	return mat.NewDense(len(cs)/2, 2, cs), mat.NewVecDense(len(ts), ts)
 }
 
+// ConvertOneHot converts corpus to one-hot-matrix.
 func ConvertOneHot(corpus mat.Matrix, vocabSize int) []mat.Matrix {
 	r, c := corpus.Dims()
 	ts := make([]mat.Matrix, 0, vocabSize-1)
@@ -70,4 +71,18 @@ func ConvertOneHot(corpus mat.Matrix, vocabSize int) []mat.Matrix {
 		ts = append(ts, t)
 	}
 	return ts
+}
+
+// GetWord2VecFromDist convert Distributed representation to word-vec map.
+func GetWord2VecFromDist(dist mat.Matrix, id2w ID2Word) map[string]mat.Vector {
+	r, _ := dist.Dims()
+	w2v := make(map[string]mat.Vector, r)
+	d, ok := dist.(*mat.Dense)
+	if !ok {
+		panic("gonlp: failed to transpose matrix to dense")
+	}
+	for i := 0; i < r; i++ {
+		w2v[id2w[float64(i)]] = d.RowView(i)
+	}
+	return w2v
 }
