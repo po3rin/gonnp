@@ -4,7 +4,7 @@
 </p>
 
 ---
-<img src="https://img.shields.io/badge/go-v1.12-blue.svg"/> [![CircleCI](https://circleci.com/gh/po3rin/gonnp.svg?style=shield&circle-token=d2ad1b26978ffeb0f6aa43b9a517ec7e5180d474)](https://circleci.com/gh/po3rin/gonnp) <a href="https://codeclimate.com/github/po3rin/gonnp/maintainability"><img src="https://api.codeclimate.com/v1/badges/a0e4c5e4c1c04fafb73a/maintainability" /></a> [![GolangCI](https://golangci.com/badges/github.com/po3rin/gonnp.svg)](https://golangci.com) [![codecov](https://codecov.io/gh/po3rin/gonnp/branch/master/graph/badge.svg)](https://codecov.io/gh/po3rin/gonnp)
+<img src="https://img.shields.io/badge/go-v1.12-blue.svg"/> [![CircleCI](https://circleci.com/gh/po3rin/gonnp.svg?style=shield&circle-token=d2ad1b26978ffeb0f6aa43b9a517ec7e5180d474)](https://circleci.com/gh/po3rin/gonnp) <a href="https://codeclimate.com/github/po3rin/gonnp/maintainability"><img src="https://api.codeclimate.com/v1/badges/a0e4c5e4c1c04fafb73a/maintainability" /></a> [![GolangCI](https://golangci.com/badges/github.com/po3rin/gonnp.svg)](https://golangci.com) [![codecov](https://codecov.io/gh/po3rin/gonnp/branch/master/graph/badge.svg)](https://codecov.io/gh/po3rin/gonnp) [![GoDoc](https://godoc.org/github.com/po3rin/gonnp?status.svg)](https://godoc.org/github.com/po3rin/gonnp)
 
 ## What
 

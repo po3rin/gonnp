@@ -389,3 +389,10 @@ func TestSort3DWithIDs(t *testing.T) {
 		})
 	}
 }
+
+func TestPrint(t *testing.T) {
+	d := mat.NewDense(1, 1, nil)
+	matutils.PrintMat(d)
+	matutils.PrintDims(d)
+	matutils.Print3D([]mat.Matrix{d})
+}
