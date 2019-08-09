@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  codecov: codecov/codecov@1.0.2
 
 jobs:
   build:
@@ -20,16 +18,5 @@ jobs:
             go test ./... -tags=e2e
             go tool cover -html=c.out -o coverage.html
             mv coverage.html /tmp/artifacts
-
-      # Download test-reporter
-       - run:
-           name: Setup Code Climate test-reporter
-           command: |
-             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-             chmod +x ./cc-test-reporter
-
-      - store_artifacts:
-          path: /tmp/artifacts
-
       - codecov/upload:
-          file: /tmp/artifacts
+          file: ./c.out
