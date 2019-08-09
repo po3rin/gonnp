@@ -59,7 +59,6 @@ func TestSoftmax(t *testing.T) {
 	}
 }
 
-// TODO: cofirm correct want.
 func TestSoftmaxWithLossForward(t *testing.T) {
 	tests := []struct {
 		name    string

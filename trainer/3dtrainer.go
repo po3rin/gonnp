@@ -12,7 +12,6 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-// TODO: impliments
 func rmDuplicate(params []entity.Param, grads []entity.Grad) ([]entity.Param, []entity.Grad) {
 L:
 	for {
