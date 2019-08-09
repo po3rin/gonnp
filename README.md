@@ -10,6 +10,5 @@ in impliments ...
 
 ## TODO
 
-Pass MNIST e2e
-impliments Word2vec
-impliments Seq2Seq
+Improve Word2vec  
+Impliments Seq2Seq
