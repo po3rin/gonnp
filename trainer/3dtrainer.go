@@ -3,9 +3,12 @@ package trainer
 
 import (
 	"fmt"
+	"math/rand"
 	"reflect"
+	"time"
 
 	"github.com/po3rin/gonlp/entity"
+	"github.com/po3rin/gonlp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -51,16 +54,16 @@ func (t *Train) Fit3D(x []mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize in
 	var lossCount int
 
 	for i := 0; i < maxEpoch; i++ {
+		rand.Seed(time.Now().UnixNano())
+		idx := rand.Perm(dataSize)
 
 		// shuffle x
-		// tx := matutils.Shuffle3D(x)
-		tx := x
+		tx := matutils.Sort3DWithIDs(x, idx)
+		// tx := x
 
 		// shuffle t
-		// rand.Seed(time.Now().UnixNano())
-		// idx := rand.Perm(dataSize)
-		// tt := matutils.ThinCol(teacher, idx)
-		tt := teacher
+		tt := matutils.ThinCol(teacher, idx)
+		// tt := teacher
 		dt, ok := tt.(*mat.Dense)
 		if !ok {
 			panic("gonlp: failed to transpose matrix to dense")

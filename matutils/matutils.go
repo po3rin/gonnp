@@ -147,14 +147,13 @@ func At3D(x []mat.Matrix, i int) mat.Matrix {
 	return result
 }
 
-// Shuffle3D shuffles 3 dimentional matrix col.
-func Shuffle3D(x []mat.Matrix) []mat.Matrix {
-	n := len(x)
-	for i := n - 1; i >= 0; i-- {
-		j := rand.Intn(i + 1)
-		x[i], x[j] = x[j], x[i]
+// Sort3DWithIDs shuffles 3 dimentional matrix col using slice of integer.
+func Sort3DWithIDs(x []mat.Matrix, ids []int) []mat.Matrix {
+	result := make([]mat.Matrix, len(ids))
+	for i, id := range ids {
+		result[i] = x[id]
 	}
-	return x
+	return result
 }
 
 // PrintDims prints dimensions for debug.

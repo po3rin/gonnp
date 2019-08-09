@@ -325,14 +325,16 @@ func TestAt3D(t *testing.T) {
 	}
 }
 
-func TestSguffle3D(t *testing.T) {
+func TestSort3DWithIDs(t *testing.T) {
 	tests := []struct {
 		name    string
+		ids     []int
 		x       []mat.Matrix
 		notwant []mat.Matrix
 	}{
 		{
 			name: "6*1*7 dimention",
+			ids:  []int{3, 1, 4, 2, 0, 5},
 			x: []mat.Matrix{
 				mat.NewDense(1, 7, []float64{
 					1, 0, 0, 0, 0, 0, 0,
@@ -355,19 +357,19 @@ func TestSguffle3D(t *testing.T) {
 			},
 			notwant: []mat.Matrix{
 				mat.NewDense(1, 7, []float64{
-					1, 0, 0, 0, 0, 0, 0,
+					0, 0, 0, 1, 0, 0, 0,
 				}),
 				mat.NewDense(1, 7, []float64{
 					0, 1, 0, 0, 0, 0, 0,
 				}),
 				mat.NewDense(1, 7, []float64{
+					0, 0, 0, 0, 1, 0, 0,
+				}),
+				mat.NewDense(1, 7, []float64{
 					0, 0, 1, 0, 0, 0, 0,
 				}),
 				mat.NewDense(1, 7, []float64{
-					0, 0, 0, 1, 0, 0, 0,
-				}),
-				mat.NewDense(1, 7, []float64{
-					0, 0, 0, 0, 1, 0, 0,
+					1, 0, 0, 0, 0, 0, 0,
 				}),
 				mat.NewDense(1, 7, []float64{
 					0, 1, 0, 0, 0, 0, 0,
@@ -379,10 +381,10 @@ func TestSguffle3D(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got := matutils.Shuffle3D(tt.x)
+			got := matutils.Sort3DWithIDs(tt.x, tt.ids)
 
-			if reflect.DeepEqual(got, tt.notwant) {
-				t.Error("not shuffled")
+			if !reflect.DeepEqual(got, tt.notwant) {
+				t.Error("not sort")
 			}
 		})
 	}

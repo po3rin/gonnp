@@ -61,7 +61,7 @@ func TestCreateContextsAndTarget(t *testing.T) {
 			name:         "simple",
 			corpus:       []float64{0, 1, 2, 3, 4, 1, 5, 6},
 			wantContexts: mat.NewDense(6, 2, []float64{0, 2, 1, 3, 2, 4, 3, 1, 4, 5, 1, 6}),
-			wantTarget:   mat.NewDense(7, 1, []float64{1, 2, 3, 4, 1, 5, 6}),
+			wantTarget:   mat.NewDense(6, 1, []float64{1, 2, 3, 4, 1, 5}),
 		},
 	}
 

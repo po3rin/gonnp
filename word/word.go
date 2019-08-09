@@ -43,7 +43,7 @@ func PreProcess(text string) (Corpus, Word2ID, ID2Word) {
 // CreateContextsAndTarget creates contexts and target from text corpus.
 func CreateContextsAndTarget(corpus Corpus) (contexts, target mat.Matrix) {
 	var windowSize = 1
-	ts := corpus[windowSize:]
+	ts := corpus[windowSize : len(corpus)-1]
 	cs := make([]float64, 0, len(corpus)*2-2)
 
 	for i := windowSize; i < len(corpus)-windowSize; i++ {
