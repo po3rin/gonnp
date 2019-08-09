@@ -24,35 +24,35 @@ import (
 )
 
 func main() {
-	hiddenSize := 5
-	batchSize := 3
-	maxEpoch := 1000
+        hiddenSize := 5
+        batchSize := 3
+        maxEpoch := 1000
 
-  // prepare one-hot matrix from text data.
-	text := "You say goodbye and I say hello."
-	corpus, w2id, id2w := word.PreProcess(text)
-	vocabSize := len(w2id)
-	contexts, target := word.CreateContextsAndTarget(corpus)
-	te := word.ConvertOneHot(target, vocabSize)
-	co := word.ConvertOneHot(contexts, vocabSize)
+        // prepare one-hot matrix from text data.
+        text := "You say goodbye and I say hello."
+        corpus, w2id, id2w := word.PreProcess(text)
+        vocabSize := len(w2id)
+        contexts, target := word.CreateContextsAndTarget(corpus)
+        te := word.ConvertOneHot(target, vocabSize)
+        co := word.ConvertOneHot(contexts, vocabSize)
 
-  // Inits model
-  model := nn.InitSimpleCBOW(vocabSize, hiddenSize)
-  // choses optimizer
-  optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
-  // inits trainer with model & optimizer.
-	trainer := trainer.InitTrainer(model, optimizer)
+        // Inits model
+        model := nn.InitSimpleCBOW(vocabSize, hiddenSize)
+        // choses optimizer
+        optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
+        // inits trainer with model & optimizer.
+        trainer := trainer.InitTrainer(model, optimizer)
 
-  // training !!
-  trainer.Fit3D(co, matutils.At3D(te, 0), maxEpoch, batchSize)
+        // training !!
+        trainer.Fit3D(co, matutils.At3D(te, 0), maxEpoch, batchSize)
 
-  // checks outputs
-	dist := trainer.GetWordDist()
-	w2v := word.GetWord2VecFromDist(dist, id2w)
-	for w, v := range w2v {
-		fmt.Printf("=== %v ===\n", w)
-		matutils.PrintMat(v)
-	}
+        // checks outputs
+        dist := trainer.GetWordDist()
+        w2v := word.GetWord2VecFromDist(dist, id2w)
+        for w, v := range w2v {
+                  fmt.Printf("=== %v ===\n", w)
+                  matutils.PrintMat(v)
+        }
 }
 ```
 
@@ -77,22 +77,22 @@ outputs
 package main
 
 import (
-	"github.com/po3rin/gomnist"
-	"github.com/po3rin/gonlp/nn"
-	"github.com/po3rin/gonlp/optimizers"
-	"github.com/po3rin/gonlp/trainer"
+        "github.com/po3rin/gomnist"
+        "github.com/po3rin/gonlp/nn"
+        "github.com/po3rin/gonlp/optimizers"
+        "github.com/po3rin/gonlp/trainer"
 )
 
 func main() {
-	model := nn.NewTwoLayerNet(784, 100, 10)
-	optimizer := optimizers.InitSDG(0.01)
-	trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(20))
+        model := nn.NewTwoLayerNet(784, 100, 10)
+        optimizer := optimizers.InitSDG(0.01)
+        trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(20))
 
-  // load MNIST data using github.com/po3rin/gomnist package
-	l := gomnist.NewLoader("./../testdata", gomnist.OneHotLabel(true), gomnist.Normalization(true))
-	mnist, _ := l.Load()
+        // load MNIST data using github.com/po3rin/gomnist package
+        l := gomnist.NewLoader("./../testdata", gomnist.OneHotLabel(true), gomnist.Normalization(true))
+        mnist, _ := l.Load()
 
-	trainer.Fit(mnist.TestData, mnist.TestLabels, 10, 100)
+        trainer.Fit(mnist.TestData, mnist.TestLabels, 10, 100)
 }
 ```
 
