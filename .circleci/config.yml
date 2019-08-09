@@ -17,9 +17,13 @@ jobs:
       - run:
           command: |
             go test -coverprofile=c.out
+            cp c.out coverage.out
             go test ./...
             go test ./... -tags=e2e
             go tool cover -html=c.out -o coverage.html
             mv coverage.html /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/artifacts
+
       - codecov/upload:
-          file: ./c.out
+          file: ./coverage.out
