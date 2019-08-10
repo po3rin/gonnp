@@ -2,49 +2,65 @@ package layers
 
 import (
 	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
-type EmbeddingDot struct {
-	IDx   mat.Matrix
-	Param entity.Param
-	Grad  entity.Grad
+type cache struct {
+	h       mat.Matrix
+	targetW mat.Matrix
 }
 
-// class EmbeddingDot:
-//     def __init__(self, W):
-//         self.embed = Embedding(W)
-//         self.params = self.embed.params
-//         self.grads = self.embed.grads
-//         self.cache = None
-
-//     def forward(self, h, idx):
-//         target_W = self.embed.forward(idx)
-//         out = np.sum(target_W * h, axis=1)
-
-//         self.cache = (h, target_W)
-//         return out
-
-//     def backward(self, dout):
-//         h, target_W = self.cache
-//         dout = dout.reshape(dout.shape[0], 1)
-
-//         dtarget_W = dout * h
-//         self.embed.backward(dtarget_W)
-//         dh = dout * target_W
-//         return dh
+type EmbeddingDot struct {
+	Embed *Embedding
+	Param entity.Param
+	Grad  entity.Grad
+	cache cache
+}
 
 // InitEmbeddingDotLayer inits Relu layer.
 func InitEmbeddingDotLayer(weight mat.Matrix) *EmbeddingDot {
-	return &EmbeddingDot{}
+	embed := InitEmbeddingLayer(weight)
+	return &EmbeddingDot{
+		Embed: embed,
+		Param: embed.GetParam(),
+		Grad:  embed.GetGrad(),
+	}
 }
 
-func (e *EmbeddingDot) Forward(x mat.Matrix) mat.Matrix {
-	return nil
+func (e *EmbeddingDot) Forward(h mat.Matrix, idx mat.Matrix) mat.Matrix {
+	targetW := e.Embed.Forward(idx)
+	r, c := targetW.Dims()
+	mul := mat.NewDense(r, c, nil)
+	mul.MulElem(targetW, h)
+	got := matutils.SumRow(mul)
+
+	e.cache.h = h
+	e.cache.targetW = targetW
+
+	return got
 }
 
 func (e *EmbeddingDot) Backward(x mat.Matrix) mat.Matrix {
-	return nil
+	h := e.cache.h
+	targetW := e.cache.targetW
+
+	d, ok := x.(*mat.Dense)
+	if !ok {
+		panic("gonnp: failed to transpose matrix to dense")
+	}
+	r, _ := d.Dims()
+	dout := mat.NewDense(r, 1, d.RawMatrix().Data)
+
+	r, c := dout.Dims()
+	mul := mat.NewDense(r, c, nil)
+	mul.MulElem(dout, h)
+
+	_ = e.Embed.Backward(mul)
+
+	mul.MulElem(dout, targetW)
+
+	return mul
 }
 
 func (e *EmbeddingDot) GetParam() entity.Param {
