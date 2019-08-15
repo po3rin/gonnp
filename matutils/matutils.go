@@ -70,6 +70,17 @@ func SubMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 	return d
 }
 
+// MulMatVec mul mat by vec.
+func MulMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
+	r, c := x.Dims()
+	f := func(i, j int, n float64) float64 {
+		return n * v.AtVec(i)
+	}
+	d := mat.NewDense(r, c, nil)
+	d.Apply(f, x)
+	return d
+}
+
 // DivMatVec divids mat by vec.
 func DivMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 	r, c := x.Dims()

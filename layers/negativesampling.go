@@ -45,22 +45,20 @@ func (e *EmbeddingDot) Backward(x mat.Matrix) mat.Matrix {
 	h := e.cache.h
 	targetW := e.cache.targetW
 
-	d, ok := x.(*mat.Dense)
+	d, ok := x.(*mat.VecDense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to transpose matrix to vec dense")
 	}
+
 	r, _ := d.Dims()
-	dout := mat.NewDense(r, 1, d.RawMatrix().Data)
+	dout := mat.NewDense(r, 1, d.RawVector().Data)
+	dv := mat.NewVecDense(r, dout.RawMatrix().Data)
+	x = matutils.MulMatVec(h, dv)
 
-	r, c := dout.Dims()
-	mul := mat.NewDense(r, c, nil)
-	mul.MulElem(dout, h)
+	_ = e.Embed.Backward(x)
 
-	_ = e.Embed.Backward(mul)
-
-	mul.MulElem(dout, targetW)
-
-	return mul
+	dh := matutils.MulMatVec(targetW, dv)
+	return dh
 }
 
 func (e *EmbeddingDot) GetParam() entity.Param {
