@@ -390,6 +390,30 @@ func TestSort3DWithIDs(t *testing.T) {
 	}
 }
 
+func TestJoinC(t *testing.T) {
+	tests := []struct {
+		name string
+		x    mat.Matrix
+		y    mat.Matrix
+		want mat.Matrix
+	}{
+		{
+			name: "4*2",
+			x:    mat.NewDense(2, 2, []float64{1, 2, 3, 4}),
+			y:    mat.NewDense(2, 2, []float64{1, 2, 3, 4}),
+			want: mat.NewDense(2, 4, []float64{1, 2, 1, 2, 3, 4, 3, 4}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.JoinC(tt.x, tt.y); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+			}
+		})
+	}
+}
+
 func TestPrint(t *testing.T) {
 	d := mat.NewDense(1, 1, nil)
 	matutils.PrintMat(d)

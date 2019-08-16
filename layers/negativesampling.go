@@ -78,6 +78,10 @@ func (e *EmbeddingDot) SetParam(p entity.Param) {
 	e.Param = p
 }
 
+type Sampler interface {
+	GetNegativeSample(target mat.Vector) mat.Matrix
+}
+
 // UnigramSampler makes probability distribution of words from corpus
 type UnigramSampler struct {
 	SampleSize int
@@ -181,3 +185,35 @@ func weightedChoice(v, size int, w []float64) ([]float64, error) {
 	}
 	return result, nil
 }
+
+// NegativeSamplingLoss is layer for negative sampling.
+type NegativeSamplingLoss struct {
+	SampleSize     int
+	EmbedDotLayers []*EmbeddingDot
+	LossLayers     []LossLayer
+	Sampler        Sampler
+}
+
+// // InitNegativeSamplingLoss inits NegativeSamplingLoss.
+// func InitNegativeSamplingLoss(
+// 	weight mat.Matrix,
+// 	corpus word.Corpus,
+// 	sampler Sampler,
+// 	power float64,
+// 	sampleSize int,
+// ) *NegativeSamplingLoss {
+// 	lossLayers := make([]LossLayer, 0, sampleSize+1)
+// 	embedDotLayers := make([]*EmbeddingDot, 0, sampleSize+1)
+
+// 	for i := 0; i < sampleSize+1; i++ {
+// 		lossLayers = append(lossLayers, InitSigmoidWithLossLayer())
+// 		embedDotLayers = append(embedDotLayers, InitEmbeddingDotLayer(weight))
+// 	}
+
+// 	return &NegativeSamplingLoss{
+// 		SampleSize:     sampleSize,
+// 		EmbedDotLayers: embedDotLayers,
+// 		LossLayers:     lossLayers,
+// 		Sampler:        InitUnigraSampler(corpus, power, sampleSize),
+// 	}
+// }

@@ -185,6 +185,29 @@ func Sort3DWithIDs(x []mat.Matrix, ids []int) []mat.Matrix {
 	return result
 }
 
+// JoinC join matrix.
+func JoinC(x mat.Matrix, y mat.Matrix) mat.Matrix {
+	xr, xc := x.Dims()
+	yr, yc := y.Dims()
+
+	if xr != yr {
+		panic("gonnp: row length mismatch")
+	}
+
+	yd := mat.DenseCopyOf(y)
+	xd := mat.DenseCopyOf(x)
+	expanded := xd.Grow(0, yc)
+	ed := mat.DenseCopyOf(expanded)
+
+	for i := 0; i < yc; i++ {
+		v := yd.ColView(i)
+		vd := mat.VecDenseCopyOf(v)
+		ed.SetCol(xc+i, vd.RawVector().Data)
+	}
+
+	return ed
+}
+
 // PrintDims prints dimensions for debug.
 func PrintDims(x mat.Matrix) {
 	r, c := x.Dims()

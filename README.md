@@ -24,9 +24,11 @@ The number of components will increase in the future.
 * Affine
 * MatuMul
 * Embedding
+* EmbeddingDot
 * Relu
 * Sigmoid
 * Softmax with Loss
+* Sigmoid with Loss
 
 ### Optimizer
 
