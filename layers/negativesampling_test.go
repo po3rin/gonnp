@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/po3rin/gonnp/layers"
+	"github.com/po3rin/gonnp/word"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -96,5 +97,39 @@ func TestEmbeddingDotBackward(t *testing.T) {
 				t.Fatalf("unexpected data\nwant = %v\ngot = %v\n", tt.want, got)
 			}
 		})
+	}
+}
+
+func TestGetNegativeSample(t *testing.T) {
+	tests := []struct {
+		power      float64
+		sampleSize int
+		corpus     word.Corpus
+		target     mat.Vector
+		want       mat.Matrix
+	}{
+		{
+			power:      0.75,
+			sampleSize: 2,
+			corpus: word.Corpus{
+				0, 1, 2, 3, 4, 1, 2, 3,
+			},
+			target: mat.NewVecDense(3, []float64{1, 3, 0}),
+			want:   mat.NewDense(3, 2, []float64{2, 3, 1, 2, 2, 3}),
+		},
+	}
+
+	randGenerator := func(max float64) float64 {
+		return 0.3
+	}
+	layers.UseCustomRandGenerator(randGenerator)
+
+	for _, tt := range tests {
+		u := layers.InitUnigraSampler(tt.corpus, tt.power, tt.sampleSize)
+		got := u.GetNegativeSample(tt.target)
+
+		if !mat.EqualApprox(got, tt.want, 1e-7) {
+			t.Errorf("x:\nwant = %d\ngot = %d", tt.want, got)
+		}
 	}
 }

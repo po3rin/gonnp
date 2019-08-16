@@ -22,3 +22,11 @@ func (e *EmbeddingDot) SetCacheH(h mat.Matrix) {
 func (e *EmbeddingDot) SetCacheTargetW(targetW mat.Matrix) {
 	e.cache.targetW = targetW
 }
+
+func UseCustomRandGenerator(f func(max float64) float64) (resetFunc func()) {
+	var tmp func(max float64) float64
+	tmp, randGenerator = randGenerator, f
+	return func() {
+		randGenerator = tmp
+	}
+}
