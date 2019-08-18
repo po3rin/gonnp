@@ -1,3 +1,4 @@
+// Package nn is example of neural netwark model.
 package nn
 
 import (

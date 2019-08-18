@@ -148,7 +148,7 @@ func (s *SamplerMock) GetNegativeSample(target mat.Vector) mat.Matrix {
 	})
 }
 
-func TestNegativeSamplingLossForward(t *testing.T) {
+func TestNegativeSamplingLoss(t *testing.T) {
 	tests := []struct {
 		corpus     word.Corpus
 		power      float64
@@ -184,7 +184,7 @@ func TestNegativeSamplingLossForward(t *testing.T) {
 	sampler := newSamplerMock()
 
 	for _, tt := range tests {
-		u := layers.InitNegativeSamplingLoss(tt.weight, tt.corpus, sampler, tt.power, tt.sampleSize)
+		u := layers.InitNegativeSamplingLoss(tt.weight, tt.corpus, sampler, tt.sampleSize)
 		got := u.Forward(tt.h, tt.target)
 		if got != tt.want {
 			t.Errorf("x:\nwant = %v\ngot = %v", tt.want, got)

@@ -199,7 +199,6 @@ func InitNegativeSamplingLoss(
 	weight mat.Matrix,
 	corpus word.Corpus,
 	sampler Sampler,
-	power float64,
 	sampleSize int,
 ) *NegativeSamplingLoss {
 	lossLayers := make([]LossLayer, 0, sampleSize+1)
@@ -246,4 +245,14 @@ func (n *NegativeSamplingLoss) Forward(h, target mat.Matrix) float64 {
 	}
 
 	return loss
+}
+
+func (n *NegativeSamplingLoss) Backward() mat.Matrix {
+	var dh *mat.Dense
+	for i, l := range n.LossLayers {
+		dscore := l.Backward()
+		r := n.EmbedDotLayers[i].Backward(dscore)
+		dh.Add(dh, r)
+	}
+	return dh
 }
