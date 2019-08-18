@@ -194,56 +194,56 @@ type NegativeSamplingLoss struct {
 	Sampler        Sampler
 }
 
-// // InitNegativeSamplingLoss inits NegativeSamplingLoss.
-// func InitNegativeSamplingLoss(
-// 	weight mat.Matrix,
-// 	corpus word.Corpus,
-// 	sampler Sampler,
-// 	power float64,
-// 	sampleSize int,
-// ) *NegativeSamplingLoss {
-// 	lossLayers := make([]LossLayer, 0, sampleSize+1)
-// 	embedDotLayers := make([]*EmbeddingDot, 0, sampleSize+1)
+// InitNegativeSamplingLoss inits NegativeSamplingLoss.
+func InitNegativeSamplingLoss(
+	weight mat.Matrix,
+	corpus word.Corpus,
+	sampler Sampler,
+	power float64,
+	sampleSize int,
+) *NegativeSamplingLoss {
+	lossLayers := make([]LossLayer, 0, sampleSize+1)
+	embedDotLayers := make([]*EmbeddingDot, 0, sampleSize+1)
 
-// 	for i := 0; i < sampleSize+1; i++ {
-// 		lossLayers = append(lossLayers, InitSigmoidWithLossLayer())
-// 		embedDotLayers = append(embedDotLayers, InitEmbeddingDotLayer(weight))
-// 	}
+	for i := 0; i < sampleSize+1; i++ {
+		lossLayers = append(lossLayers, InitSigmoidWithLossLayer())
+		embedDotLayers = append(embedDotLayers, InitEmbeddingDotLayer(weight))
+	}
 
-// 	return &NegativeSamplingLoss{
-// 		SampleSize:     sampleSize,
-// 		EmbedDotLayers: embedDotLayers,
-// 		LossLayers:     lossLayers,
-// 		Sampler:        sampler,
-// 	}
-// }
+	return &NegativeSamplingLoss{
+		SampleSize:     sampleSize,
+		EmbedDotLayers: embedDotLayers,
+		LossLayers:     lossLayers,
+		Sampler:        sampler,
+	}
+}
 
-// // Forward calicurates loss with negative sampling.
-// func (n *NegativeSamplingLoss) Forward(h, target mat.Matrix) float64 {
-// 	batchSize, _ := target.Dims()
-// 	td := mat.DenseCopyOf(target)
-// 	vt := td.RowView(0)
+// Forward calicurates loss with negative sampling.
+func (n *NegativeSamplingLoss) Forward(h, target mat.Matrix) float64 {
+	batchSize, _ := target.Dims()
+	td := mat.DenseCopyOf(target)
+	vt := td.RowView(0)
 
-// 	negativeSample := n.Sampler.GetNegativeSample(vt)
-// 	nsd := mat.DenseCopyOf(negativeSample)
+	negativeSample := n.Sampler.GetNegativeSample(vt)
+	nsd := mat.DenseCopyOf(negativeSample)
 
-// 	// correct forward
-// 	score := n.EmbedDotLayers[0].Forward(h, target)
-// 	s := make([]float64, batchSize)
-// 	for i := 0; i < batchSize; i++ {
-// 		s[i] = 1
-// 	}
-// 	correctLabel := mat.NewDense(batchSize, 1, s)
-// 	loss := n.LossLayers[0].Forward(score, correctLabel)
+	// correct forward
+	score := n.EmbedDotLayers[0].Forward(h, target)
+	s := make([]float64, batchSize)
+	for i := 0; i < batchSize; i++ {
+		s[i] = 1
+	}
+	correctLabel := mat.NewDense(batchSize, 1, s)
+	loss := n.LossLayers[0].Forward(score, correctLabel)
 
-// 	// negative forward
-// 	negativeLabel := mat.NewDense(batchSize, 1, nil)
-// 	for i := 0; i < n.SampleSize; i++ {
-// 		negativeTarget := nsd.ColView(i)
-// 		score := n.EmbedDotLayers[1+i].Forward(h, negativeTarget)
-// 		negativeLoss := n.LossLayers[1+i].Forward(score, negativeLabel)
-// 		loss += negativeLoss
-// 	}
+	// negative forward
+	negativeLabel := mat.NewDense(batchSize, 1, nil)
+	for i := 0; i < n.SampleSize; i++ {
+		negativeTarget := nsd.ColView(i)
+		score := n.EmbedDotLayers[1+i].Forward(h, negativeTarget)
+		negativeLoss := n.LossLayers[1+i].Forward(score, negativeLabel)
+		loss += negativeLoss
+	}
 
-// 	return loss
-// }
+	return loss
+}

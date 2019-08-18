@@ -69,18 +69,18 @@ func crossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
 	tr, tc := t.Dims()
 
 	if batchSize == 1 {
-		d = mat.NewDense(1, dc, d.RawMatrix().Data)
-		t = mat.NewDense(1, tc, t.RawMatrix().Data)
+		d = mat.NewDense(1, batchSize*dc, d.RawMatrix().Data)
+		t = mat.NewDense(1, tr*tc, t.RawMatrix().Data)
 	}
 
 	if batchSize == tr && dc == tc {
 		oh := matutils.OneHotVec2Index(t)
 		t = mat.DenseCopyOf(oh)
+	}
 
-		tr, _ := t.Dims()
-		if tr != 1 {
-			t = mat.NewDense(1, tr, t.RawMatrix().Data)
-		}
+	tr, tc = t.Dims()
+	if tr != 1 {
+		t = mat.NewDense(1, tr*tc, t.RawMatrix().Data)
 	}
 
 	// d[np.arange(batch_size), t]
