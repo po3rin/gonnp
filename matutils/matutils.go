@@ -116,7 +116,6 @@ func NewRandVecWithSND(r int, _ []float64) *mat.VecDense {
 
 // ThinRow thins out rows.
 func ThinRow(x mat.Matrix, targets []int) mat.Matrix {
-	// 	sort.Ints(targets)
 	_, c := x.Dims()
 	result := mat.NewDense(len(targets), c, nil)
 
@@ -126,6 +125,31 @@ func ThinRow(x mat.Matrix, targets []int) mat.Matrix {
 			panic("gonnp: failed to transpose matrix to dense")
 		}
 		result.SetRow(i, d.RawRowView(v))
+	}
+	return result
+}
+
+// SetColToRow set row to row using targets.
+func SetColToRow(x mat.Matrix, targets []int) mat.Matrix {
+	r, _ := x.Dims()
+	result := mat.NewDense(r, len(targets), nil)
+	d := mat.DenseCopyOf(x)
+
+	for i, v := range targets {
+		s := make([]float64, 0, len(targets))
+		for j := 0; j < r; j++ {
+			s = append(s, d.At(j, v))
+		}
+		result.SetRow(i, s)
+	}
+	return result
+}
+
+// ExtractFromEachRows extracts from row from targets.
+func ExtractFromEachRows(x mat.Matrix, targets []int) mat.Matrix {
+	result := mat.NewDense(1, len(targets), nil)
+	for i, v := range targets {
+		result.Set(0, i, x.At(i, v))
 	}
 	return result
 }
