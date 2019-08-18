@@ -62,21 +62,46 @@ func softmax(x mat.Matrix) mat.Matrix {
 
 // CrossEntropyErr measures the performance of a classification model whose output is a probability value between 0 and 1.
 func crossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
-	batchSize, _ := data.Dims()
-	tr, tc := teacher.Dims()
+	d := mat.DenseCopyOf(data)
+	t := mat.DenseCopyOf(teacher)
 
-	delta := 1e-7
-	crossEnrtopy := func(i, j int, v float64) float64 {
-		return -1 * v * math.Log(data.At(i, j)+delta)
-	}
+	batchSize, dc := d.Dims()
+	tr, tc := t.Dims()
 
 	if batchSize == 1 {
-		ce := mat.NewDense(tr, tc, nil)
-		ce.Apply(crossEnrtopy, teacher)
-		return mat.Sum(ce)
+		d = mat.NewDense(1, dc, d.RawMatrix().Data)
+		t = mat.NewDense(1, tc, t.RawMatrix().Data)
 	}
 
-	ce := mat.NewDense(tr, tc, nil)
-	ce.Apply(crossEnrtopy, teacher)
-	return mat.Sum(ce) / float64(batchSize)
+	if batchSize == tr && dc == tc {
+		oh := matutils.OneHotVec2Index(t)
+		t = mat.DenseCopyOf(oh)
+
+		tr, _ := t.Dims()
+		if tr != 1 {
+			t = mat.NewDense(1, tr, t.RawMatrix().Data)
+		}
+	}
+
+	// d[np.arange(batch_size), t]
+	fs := t.RawMatrix().Data
+	ints := make([]int, len(fs))
+	for i, v := range fs {
+		ints[i] = int(v)
+	}
+	tr, tc = t.Dims()
+	var sd mat.Matrix
+	if tc == 1 {
+		sd = matutils.SetColToRow(d, ints)
+	} else if tr == 1 {
+		sd = matutils.ExtractFromEachRows(d, ints)
+	}
+
+	crossEnrtopy := func(i, j int, v float64) float64 {
+		return math.Log(v + 1e-7)
+	}
+
+	sdd := mat.DenseCopyOf(sd)
+	sdd.Apply(crossEnrtopy, sd)
+	return -mat.Sum(sdd) / float64(batchSize)
 }

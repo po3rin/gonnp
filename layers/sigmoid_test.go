@@ -79,8 +79,8 @@ func TestSigmoidWithLossForward(t *testing.T) {
 			name:    "1*5 with one-hot",
 			input:   mat.NewDense(5, 1, []float64{0, 1, 4, 0, 1}),
 			teacher: mat.NewDense(5, 1, []float64{0, 0, 1, 0, 0}),
-			// want:    0.80619328371728,
-			want: 0.8036288736236525,
+			want:    6.830962146228082,
+			// want: 0.8036288736236525,
 		},
 	}
 
