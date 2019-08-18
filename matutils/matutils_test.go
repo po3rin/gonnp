@@ -159,6 +159,61 @@ func TestThinRow(t *testing.T) {
 	}
 }
 
+func TestSetColToRow(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  mat.Matrix
+		target []int
+		want   mat.Matrix
+	}{
+		{
+			name: "4*2",
+			input: mat.NewDense(2, 4, []float64{
+				1, 2, 3, 4,
+				5, 6, 7, 8,
+			}),
+			target: []int{0, 2},
+			want:   mat.NewDense(2, 2, []float64{1, 5, 3, 7}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.SetColToRow(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+			}
+		})
+	}
+}
+
+func TestExtractFromEachRows(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  mat.Matrix
+		target []int
+		want   mat.Matrix
+	}{
+		{
+			name: "4*2",
+			input: mat.NewDense(3, 3, []float64{
+				0, 1, 2,
+				4, 5, 6,
+				8, 9, 10,
+			}),
+			target: []int{0, 2, 2},
+			want:   mat.NewDense(1, 3, []float64{0, 6, 10}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.ExtractFromEachRows(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+			}
+		})
+	}
+}
+
 func TestOneHotVec2Index(t *testing.T) {
 	tests := []struct {
 		name  string

@@ -11,7 +11,7 @@ import (
 	"github.com/po3rin/gonnp/trainer"
 )
 
-func TestMNITS(t *testing.T) {
+func TestMNIST(t *testing.T) {
 	model := nn.NewTwoLayerNet(784, 100, 10)
 	optimizer := optimizers.InitSDG(0.01)
 	trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(20))
