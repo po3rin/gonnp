@@ -164,6 +164,7 @@ func TestRmDuplicate(t *testing.T) {
 }
 
 func Test3DFit(t *testing.T) {
+	windowSize := 1
 	hiddenSize := 5
 	batchSize := 3
 	maxEpoch := 1
@@ -172,7 +173,7 @@ func Test3DFit(t *testing.T) {
 	corpus, w2id, _ := word.PreProcess(text)
 
 	vocabSize := len(w2id)
-	contexts, target := word.CreateContextsAndTarget(corpus)
+	contexts, target := word.CreateContextsAndTarget(corpus, windowSize)
 
 	te := word.ConvertOneHot(target, vocabSize)
 	co := word.ConvertOneHot(contexts, vocabSize)

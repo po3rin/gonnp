@@ -35,9 +35,13 @@ The number of components will increase in the future.
 * SDG
 * Adam
 
+### Sampler
+
+Unigram Sampler
+
 ## Quick Start
 
-### Word2Vec
+### Simple Word2Vec
 
 ```go
 package main
@@ -127,5 +131,5 @@ func main() {
 
 ## TODO
 
-Impliments Negative Sampling
+Impliments Word2Vec using Negative Sampling
 Impliments RNN

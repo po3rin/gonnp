@@ -41,9 +41,8 @@ func PreProcess(text string) (Corpus, Word2ID, ID2Word) {
 }
 
 // CreateContextsAndTarget creates contexts and target from text corpus.
-func CreateContextsAndTarget(corpus Corpus) (contexts, target mat.Matrix) {
-	var windowSize = 1
-	ts := corpus[windowSize : len(corpus)-1]
+func CreateContextsAndTarget(corpus Corpus, windowSize int) (contexts, target mat.Matrix) {
+	ts := corpus[windowSize : len(corpus)-windowSize]
 	cs := make([]float64, 0, len(corpus)*2-2)
 
 	for i := windowSize; i < len(corpus)-windowSize; i++ {
@@ -54,7 +53,10 @@ func CreateContextsAndTarget(corpus Corpus) (contexts, target mat.Matrix) {
 			cs = append(cs, corpus[i+j])
 		}
 	}
-	return mat.NewDense(len(cs)/2, 2, cs), mat.NewVecDense(len(ts), ts)
+
+	cr := mat.NewDense(len(cs)/(windowSize*2), windowSize*2, cs)
+	tr := mat.NewVecDense(len(ts), ts)
+	return cr, tr
 }
 
 // ConvertOneHot converts corpus to one-hot-matrix.

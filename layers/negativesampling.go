@@ -50,13 +50,9 @@ func (e *EmbeddingDot) Backward(x mat.Matrix) mat.Matrix {
 	h := e.cache.h
 	targetW := e.cache.targetW
 
-	d, ok := x.(*mat.VecDense)
-	if !ok {
-		panic("gonnp: failed to transpose matrix to vec dense")
-	}
-
+	d := mat.DenseCopyOf(x)
 	r, _ := d.Dims()
-	dout := mat.NewDense(r, 1, d.RawVector().Data)
+	dout := mat.NewDense(r, 1, d.RawMatrix().Data)
 	dv := mat.NewVecDense(r, dout.RawMatrix().Data)
 	x = matutils.MulMatVec(h, dv)
 
@@ -221,7 +217,7 @@ func InitNegativeSamplingLoss(
 func (n *NegativeSamplingLoss) Forward(h, target mat.Matrix) float64 {
 	batchSize, _ := target.Dims()
 	td := mat.DenseCopyOf(target)
-	vt := td.RowView(0)
+	vt := td.ColView(0)
 
 	negativeSample := n.Sampler.GetNegativeSample(vt)
 	nsd := mat.DenseCopyOf(negativeSample)
@@ -252,6 +248,10 @@ func (n *NegativeSamplingLoss) Backward() mat.Matrix {
 	for i, l := range n.LossLayers {
 		dscore := l.Backward()
 		r := n.EmbedDotLayers[i].Backward(dscore)
+		if dh == nil {
+			dr, dc := r.Dims()
+			dh = mat.NewDense(dr, dc, nil)
+		}
 		dh.Add(dh, r)
 	}
 	return dh

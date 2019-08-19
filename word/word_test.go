@@ -54,12 +54,14 @@ func TestCreateContextsAndTarget(t *testing.T) {
 	tests := []struct {
 		name         string
 		corpus       word.Corpus
+		windowSize   int
 		wantContexts mat.Matrix
 		wantTarget   mat.Matrix
 	}{
 		{
 			name:         "simple",
 			corpus:       []float64{0, 1, 2, 3, 4, 1, 5, 6},
+			windowSize:   1,
 			wantContexts: mat.NewDense(6, 2, []float64{0, 2, 1, 3, 2, 4, 3, 1, 4, 5, 1, 6}),
 			wantTarget:   mat.NewDense(6, 1, []float64{1, 2, 3, 4, 1, 5}),
 		},
@@ -69,7 +71,7 @@ func TestCreateContextsAndTarget(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			contexts, target := word.CreateContextsAndTarget(tt.corpus)
+			contexts, target := word.CreateContextsAndTarget(tt.corpus, tt.windowSize)
 
 			if !mat.EqualApprox(contexts, tt.wantContexts, 1e-7) {
 				t.Errorf("x:\nwant = %d\ngot = %d", tt.wantContexts, contexts)

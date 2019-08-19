@@ -24,3 +24,7 @@ mnist:
 .PHONY: simplecbow
 simplecbow:
 	go test -v --tags=e2e ./... -run TestSimpleCBOW
+
+.PHONY: cbow
+cbow:
+	go test -v --tags=e2e ./... -run TestCBOW

@@ -1,22 +1,19 @@
 package nn
 
 import (
-	"fmt"
-
 	"github.com/po3rin/gonnp/entity"
 	"github.com/po3rin/gonnp/layers"
-	"github.com/po3rin/gonnp/matutils"
 	"github.com/po3rin/gonnp/word"
 	"gonum.org/v1/gonum/mat"
 )
 
-type Cbow struct {
+type CBOW struct {
 	Layers    []layers.Layer
 	LossLayer layers.LossLayer
 }
 
-func InitCBOW(vocabSize, hiddenSize, windowSize int, corpus word.Corpus) *Cbow {
-	sampleSize := 3
+func InitCBOW(vocabSize, hiddenSize, windowSize int, corpus word.Corpus) *CBOW {
+	sampleSize := 5
 
 	w1 := weightGenerator(vocabSize, hiddenSize)
 	w2 := weightGenerator(vocabSize, hiddenSize)
@@ -27,16 +24,18 @@ func InitCBOW(vocabSize, hiddenSize, windowSize int, corpus word.Corpus) *Cbow {
 	}
 
 	sampler := layers.InitUnigraSampler(corpus, 0.75, sampleSize)
-	return &Cbow{
+	return &CBOW{
 		Layers:    ls,
 		LossLayer: layers.InitNegativeSamplingLoss(w2, corpus, sampler, sampleSize),
 	}
 }
 
-func (s *Cbow) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 {
-	var h *mat.Dense
+func (s *CBOW) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 {
+	d := mat.DenseCopyOf(contexts[0])
+	dr, dc := d.Dims()
+	h := mat.NewDense(dr, dc*len(s.Layers), nil)
 	for i, l := range s.Layers {
-		r := l.Forward(matutils.At3D(contexts, i))
+		r := l.Forward(d.Slice(0, dr, i, i+1))
 		h.Add(h, r)
 	}
 
@@ -44,7 +43,7 @@ func (s *Cbow) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 {
 	return s.LossLayer.Forward(h, target)
 }
 
-func (s *Cbow) Backward() mat.Matrix {
+func (s *CBOW) Backward() mat.Matrix {
 	dout := s.LossLayer.Backward()
 	d := mat.DenseCopyOf(dout)
 	d.Scale(float64(1/len(s.Layers)), d)
@@ -55,7 +54,7 @@ func (s *Cbow) Backward() mat.Matrix {
 }
 
 // GetParams gets params that layers have.
-func (s *Cbow) GetParams() []entity.Param {
+func (s *CBOW) GetParams() []entity.Param {
 	params := make([]entity.Param, 0, len(s.Layers))
 	for _, l := range s.Layers {
 		// ignore if weight is empty.
@@ -68,7 +67,7 @@ func (s *Cbow) GetParams() []entity.Param {
 }
 
 // GetGrads gets gradient that layers have.
-func (s *Cbow) GetGrads() []entity.Grad {
+func (s *CBOW) GetGrads() []entity.Grad {
 	grads := make([]entity.Grad, 0, len(s.Layers))
 	for _, l := range s.Layers {
 		// ignore if weight is empty.
@@ -81,7 +80,7 @@ func (s *Cbow) GetGrads() []entity.Grad {
 }
 
 // UpdateParams updates lyaers params using TwoLayerMet's params.
-func (s *Cbow) UpdateParams(params []entity.Param) {
+func (s *CBOW) UpdateParams(params []entity.Param) {
 	// TODO: impliments
-	fmt.Println(len(params))
+	// fmt.Println(len(params))
 }

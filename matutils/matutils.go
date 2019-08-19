@@ -122,7 +122,7 @@ func ThinRow(x mat.Matrix, targets []int) mat.Matrix {
 	for i, v := range targets {
 		d, ok := x.(*mat.Dense)
 		if !ok {
-			panic("gonnp: failed to transpose matrix to dense")
+			d = mat.DenseCopyOf(x)
 		}
 		result.SetRow(i, d.RawRowView(v))
 	}

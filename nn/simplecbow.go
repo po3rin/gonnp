@@ -7,12 +7,12 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-type SimpleCbow struct {
+type SimpleCBOW struct {
 	Layers    []layers.Layer
 	LossLayer layers.LossLayer
 }
 
-func InitSimpleCBOW(vocabSize, hiddenSize int) *SimpleCbow {
+func InitSimpleCBOW(vocabSize, hiddenSize int) *SimpleCBOW {
 	w1 := weightGenerator(vocabSize, hiddenSize)
 	w2 := weightGenerator(hiddenSize, vocabSize)
 
@@ -22,13 +22,13 @@ func InitSimpleCBOW(vocabSize, hiddenSize int) *SimpleCbow {
 		layers.InitMatMulLayer(w2),
 	}
 
-	return &SimpleCbow{
+	return &SimpleCBOW{
 		Layers:    ls,
 		LossLayer: layers.InitSoftmaxWithLossLayer(),
 	}
 }
 
-func (s *SimpleCbow) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 {
+func (s *SimpleCBOW) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 {
 	a0 := matutils.At3D(contexts, 0)
 	a1 := matutils.At3D(contexts, 1)
 
@@ -49,7 +49,7 @@ func (s *SimpleCbow) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 
 	return s.LossLayer.Forward(score, target)
 }
 
-func (s *SimpleCbow) Backward() mat.Matrix {
+func (s *SimpleCBOW) Backward() mat.Matrix {
 	ds := s.LossLayer.Backward()
 	da := s.Layers[2].Backward(ds)
 
@@ -66,7 +66,7 @@ func (s *SimpleCbow) Backward() mat.Matrix {
 }
 
 // GetParams gets params that layers have.
-func (s *SimpleCbow) GetParams() []entity.Param {
+func (s *SimpleCBOW) GetParams() []entity.Param {
 	params := make([]entity.Param, 0, len(s.Layers))
 	for _, l := range s.Layers {
 		// ignore if weight is empty.
@@ -79,7 +79,7 @@ func (s *SimpleCbow) GetParams() []entity.Param {
 }
 
 // GetGrads gets gradient that layers have.
-func (s *SimpleCbow) GetGrads() []entity.Grad {
+func (s *SimpleCBOW) GetGrads() []entity.Grad {
 	grads := make([]entity.Grad, 0, len(s.Layers))
 	for _, l := range s.Layers {
 		// ignore if weight is empty.
@@ -92,7 +92,7 @@ func (s *SimpleCbow) GetGrads() []entity.Grad {
 }
 
 // UpdateParams updates lyaers params using TwoLayerMet's params.
-func (s *SimpleCbow) UpdateParams(params []entity.Param) {
+func (s *SimpleCBOW) UpdateParams(params []entity.Param) {
 	s.Layers[0].SetParam(params[0])
 	s.Layers[1].SetParam(params[0])
 	s.Layers[2].SetParam(params[1])
