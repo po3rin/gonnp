@@ -9,7 +9,7 @@ import (
 
 type CBOW struct {
 	Layers    []layers.Layer
-	LossLayer layers.LossLayer
+	LossLayer layers.LossLayerWithParams
 }
 
 func InitCBOW(vocabSize, hiddenSize, windowSize int, corpus word.Corpus) *CBOW {
@@ -63,6 +63,7 @@ func (s *CBOW) GetParams() []entity.Param {
 		}
 		params = append(params, l.GetParam())
 	}
+	params = append(params, s.LossLayer.GetParams()...)
 	return params
 }
 
@@ -76,11 +77,21 @@ func (s *CBOW) GetGrads() []entity.Grad {
 		}
 		grads = append(grads, l.GetGrad())
 	}
+	grads = append(grads, s.LossLayer.GetGrads()...)
 	return grads
 }
 
 // UpdateParams updates lyaers params using TwoLayerMet's params.
 func (s *CBOW) UpdateParams(params []entity.Param) {
-	// TODO: impliments
-	// fmt.Println(len(params))
+	for j, l := range s.Layers {
+		p := l.GetParam()
+		// ignore if weight is nil.
+		if p.Weight == nil {
+			continue
+		}
+		l.SetParam(params[0])
+		s.Layers[j] = l
+	}
+
+	s.LossLayer.UpdateParams([]entity.Param{params[1]})
 }

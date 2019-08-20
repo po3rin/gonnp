@@ -8,7 +8,6 @@ import (
 )
 
 func rmDuplicate(params []entity.Param, grads []entity.Grad) ([]entity.Param, []entity.Grad) {
-L:
 	for {
 		var findFlg bool
 		L := len(params)
@@ -24,15 +23,15 @@ L:
 					grads = append(grads[:j], grads[j+1:]...)
 				}
 				if findFlg {
-					break L
+					break
 				}
 			}
 			if findFlg {
-				break L
+				break
 			}
 		}
 		if !findFlg {
-			break L
+			break
 		}
 	}
 	return params, grads

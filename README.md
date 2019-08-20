@@ -131,5 +131,5 @@ func main() {
 
 ## TODO
 
-Impliments Word2Vec using Negative Sampling
-Impliments RNN
+* Impliments Word2Vec using Negative Sampling
+* Impliments RNN

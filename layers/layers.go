@@ -16,3 +16,9 @@ type LossLayer interface {
 	Forward(x mat.Matrix, teacher mat.Matrix) float64
 	Backward() mat.Matrix
 }
+
+type LossLayerWithParams interface {
+	Forward(x mat.Matrix, teacher mat.Matrix) float64
+	Backward() mat.Matrix
+	entity.ParamsManager
+}

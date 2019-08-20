@@ -256,3 +256,44 @@ func (n *NegativeSamplingLoss) Backward() mat.Matrix {
 	}
 	return dh
 }
+
+// GetParams gets params that layers have.
+func (n *NegativeSamplingLoss) GetParams() []entity.Param {
+	params := make([]entity.Param, 0, len(n.EmbedDotLayers))
+	for _, l := range n.EmbedDotLayers {
+		// ignore if weight is empty.
+		if l.GetParam().Weight == nil {
+			continue
+		}
+		params = append(params, l.GetParam())
+	}
+	return params
+}
+
+// GetGrads gets gradient that layers have.
+func (n *NegativeSamplingLoss) GetGrads() []entity.Grad {
+	grads := make([]entity.Grad, 0, len(n.EmbedDotLayers))
+	for _, l := range n.EmbedDotLayers {
+		// ignore if weight is empty.
+		if l.GetGrad().Weight == nil {
+			continue
+		}
+		grads = append(grads, l.GetGrad())
+	}
+	return grads
+}
+
+// UpdateParams updates lyaers params using args.
+func (n *NegativeSamplingLoss) UpdateParams(params []entity.Param) {
+	var i int
+	for j, l := range n.EmbedDotLayers {
+		p := l.GetParam()
+		// ignore if weight is nil.
+		if p.Weight == nil {
+			continue
+		}
+		l.SetParam(params[0])
+		n.EmbedDotLayers[j] = l
+		i++
+	}
+}

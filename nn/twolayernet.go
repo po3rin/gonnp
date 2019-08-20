@@ -6,14 +6,14 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-// TowLayerNet has layer net config.
-type TowLayerNet struct {
+// TwoLayerNet has layer net config.
+type TwoLayerNet struct {
 	Layers    []layers.Layer
 	LossLayer layers.LossLayer
 }
 
 // NewTwoLayerNet inits 2-layer-network.
-func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TowLayerNet {
+func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TwoLayerNet {
 	w1 := weightGenerator(inputSize, hiddenSize)
 	w2 := weightGenerator(hiddenSize, outputSize)
 
@@ -27,13 +27,13 @@ func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TowLayerNet {
 		layers.InitAffineLayer(w2, b2),
 	}
 
-	return &TowLayerNet{
+	return &TwoLayerNet{
 		Layers:    ls,
 		LossLayer: layers.InitSoftmaxWithLossLayer(),
 	}
 }
 
-func (t *TowLayerNet) Predict(x mat.Matrix) mat.Matrix {
+func (t *TwoLayerNet) Predict(x mat.Matrix) mat.Matrix {
 	for i, l := range t.Layers {
 		x = l.Forward(x)
 		t.Layers[i] = l
@@ -41,7 +41,7 @@ func (t *TowLayerNet) Predict(x mat.Matrix) mat.Matrix {
 	return x
 }
 
-func (t *TowLayerNet) Forward(teacher mat.Matrix, x ...mat.Matrix) float64 {
+func (t *TwoLayerNet) Forward(teacher mat.Matrix, x ...mat.Matrix) float64 {
 	m := x[0]
 	for i, l := range t.Layers {
 		m = l.Forward(m)
@@ -52,7 +52,7 @@ func (t *TowLayerNet) Forward(teacher mat.Matrix, x ...mat.Matrix) float64 {
 	return loss
 }
 
-func (t *TowLayerNet) Backward() mat.Matrix {
+func (t *TwoLayerNet) Backward() mat.Matrix {
 	dout := t.LossLayer.Backward()
 	for i := len(t.Layers) - 1; i >= 0; i-- {
 		dout = t.Layers[i].Backward(dout)
@@ -61,7 +61,7 @@ func (t *TowLayerNet) Backward() mat.Matrix {
 }
 
 // GetParams gets params that layers have.
-func (t *TowLayerNet) GetParams() []entity.Param {
+func (t *TwoLayerNet) GetParams() []entity.Param {
 	params := make([]entity.Param, 0, len(t.Layers))
 	for _, l := range t.Layers {
 		// ignore if weight is empty.
@@ -74,7 +74,7 @@ func (t *TowLayerNet) GetParams() []entity.Param {
 }
 
 // GetGrads gets gradient that layers have.
-func (t *TowLayerNet) GetGrads() []entity.Grad {
+func (t *TwoLayerNet) GetGrads() []entity.Grad {
 	grads := make([]entity.Grad, 0, len(t.Layers))
 	for _, l := range t.Layers {
 		// ignore if weight is empty.
@@ -87,7 +87,7 @@ func (t *TowLayerNet) GetGrads() []entity.Grad {
 }
 
 // UpdateParams updates lyaers params using TwoLayerMet's params.
-func (t *TowLayerNet) UpdateParams(params []entity.Param) {
+func (t *TwoLayerNet) UpdateParams(params []entity.Param) {
 	var i int
 	for j, l := range t.Layers {
 		p := l.GetParam()
