@@ -32,10 +32,14 @@ func InitCBOW(vocabSize, hiddenSize, windowSize int, corpus word.Corpus) *CBOW {
 
 func (s *CBOW) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 {
 	d := mat.DenseCopyOf(contexts[0])
-	dr, dc := d.Dims()
-	h := mat.NewDense(dr, dc*len(s.Layers), nil)
+	dr, _ := d.Dims()
+	var h *mat.Dense
 	for i, l := range s.Layers {
 		r := l.Forward(d.Slice(0, dr, i, i+1))
+		if h == nil {
+			rr, rc := r.Dims()
+			h = mat.NewDense(rr, rc, nil)
+		}
 		h.Add(h, r)
 	}
 

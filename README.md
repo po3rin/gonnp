@@ -33,7 +33,7 @@ The number of components will increase in the future.
 ### Optimizer
 
 * SDG
-* Adam
+* Adam (feature)
 
 ### Sampler
 
