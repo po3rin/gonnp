@@ -214,6 +214,30 @@ func TestExtractFromEachRows(t *testing.T) {
 	}
 }
 
+func TestThinRowWithMat(t *testing.T) {
+	tests := []struct {
+		name   string
+		input1 mat.Matrix
+		input2 mat.Vector
+		want   mat.Matrix
+	}{
+		{
+			name:   "normal",
+			input1: mat.NewDense(4, 2, []float64{2, 0, 4, 0, 0, 6, 0, 8}),
+			input2: mat.NewVecDense(2, []float64{0, 2}),
+			want:   mat.NewDense(2, 2, []float64{2, 0, 0, 6}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.ThinRowWithMat(tt.input1, tt.input2); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+			}
+		})
+	}
+}
+
 func TestOneHotVec2Index(t *testing.T) {
 	tests := []struct {
 		name  string
@@ -230,6 +254,54 @@ func TestOneHotVec2Index(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.OneHotVec2Index(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+			}
+		})
+	}
+}
+
+func TestMulMatVec(t *testing.T) {
+	tests := []struct {
+		name     string
+		inputMat mat.Matrix
+		inputVec mat.Vector
+		want     mat.Matrix
+	}{
+		{
+			name:     "normal",
+			inputMat: mat.NewDense(2, 4, []float64{2, 0, 4, 0, 0, 6, 0, 8}),
+			inputVec: mat.NewVecDense(2, []float64{2, 3}),
+			want:     mat.NewDense(2, 4, []float64{4, 0, 8, 0, 0, 18, 0, 24}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.MulMatVec(tt.inputMat, tt.inputVec); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+			}
+		})
+	}
+}
+
+func TestDivMatVec(t *testing.T) {
+	tests := []struct {
+		name     string
+		inputMat mat.Matrix
+		inputVec mat.Vector
+		want     mat.Matrix
+	}{
+		{
+			name:     "normal",
+			inputMat: mat.NewDense(2, 4, []float64{2, 0, 4, 0, 0, 6, 0, 9}),
+			inputVec: mat.NewVecDense(2, []float64{2, 3}),
+			want:     mat.NewDense(2, 4, []float64{1, 0, 2, 0, 0, 2, 0, 3}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.DivMatVec(tt.inputMat, tt.inputVec); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %d, got = %d\n", tt.want, got)
 			}
 		})
