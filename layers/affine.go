@@ -51,7 +51,6 @@ func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
 	a.Grad.Weight = &dw
 	a.Grad.Bias = db
 
-	// matutils.PrintMat(&dx)
 	return &dx
 }
 

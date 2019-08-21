@@ -150,7 +150,7 @@ func TestAdamUpdate(t *testing.T) {
 			}
 
 			for i, w := range tt.wantParams {
-				if !mat.EqualApprox(got[i].Weight, w.Weight, 1e-2) {
+				if !mat.EqualApprox(got[i].Weight, w.Weight, 1e-3) {
 					t.Errorf("x:\nwant = %d\ngot = %d", w.Weight, got[i].Weight)
 				}
 			}

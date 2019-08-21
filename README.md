@@ -33,7 +33,7 @@ The number of components will increase in the future.
 ### Optimizer
 
 * SDG
-* Adam (feature)
+* Adam
 
 ### Sampler
 
@@ -41,7 +41,68 @@ Unigram Sampler
 
 ## Quick Start
 
-### Simple Word2Vec
+### Word2Vec
+
+with Negative Sampling
+
+```go
+package e2e_test
+
+import (
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+
+	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/nn"
+	"github.com/po3rin/gonnp/optimizers"
+	"github.com/po3rin/gonnp/trainer"
+	"github.com/po3rin/gonnp/word"
+)
+
+func main() {
+	windowSize := 5
+	hiddenSize := 100
+	batchSize := 100
+	maxEpoch := 10
+
+        // prepare one-hot matrix from text data.
+	file, err := os.Open("../testdata/golang.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	text, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	corpus, w2id, id2w := word.PreProcess(string(text))
+	vocabSize := len(w2id)
+	contexts, target := word.CreateContextsAndTarget(corpus, windowSize)
+
+        // Inits model
+        model := nn.InitCBOW(vocabSize, hiddenSize, windowSize, corpus)
+        // choses optimizer
+        optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
+        // inits trainer with model & optimizer.
+        trainer := trainer.InitTrainer(model, optimizer)
+
+        // training !!
+        trainer.Fit(contexts, target, maxEpoch, batchSize)
+
+        // checks outputs
+	dist := trainer.GetWordDist()
+	_ = word.GetWord2VecFromDist(dist, id2w)
+	w2v := word.GetWord2VecFromDist(dist, id2w)
+	for w, v := range w2v {
+		fmt.Printf("=== %v ===\n", w)
+		matutils.PrintMat(v)
+	}
+}
+```
+
+### Simple Word2Vec (short text only)
 
 ```go
 package main
@@ -131,5 +192,4 @@ func main() {
 
 ## TODO
 
-* Impliments Word2Vec using Negative Sampling
 * Impliments RNN

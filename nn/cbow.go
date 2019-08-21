@@ -43,16 +43,18 @@ func (s *CBOW) Forward(target mat.Matrix, contexts ...mat.Matrix) float64 {
 		h.Add(h, r)
 	}
 
-	h.Scale(float64(1/len(s.Layers)), h)
+	h.Scale(1/float64(len(s.Layers)), h)
 	return s.LossLayer.Forward(h, target)
 }
 
 func (s *CBOW) Backward() mat.Matrix {
 	dout := s.LossLayer.Backward()
 	d := mat.DenseCopyOf(dout)
-	d.Scale(float64(1/len(s.Layers)), d)
-	for _, l := range s.Layers {
+
+	d.Scale(1/float64(len(s.Layers)), d)
+	for i, l := range s.Layers {
 		l.Backward(d)
+		s.Layers[i] = l
 	}
 	return nil
 }

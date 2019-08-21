@@ -18,8 +18,6 @@ type cache struct {
 
 type EmbeddingDot struct {
 	Embed *Embedding
-	Param entity.Param
-	Grad  entity.Grad
 	cache cache
 }
 
@@ -28,8 +26,6 @@ func InitEmbeddingDotLayer(weight mat.Matrix) *EmbeddingDot {
 	embed := InitEmbeddingLayer(weight)
 	return &EmbeddingDot{
 		Embed: embed,
-		Param: embed.GetParam(),
-		Grad:  embed.GetGrad(),
 	}
 }
 
@@ -63,15 +59,15 @@ func (e *EmbeddingDot) Backward(x mat.Matrix) mat.Matrix {
 }
 
 func (e *EmbeddingDot) GetParam() entity.Param {
-	return e.Param
+	return e.Embed.GetParam()
 }
 
 func (e *EmbeddingDot) GetGrad() entity.Grad {
-	return e.Grad
+	return e.Embed.GetGrad()
 }
 
 func (e *EmbeddingDot) SetParam(p entity.Param) {
-	e.Param = p
+	e.Embed.SetParam(p)
 }
 
 type Sampler interface {
@@ -253,6 +249,7 @@ func (n *NegativeSamplingLoss) Backward() mat.Matrix {
 			dh = mat.NewDense(dr, dc, nil)
 		}
 		dh.Add(dh, r)
+		n.LossLayers[i] = l
 	}
 	return dh
 }

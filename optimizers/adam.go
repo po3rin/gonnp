@@ -36,9 +36,10 @@ func sqrtWithMin(i, j int, v float64) float64 {
 	return math.Sqrt(v) + 1e-7
 }
 
+var it int
+
 // Update updates params using Adam argolism. supports weight only.
 func (a *Adam) Update(params []entity.Param, grads []entity.Grad) []entity.Param {
-
 	if len(a.M) == 0 {
 		for _, p := range params {
 			r, c := p.Weight.Dims()
@@ -82,5 +83,8 @@ func (a *Adam) Update(params []entity.Param, grads []entity.Grad) []entity.Param
 		d.Sub(params[i].Weight, d)
 		result[i].Weight = d
 	}
+
+	it++
+
 	return result
 }
