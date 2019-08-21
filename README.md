@@ -1,4 +1,5 @@
 <p align="center">
+  <img src="./cover.png" width="480px">
   <h3 align="center">gonnp</h3>
   <p align="center">Deep learning from scratch using Go. Specializes in natural language processing</p>
 </p>
