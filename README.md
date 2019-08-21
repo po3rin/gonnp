@@ -40,11 +40,11 @@ The number of components will increase in the future.
 
 Unigram Sampler
 
-## Quick Start
+## Sample
 
 ### Word2Vec
 
-with Negative Sampling
+with EmbeddingDot Layers & Negative Sampling
 
 ```go
 package e2e_test
@@ -103,64 +103,14 @@ func main() {
 }
 ```
 
-### Simple Word2Vec (short text only)
-
-```go
-package main
-
-import (
-	"fmt"
-
-	"github.com/po3rin/gonnp/matutils"
-	"github.com/po3rin/gonnp/nn"
-	"github.com/po3rin/gonnp/optimizers"
-	"github.com/po3rin/gonnp/trainer"
-	"github.com/po3rin/gonnp/word"
-)
-
-func main() {
-        hiddenSize := 5
-        batchSize := 3
-        maxEpoch := 1000
-
-        // prepare one-hot matrix from text data.
-        text := "You say goodbye and I say hello."
-        corpus, w2id, id2w := word.PreProcess(text)
-        vocabSize := len(w2id)
-        contexts, target := word.CreateContextsAndTarget(corpus)
-        te := word.ConvertOneHot(target, vocabSize)
-        co := word.ConvertOneHot(contexts, vocabSize)
-
-        // Inits model
-        model := nn.InitSimpleCBOW(vocabSize, hiddenSize)
-        // choses optimizer
-        optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
-        // inits trainer with model & optimizer.
-        trainer := trainer.InitTrainer(model, optimizer)
-
-        // training !!
-        trainer.Fit3D(co, matutils.At3D(te, 0), maxEpoch, batchSize)
-
-        // checks outputs
-        dist := trainer.GetWordDist()
-        w2v := word.GetWord2VecFromDist(dist, id2w)
-        for w, v := range w2v {
-                  fmt.Printf("=== %v ===\n", w)
-                  matutils.PrintMat(v)
-        }
-}
-```
-
 outputs
 
 ```bash
-=== goodbye ===
+=== you ===
 ⎡ -0.983712641282964⎤
 ⎢ 0.9633828650811918⎥
 ⎢-0.7253396760955725⎥
 ⎢-0.9927919148802162⎥
-⎣ 0.9868140369919183⎦
-=== and ===
     .
     .
     .
@@ -190,6 +140,10 @@ func main() {
         trainer.Fit(mnist.TestData, mnist.TestLabels, 10, 100)
 }
 ```
+
+## Reference
+
+https://github.com/oreilly-japan/deep-learning-from-scratch-2
 
 ## TODO
 
