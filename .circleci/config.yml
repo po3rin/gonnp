@@ -18,7 +18,7 @@ jobs:
           command: |
             # go test -race -cover -coverprofile=coverage.out ./...
             go test -cover -coverprofile=coverage.out ./...
-            go test ./... -tags=e2e
+            # go test ./... -tags=e2e
             go tool cover -html=coverage.out -o coverage.html
             mv coverage.html /tmp/artifacts
       - store_artifacts:
