@@ -20,7 +20,7 @@ func TestCBOW(t *testing.T) {
 	windowSize := 5
 	hiddenSize := 100
 	batchSize := 100
-	maxEpoch := 1
+	maxEpoch := 10
 
 	file, err := os.Open("../../testdata/golang_mini.txt")
 	if err != nil {
