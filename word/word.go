@@ -26,7 +26,8 @@ func PreProcess(text string) (Corpus, Word2ID, ID2Word) {
 	idToWord := make(ID2Word, len(words))
 
 	for _, word := range words {
-		if !containsString(wordToID, word) {
+		_, ok := wordToID[word]
+		if !ok {
 			newID := float64(len(wordToID))
 			wordToID[word] = newID
 			idToWord[newID] = word
