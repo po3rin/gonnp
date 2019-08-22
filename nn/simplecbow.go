@@ -8,15 +8,15 @@ import (
 )
 
 type SimpleCBOW struct {
-	Layers    []layers.Layer
-	LossLayer layers.LossLayer
+	Layers    []Layer
+	LossLayer LossLayer
 }
 
 func InitSimpleCBOW(vocabSize, hiddenSize int) *SimpleCBOW {
 	w1 := weightGenerator(vocabSize, hiddenSize)
 	w2 := weightGenerator(hiddenSize, vocabSize)
 
-	ls := []layers.Layer{
+	ls := []Layer{
 		layers.InitMatMulLayer(w1),
 		layers.InitMatMulLayer(w1),
 		layers.InitMatMulLayer(w2),

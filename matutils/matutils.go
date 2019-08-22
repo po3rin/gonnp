@@ -115,15 +115,16 @@ func NewRandVecWithSND(r int, _ []float64) *mat.VecDense {
 }
 
 // ThinRow thins out rows.
-func ThinRow(x mat.Matrix, targets []int) mat.Matrix {
+func ThinRow(x mat.Matrix, targets []int) *mat.Dense {
 	_, c := x.Dims()
 	result := mat.NewDense(len(targets), c, nil)
 
+	d, ok := x.(*mat.Dense)
+	if !ok {
+		d = mat.DenseCopyOf(x)
+	}
+
 	for i, v := range targets {
-		d, ok := x.(*mat.Dense)
-		if !ok {
-			d = mat.DenseCopyOf(x)
-		}
 		result.SetRow(i, d.RawRowView(v))
 	}
 	return result

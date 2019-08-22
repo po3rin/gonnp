@@ -8,8 +8,8 @@ import (
 )
 
 type CBOW struct {
-	Layers    []layers.Layer
-	LossLayer layers.LossLayerWithParams
+	Layers    []Layer
+	LossLayer LossLayerWithParams
 }
 
 func InitCBOW(vocabSize, hiddenSize, windowSize int, corpus word.Corpus) *CBOW {
@@ -18,7 +18,7 @@ func InitCBOW(vocabSize, hiddenSize, windowSize int, corpus word.Corpus) *CBOW {
 	w1 := weightGenerator(vocabSize, hiddenSize)
 	w2 := weightGenerator(vocabSize, hiddenSize)
 
-	ls := []layers.Layer{}
+	ls := []Layer{}
 	for i := 0; i < windowSize*2; i++ {
 		ls = append(ls, layers.InitEmbeddingLayer(w1))
 	}

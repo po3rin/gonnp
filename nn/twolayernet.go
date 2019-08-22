@@ -8,8 +8,8 @@ import (
 
 // TwoLayerNet has layer net config.
 type TwoLayerNet struct {
-	Layers    []layers.Layer
-	LossLayer layers.LossLayer
+	Layers    []Layer
+	LossLayer LossLayer
 }
 
 // NewTwoLayerNet inits 2-layer-network.
@@ -20,7 +20,7 @@ func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TwoLayerNet {
 	b1 := biasGenerator(hiddenSize, nil)
 	b2 := biasGenerator(outputSize, nil)
 
-	ls := []layers.Layer{
+	ls := []Layer{
 		layers.InitAffineLayer(w1, b1),
 		layers.InitReluLayer(),
 		// layers.InitSigmoidLayer(),

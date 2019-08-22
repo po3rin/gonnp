@@ -6,15 +6,22 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/po3rin/gonnp/entity"
 	"github.com/po3rin/gonnp/matutils"
-	"github.com/po3rin/gonnp/nn"
 	"github.com/po3rin/gonnp/optimizers"
 	"gonum.org/v1/gonum/mat"
 )
 
+// NeuralNet is neural network interface.
+type NeuralNet interface {
+	Forward(teacher mat.Matrix, x ...mat.Matrix) float64
+	Backward() mat.Matrix
+	entity.ParamsManager
+}
+
 // Train has trainer config.
 type Train struct {
-	Model        nn.NeuralNet
+	Model        NeuralNet
 	Optimizer    optimizers.Optimizer
 	LossList     []float64
 	EvalInterval int
@@ -32,7 +39,7 @@ func EvalInterval(i int) func(*Train) {
 }
 
 // InitTrainer inits Trainer.
-func InitTrainer(model nn.NeuralNet, opt optimizers.Optimizer, options ...OptionFunc) *Train {
+func InitTrainer(model NeuralNet, opt optimizers.Optimizer, options ...OptionFunc) *Train {
 	t := &Train{
 		Model:     model,
 		Optimizer: opt,
@@ -57,21 +64,12 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 	var lossCount int
 
 	for i := 0; i < maxEpoch; i++ {
-
 		// shuffle
 		rand.Seed(time.Now().UnixNano())
 		idx := rand.Perm(dataSize)
-		tx := matutils.ThinRow(x, idx)
-		tt := matutils.ThinRow(teacher, idx)
 
-		dx, ok := tx.(*mat.Dense)
-		if !ok {
-			panic("gonnp: failed to transpose matrix to dense")
-		}
-		dt, ok := tt.(*mat.Dense)
-		if !ok {
-			panic("gonnp: failed to transpose matrix to dense")
-		}
+		dx := matutils.ThinRow(x, idx)
+		dt := matutils.ThinRow(teacher, idx)
 
 		for j := 0; j < maxIters; j++ {
 			bx := dx.Slice(j*batchSize, (j+1)*batchSize, 0, c)

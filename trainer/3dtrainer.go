@@ -27,11 +27,7 @@ func (t *Train) Fit3D(x []mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize in
 		tx := matutils.Sort3DWithIDs(x, idx)
 
 		// shuffle t
-		tt := matutils.ThinRow(teacher, idx)
-		dt, ok := tt.(*mat.Dense)
-		if !ok {
-			panic("gonnp: failed to transpose matrix to dense")
-		}
+		dt := matutils.ThinRow(teacher, idx)
 
 		for j := 0; j < maxIters; j++ {
 			bx := tx[j*batchSize : (j+1)*batchSize]

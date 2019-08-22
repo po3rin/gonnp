@@ -28,3 +28,9 @@ simplecbow:
 .PHONY: cbow
 cbow:
 	go test -v --tags=e2e ./... -run TestCBOW
+
+.PHONY: profile
+profile:
+	go build dev/profile/cbow/main.go && \
+		./main && \
+		go tool pprof main cpu.pprof

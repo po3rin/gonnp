@@ -13,9 +13,19 @@ var (
 	// biasGenerator = mat.NewVecDense
 )
 
-// NeuralNet is neural network interface.
-type NeuralNet interface {
-	Forward(teacher mat.Matrix, x ...mat.Matrix) float64
+type Layer interface {
+	Forward(x mat.Matrix) mat.Matrix
+	Backward(x mat.Matrix) mat.Matrix
+	entity.ParamManager
+}
+
+type LossLayer interface {
+	Forward(x mat.Matrix, teacher mat.Matrix) float64
+	Backward() mat.Matrix
+}
+
+type LossLayerWithParams interface {
+	Forward(x mat.Matrix, teacher mat.Matrix) float64
 	Backward() mat.Matrix
 	entity.ParamsManager
 }

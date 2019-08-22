@@ -2,3 +2,5 @@
 .DS_Store
 cover.out
 process.yml
+main
+cpu.pprof

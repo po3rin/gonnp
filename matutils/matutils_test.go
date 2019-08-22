@@ -153,7 +153,7 @@ func TestThinRow(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.ThinRow(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
 	}

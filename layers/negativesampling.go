@@ -182,7 +182,7 @@ func weightedChoice(v, size int, w []float64) ([]float64, error) {
 type NegativeSamplingLoss struct {
 	SampleSize     int
 	EmbedDotLayers []*EmbeddingDot
-	LossLayers     []LossLayer
+	LossLayers     []*SigmoidWithLoss
 	Sampler        Sampler
 }
 
@@ -193,7 +193,7 @@ func InitNegativeSamplingLoss(
 	sampler Sampler,
 	sampleSize int,
 ) *NegativeSamplingLoss {
-	lossLayers := make([]LossLayer, 0, sampleSize+1)
+	lossLayers := make([]*SigmoidWithLoss, 0, sampleSize+1)
 	embedDotLayers := make([]*EmbeddingDot, 0, sampleSize+1)
 
 	for i := 0; i < sampleSize+1; i++ {

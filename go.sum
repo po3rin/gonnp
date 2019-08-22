@@ -8,6 +8,8 @@ github.com/petar/GoMNIST v0.0.0-20150320212226-2fbe10d0fa63 h1:xS51uYfMeRA+pLKKs
 github.com/petar/GoMNIST v0.0.0-20150320212226-2fbe10d0fa63/go.mod h1:d7fwuOuDrb75/3iplL4oWbe4MBZgWil/pSVR3ItECVU=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/pkg/profile v1.3.0 h1:OQIvuDgm00gWVWGTf4m4mCt6W1/0YqU7Ntg0mySWgaI=
+github.com/pkg/profile v1.3.0/go.mod h1:hJw3o1OdXxsrSjjVksARp5W95eeEaEfptyVZyv6JUPA=
 github.com/po3rin/gomnist v0.0.0-20190729090533-a707d482e31e h1:yJMVxXlNbiL/dADPNPaqxg40Xe/fg7zgweJp4jDpkD4=
 github.com/po3rin/gomnist v0.0.0-20190729090533-a707d482e31e/go.mod h1:cMSTKZ8SxYpV18qlzVAiyg2SSIIjYXpZPyblm85xhio=
 github.com/po3rin/matsum v0.0.0-20190721065418-87d0bf65169d h1:/HXhkWplEYAAKdNViZPrpsik+Avf6RNS+WQpaJrB1eg=
