@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
-	"github.com/po3rin/gonnp/matutils"
 	"github.com/po3rin/gonnp/nn"
 	"github.com/po3rin/gonnp/optimizers"
+	"github.com/po3rin/gonnp/store"
 	"github.com/po3rin/gonnp/testdata/ptb"
 	"github.com/po3rin/gonnp/trainer"
 	"github.com/po3rin/gonnp/word"
@@ -29,10 +29,8 @@ func main() {
 	trainer.Fit(contexts, target, maxEpoch, batchSize)
 
 	dist := trainer.GetWordDist()
-	_ = word.GetWord2VecFromDist(dist, id2w)
-	w2v := word.GetWord2VecFromDist(dist, id2w)
-	for w, v := range w2v {
-		fmt.Printf("=== %v ===\n", w)
-		matutils.PrintMat(v)
+	err := store.NewCBOW(w2id, id2w, dist).Encode("cbow.gob")
+	if err != nil {
+		log.Fatal(err)
 	}
 }

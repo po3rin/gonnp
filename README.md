@@ -40,7 +40,7 @@ The number of components will increase in the future.
 
 Unigram Sampler
 
-## Sample
+## Example
 
 ### Word2Vec
 
@@ -94,7 +94,6 @@ func main() {
 
         // checks outputs
 	dist := trainer.GetWordDist()
-	_ = word.GetWord2VecFromDist(dist, id2w)
 	w2v := word.GetWord2VecFromDist(dist, id2w)
 	for w, v := range w2v {
 		fmt.Printf("=== %v ===\n", w)
