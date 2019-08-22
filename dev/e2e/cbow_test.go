@@ -22,7 +22,7 @@ func TestCBOW(t *testing.T) {
 	batchSize := 100
 	maxEpoch := 1
 
-	file, err := os.Open("../../testdata/golang_mini.txt")
+	file, err := os.Open("../../testdata/golang.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
