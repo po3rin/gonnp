@@ -16,7 +16,7 @@ func TestMNIST(t *testing.T) {
 	optimizer := optimizers.InitSDG(0.01)
 	trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(20))
 
-	l := gomnist.NewLoader("./../testdata", gomnist.OneHotLabel(true), gomnist.Normalization(true))
+	l := gomnist.NewLoader("./../../testdata", gomnist.OneHotLabel(true), gomnist.Normalization(true))
 	mnist, err := l.Load()
 	if err != nil {
 		t.Fatalf("unexpected error: %v\n", err)
