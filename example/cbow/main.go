@@ -11,6 +11,7 @@ import (
 	"github.com/po3rin/gonnp/word"
 )
 
+// train Word2Vec.
 func main() {
 	windowSize := 5
 	hiddenSize := 100
