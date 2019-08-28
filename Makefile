@@ -31,6 +31,7 @@ cbow:
 
 .PHONY: profile
 profile:
+	# should change loop num. maxIters=10, maxEpoch=10.
 	go build dev/profile/cbow/main.go && \
 		./main && \
 		go tool pprof main cpu.pprof

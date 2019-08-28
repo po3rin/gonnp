@@ -4,7 +4,9 @@ package e2e_test
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/po3rin/gonnp/matutils"
 	"github.com/po3rin/gonnp/nn"
@@ -14,6 +16,8 @@ import (
 )
 
 func TestSimpleCBOW(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+
 	windowSize := 1
 	hiddenSize := 5
 	batchSize := 3

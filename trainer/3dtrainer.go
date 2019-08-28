@@ -4,7 +4,6 @@ package trainer
 import (
 	"fmt"
 	"math/rand"
-	"time"
 
 	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
@@ -20,7 +19,6 @@ func (t *Train) Fit3D(x []mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize in
 	var lossCount int
 
 	for i := 0; i < maxEpoch; i++ {
-		rand.Seed(time.Now().UnixNano())
 		idx := rand.Perm(dataSize)
 
 		// shuffle x

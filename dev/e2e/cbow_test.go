@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/po3rin/gonnp/matutils"
 	"github.com/po3rin/gonnp/nn"
@@ -17,6 +19,8 @@ import (
 )
 
 func TestCBOW(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+
 	windowSize := 5
 	hiddenSize := 100
 	batchSize := 100

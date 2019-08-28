@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"math/rand"
+	"time"
 
 	"github.com/po3rin/gonnp/nn"
 	"github.com/po3rin/gonnp/optimizers"
@@ -13,6 +15,8 @@ import (
 
 // train Word2Vec.
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	windowSize := 5
 	hiddenSize := 100
 	batchSize := 100

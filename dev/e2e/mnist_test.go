@@ -3,7 +3,9 @@
 package e2e_test
 
 import (
+	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/po3rin/gomnist"
 	"github.com/po3rin/gonnp/nn"
@@ -12,6 +14,8 @@ import (
 )
 
 func TestMNIST(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+
 	model := nn.NewTwoLayerNet(784, 100, 10)
 	optimizer := optimizers.InitSDG(0.01)
 	trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(20))

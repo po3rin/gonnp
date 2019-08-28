@@ -4,7 +4,6 @@ package matutils
 import (
 	"fmt"
 	"math/rand"
-	"time"
 
 	"gonum.org/v1/gonum/mat"
 )
@@ -97,7 +96,6 @@ func NewRandMatrixWithSND(r, c int) mat.Matrix {
 	a := make([]float64, 0, r*c)
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {
-			rand.Seed(time.Now().UnixNano())
 			a = append(a, rand.NormFloat64()*DsiredStdDev+DesiredMean)
 		}
 	}
@@ -108,7 +106,6 @@ func NewRandMatrixWithSND(r, c int) mat.Matrix {
 func NewRandVecWithSND(r int, _ []float64) *mat.VecDense {
 	a := make([]float64, 0, r)
 	for i := 0; i < r; i++ {
-		rand.Seed(time.Now().UnixNano())
 		a = append(a, rand.NormFloat64()*DsiredStdDev+DesiredMean)
 	}
 	return mat.NewVecDense(r, a)

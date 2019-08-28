@@ -3,7 +3,6 @@ package layers
 import (
 	"math"
 	"math/rand"
-	"time"
 
 	"github.com/po3rin/gonnp/entity"
 	"github.com/po3rin/gonnp/matutils"
@@ -137,7 +136,6 @@ func (u *UnigramSampler) GetNegativeSample(target mat.Vector) mat.Matrix {
 }
 
 var randGenerator = func(max float64) float64 {
-	rand.Seed(time.Now().UnixNano())
 	r := rand.Float64() * max
 	return r
 }
