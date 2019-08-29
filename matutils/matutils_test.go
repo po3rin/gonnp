@@ -541,6 +541,28 @@ func TestJoinC(t *testing.T) {
 	}
 }
 
+func TestNormoalizeVec(t *testing.T) {
+	tests := []struct {
+		name string
+		x    *mat.VecDense
+		want *mat.VecDense
+	}{
+		{
+			name: "4*2",
+			x:    mat.NewVecDense(5, []float64{1, 2, 3, 1, 4}),
+			want: mat.NewVecDense(5, []float64{0.1796053, 0.3592106, 0.53881591, 0.1796053, 0.71842121}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.NormoalizeVec(tt.x); !mat.EqualApprox(got, tt.want, 1e-7) {
+				t.Fatalf("want = %v, got = %v\n", tt.want, got)
+			}
+		})
+	}
+}
+
 func TestPrint(t *testing.T) {
 	d := mat.NewDense(1, 1, nil)
 	matutils.PrintMat(d)

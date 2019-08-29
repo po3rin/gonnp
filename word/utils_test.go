@@ -81,3 +81,38 @@ us: 0.5862648616313337
 		})
 	}
 }
+
+// func TestAnalogy(t *testing.T) {
+// 	tests := []struct {
+// 		name string
+// 		a    string
+// 		b    string
+// 		c    string
+// 		want string
+// 		w2id word.Word2ID
+// 		id2w word.ID2Word
+// 	}{
+// 		{
+// 			name: "simple",
+// 			a:    "king",
+// 			b:    "man",
+// 			c:    "queen",
+// 			want: "woman",
+// 		},
+// 	}
+
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			cbow := &store.CBOW{}
+// 			cbow.Decode("./../testdata/cbow.gob")
+
+// 			got, err := word.Analogy(tt.a, tt.b, tt.c, cbow.W2ID, cbow.ID2W, cbow.WordVecs)
+// 			if err != nil {
+// 				t.Fatalf("unexpected error: %+v\n", err)
+// 			}
+// 			if tt.want != got {
+// 				t.Errorf("want: %v, got: %v\n", tt.want, got)
+// 			}
+// 		})
+// 	}
+// }

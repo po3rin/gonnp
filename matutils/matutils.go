@@ -3,6 +3,7 @@ package matutils
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 
 	"gonum.org/v1/gonum/mat"
@@ -228,6 +229,17 @@ func JoinC(x mat.Matrix, y mat.Matrix) mat.Matrix {
 	}
 
 	return ed
+}
+
+// NormoalizeVec normalizes matrix.
+func NormoalizeVec(x *mat.VecDense) *mat.VecDense {
+	r, _ := x.Dims()
+	d := mat.NewVecDense(r, nil)
+	d.MulElemVec(x, x)
+	div := math.Sqrt(mat.Sum(d))
+
+	x.ScaleVec(1/div, x)
+	return x
 }
 
 // PrintDims prints dimensions for debug.
