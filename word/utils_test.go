@@ -48,22 +48,22 @@ func TestWriteMostSimilar(t *testing.T) {
 	}{
 		{
 			query: "year",
-			want: `month: 0.8566038553796044
-week: 0.7842923540411619
-summer: 0.7676705352324136
-spring: 0.7637303121661754
-decade: 0.7004195797345385
-minute: 0.5673860636841538
+			want: `month: 0.8577425321209501
+week: 0.7834646860168318
+spring: 0.7763444531620151
+summer: 0.7677653678415696
+decade: 0.7095253509774642
+minute: 0.577743504663146
 `,
 		},
 		{
 			query: "you",
-			want: `we: 0.744096372149493
-i: 0.7307638803440424
-your: 0.6390780189216694
-they: 0.6117267722023164
-someone: 0.5924593205450905
-us: 0.5862648616313337
+			want: `we: 0.7330695462803781
+i: 0.7094418928150142
+your: 0.6334623096987391
+they: 0.5993890779126023
+someone: 0.5880683533754492
+anybody: 0.5758252412919126
 `,
 		},
 	}
@@ -82,37 +82,44 @@ us: 0.5862648616313337
 	}
 }
 
-// func TestAnalogy(t *testing.T) {
-// 	tests := []struct {
-// 		name string
-// 		a    string
-// 		b    string
-// 		c    string
-// 		want string
-// 		w2id word.Word2ID
-// 		id2w word.ID2Word
-// 	}{
-// 		{
-// 			name: "simple",
-// 			a:    "king",
-// 			b:    "man",
-// 			c:    "queen",
-// 			want: "woman",
-// 		},
-// 	}
+func TestAnalogy(t *testing.T) {
+	tests := []struct {
+		name    string
+		text    string
+		a       string
+		b       string
+		c       string
+		wordMat mat.Matrix
+		want    string
+	}{
+		{
+			name: "fake data",
+			text: "you say goodbye i say",
+			a:    "say",
+			b:    "you",
+			c:    "say",
+			wordMat: mat.NewDense(5, 5, []float64{
+				0.5942552, 0.73378074, 0.76838416, 0.7570169, -0.76511973,
+				-0.79442763, -0.77520937, -0.80227834, -0.7986194, 0.78109694,
+				0.8141478, 0.8137531, 0.79203695, 0.8052735, -0.8325244,
+				-0.79765093, -0.7953921, -0.7788316, -0.7819185, 0.77854705,
+				0.80453324, 0.73260766, 0.70120907, 0.7057159, -0.7123809,
+			}),
+			want: "goodbye",
+		},
+	}
 
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			cbow := &store.CBOW{}
-// 			cbow.Decode("./../testdata/cbow.gob")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, w2id, id2w := word.PreProcess(tt.text)
 
-// 			got, err := word.Analogy(tt.a, tt.b, tt.c, cbow.W2ID, cbow.ID2W, cbow.WordVecs)
-// 			if err != nil {
-// 				t.Fatalf("unexpected error: %+v\n", err)
-// 			}
-// 			if tt.want != got {
-// 				t.Errorf("want: %v, got: %v\n", tt.want, got)
-// 			}
-// 		})
-// 	}
-// }
+			got, err := word.Analogy(tt.a, tt.b, tt.c, w2id, id2w, tt.wordMat)
+			if err != nil {
+				t.Fatalf("unexpected error: %+v\n", err)
+			}
+			if tt.want != got {
+				t.Errorf("want: %v, got: %v\n", tt.want, got)
+			}
+		})
+	}
+}

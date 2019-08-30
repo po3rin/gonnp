@@ -142,7 +142,7 @@ var randGenerator = func(max float64) float64 {
 
 // weightedChoice choice num wirh weight. Deduplication is default.
 // ref: https://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/
-// ToDo: refacts deduplication & error.
+// TODO: refacts deduplication & error.
 func weightedChoice(v, size int, w []float64) ([]float64, error) {
 	// convert v to slice.
 	vs := make([]int, 0, v)

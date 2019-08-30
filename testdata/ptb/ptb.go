@@ -62,13 +62,7 @@ func LoadData(dir, dataType string) (word.Corpus, word.Word2ID, word.ID2Word) {
 
 	eg.Go(func() error {
 		path := filepath.Join(dir, "ptb."+dataType+".txt")
-		file, err := os.Open(path)
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-
-		bytes, err := ioutil.ReadAll(file)
+		bytes, err := ioutil.ReadFile(path)
 		if err != nil {
 			return err
 		}
@@ -76,6 +70,7 @@ func LoadData(dir, dataType string) (word.Corpus, word.Word2ID, word.ID2Word) {
 		text = strings.ReplaceAll(text, "\n", "")
 		text = strings.ReplaceAll(text, "<eos>", "")
 		words = strings.Split(text, " ")
+		words = words[:len(words)-1] // rm last word ""
 		return nil
 	})
 
