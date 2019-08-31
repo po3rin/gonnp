@@ -104,6 +104,31 @@ func TestMat2VecWithColMax(t *testing.T) {
 	}
 }
 
+func TestAddMatVec(t *testing.T) {
+	tests := []struct {
+		name string
+		mat  mat.Matrix
+		vec  mat.Vector
+		want mat.Matrix
+	}{
+		{
+			name: "2*2",
+			mat:  mat.NewDense(2, 2, []float64{2, 4, 4, 2}),
+			vec:  mat.NewVecDense(2, []float64{3, 1}),
+			want: mat.NewDense(2, 2, []float64{5, 5, 7, 3}),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			if got := matutils.AddMatVec(tt.mat, tt.vec); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %v, got = %v", tt.want, got)
+			}
+		})
+	}
+}
+
 func TestSubMatVec(t *testing.T) {
 	tests := []struct {
 		name string

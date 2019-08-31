@@ -30,3 +30,15 @@ func UseCustomRandGenerator(f func(max float64) float64) (resetFunc func()) {
 		randGenerator = tmp
 	}
 }
+
+func (r *RNN) SetRNNCacheX(x mat.Matrix) {
+	r.cache.x = x
+}
+
+func (r *RNN) SetRNNCacheHPrev(h mat.Matrix) {
+	r.cache.hPrev = h
+}
+
+func (r *RNN) SetRNNCacheNextPrev(h mat.Matrix) {
+	r.cache.hNext = h
+}

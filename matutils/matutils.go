@@ -59,6 +59,17 @@ func Mat2VecWithColMax(x mat.Matrix) mat.Vector {
 	return mat.NewVecDense(r, maxs)
 }
 
+// AddMatVec add mat + vec.
+func AddMatVec(x mat.Matrix, v mat.Vector) *mat.Dense {
+	r, c := x.Dims()
+	f := func(i, j int, n float64) float64 {
+		return n + v.AtVec(j)
+	}
+	d := mat.NewDense(r, c, nil)
+	d.Apply(f, x)
+	return d
+}
+
 // SubMatVec sub mat by vec.
 func SubMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 	r, c := x.Dims()
