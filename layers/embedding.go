@@ -76,3 +76,57 @@ func (e *Embedding) GetGrad() entity.Grad {
 func (e *Embedding) SetParam(p entity.Param) {
 	e.Param = p
 }
+
+// TimeEmbedding run embedding in bulk.
+type TimeEmbedding struct {
+	Param  entity.Param
+	Grad   entity.Grad
+	Layers []*Embedding
+}
+
+// InitTimeEmbeddingLayer inits TimeEmbedding layer.
+func InitTimeEmbeddingLayer(weight mat.Matrix) *TimeEmbedding {
+	return &TimeEmbedding{
+		Param: entity.Param{
+			Weight: weight,
+		},
+	}
+}
+
+func (t *TimeEmbedding) Forward(xs mat.Matrix) []mat.Matrix {
+	N, T := xs.Dims()
+	_, D := t.Param.Weight.Dims()
+
+	out := matutils.New3D(N, T, D)
+	layers := make([]*Embedding, T)
+
+	var md mat.Dense
+	md.CloneFrom(xs)
+
+	for i := 0; i < T; i++ {
+		l := InitEmbeddingLayer(t.Param.Weight)
+		in := md.ColView(i)
+		o := l.Forward(in)
+		matutils.Set3D(out, o, i)
+		layers[i] = l
+	}
+
+	t.Layers = layers
+	return out
+
+}
+
+func (t *TimeEmbedding) Backward(dout []mat.Matrix) mat.Matrix {
+	T, _ := dout[0].Dims()
+
+	r, c := t.Param.Weight.Dims()
+	grad := mat.NewDense(r, c, nil)
+	for i := 0; i < T; i++ {
+		l := t.Layers[i]
+		l.Backward(matutils.At3D(dout, i))
+		grad.Add(grad, l.GetGrad().Weight)
+	}
+
+	t.Grad.Weight = grad
+	return nil
+}

@@ -195,12 +195,21 @@ func OneHotVec2Index(x mat.Matrix) mat.Matrix {
 	return mat.NewVecDense(r, a)
 }
 
+// New3D creates 3D matrix.
+func New3D(N, T, D int) []mat.Matrix {
+	hs := make([]mat.Matrix, N)
+
+	for i := range hs {
+		hs[i] = mat.NewDense(T, D, nil)
+	}
+	return hs
+}
+
 // At3D returns matrix. example: (6,2,7) => (6,7)
-func At3D(x []mat.Matrix, i int) mat.Matrix {
+func At3D(x []mat.Matrix, i int) *mat.Dense {
 	_, c := x[0].Dims()
 	result := mat.NewDense(len(x), c, nil)
 	for n, m := range x {
-		// r, c := m.Dims()
 		d, ok := m.(*mat.Dense)
 		if !ok {
 			panic("gonnp: failed to transpose matrix to dense")
@@ -210,6 +219,21 @@ func At3D(x []mat.Matrix, i int) mat.Matrix {
 	return result
 }
 
+// Set3D sets matrix into 3d matrix.
+func Set3D(x []mat.Matrix, s mat.Matrix, t int) []mat.Matrix {
+	sd, ok := s.(*mat.Dense)
+	if !ok {
+		panic("gonnp: failed to transpose matrix to dense")
+	}
+	for i, m := range x {
+		md := mat.DenseCopyOf(m)
+		v := sd.RawRowView(i)
+		md.SetRow(t, v)
+		x[i] = md
+	}
+	return x
+}
+
 // Sort3DWithIDs shuffles 3 dimentional matrix col using slice of integer.
 func Sort3DWithIDs(x []mat.Matrix, ids []int) []mat.Matrix {
 	result := make([]mat.Matrix, len(ids))
@@ -217,6 +241,33 @@ func Sort3DWithIDs(x []mat.Matrix, ids []int) []mat.Matrix {
 		result[i] = x[id]
 	}
 	return result
+}
+
+// Reshape3DTo2D reshapes (3,4,5) -> (12,5)
+func Reshape3DTo2D(x []mat.Matrix) *mat.Dense {
+	T, D := x[0].Dims()
+	fs := make([]float64, 0, len(x)*T*D)
+	for _, m := range x {
+		var md mat.Dense
+		md.CloneFrom(m)
+		fs = append(fs, md.RawMatrix().Data...)
+	}
+	return mat.NewDense(len(x)*T, D, fs)
+}
+
+// Reshape2DTo3D rechapes if r=2 (12,3) -> (6,2,3)
+func Reshape2DTo3D(x mat.Matrix, s int) []mat.Matrix {
+	r, D := x.Dims()
+	N := int(r / s)
+
+	var md mat.Dense
+	md.CloneFrom(x)
+
+	rs := make([]mat.Matrix, N)
+	for i := 0; i < N; i++ {
+		rs[i] = md.Slice(i*s, i*s+s, 0, D)
+	}
+	return rs
 }
 
 // JoinC join matrix.

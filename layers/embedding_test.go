@@ -102,3 +102,58 @@ func TestEmbeddingBackward(t *testing.T) {
 		})
 	}
 }
+
+func TestTimeEmbeddingForward(t *testing.T) {
+	tests := []struct {
+		name   string
+		data   mat.Matrix
+		weight mat.Matrix
+		want   []mat.Matrix
+	}{
+		{
+			name: "simple",
+			data: mat.NewDense(3, 2, []float64{
+				2, 3,
+				4, 1,
+				5, 0,
+			}),
+			weight: mat.NewDense(7, 2, []float64{
+				-0.07756537, -0.42653856,
+				-0.77619475, 0.36609185,
+				0.5545087, 0.8681872,
+				-0.17239346, 0.70797604,
+				-0.3200279, -0.6484259,
+				0.69929963, -0.42481396,
+				-0.00797722, -0.01127309,
+			}),
+			want: []mat.Matrix{
+				mat.NewDense(2, 2, []float64{
+					0.5545087, 0.8681872,
+					-0.17239346, 0.70797604,
+				}),
+				mat.NewDense(2, 2, []float64{
+					-0.3200279, -0.6484259,
+					-0.77619475, 0.36609185,
+				}),
+				mat.NewDense(2, 2, []float64{
+					0.69929963, -0.42481396,
+					-0.07756537, -0.42653856,
+				}),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			e := layers.InitTimeEmbeddingLayer(tt.weight)
+			got := e.Forward(tt.data)
+			for i, m := range got {
+				if !mat.EqualApprox(m, tt.want[i], 1e-7) {
+					t.Errorf("dx:\nwant = %d\ngot = %d", m, tt.want[i])
+				}
+			}
+		})
+	}
+}

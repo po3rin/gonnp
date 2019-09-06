@@ -387,6 +387,43 @@ func TestNewRandVecWithSND(t *testing.T) {
 	}
 }
 
+func TestNew3D(t *testing.T) {
+	tests := []struct {
+		name    string
+		N, T, D int
+		want    []mat.Matrix
+	}{
+		{
+			name: "initialize",
+			N:    2,
+			T:    3,
+			D:    4,
+			want: []mat.Matrix{
+				mat.NewDense(3, 4, []float64{
+					0, 0, 0, 0,
+					0, 0, 0, 0,
+					0, 0, 0, 0,
+				}),
+				mat.NewDense(3, 4, []float64{
+					0, 0, 0, 0,
+					0, 0, 0, 0,
+					0, 0, 0, 0,
+				}),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got := matutils.New3D(tt.N, tt.T, tt.D)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Error("not expected")
+			}
+		})
+	}
+}
+
 func TestAt3D(t *testing.T) {
 	tests := []struct {
 		name string
@@ -471,6 +508,70 @@ func TestAt3D(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := matutils.At3D(tt.x, tt.at)
 			if !mat.EqualApprox(got, tt.want, 1e-7) {
+				t.Errorf("x:\nwant = %v\ngot = %v", tt.want, got)
+			}
+		})
+	}
+}
+
+func TestSet3D(t *testing.T) {
+	tests := []struct {
+		name string
+		t    int
+		x    []mat.Matrix
+		s    mat.Matrix
+		want []mat.Matrix
+	}{
+		{
+			name: "3 dimention",
+			t:    2,
+			x: []mat.Matrix{
+				mat.NewDense(3, 2, []float64{
+					1, 1,
+					1, 2,
+					1, 3,
+				}),
+				mat.NewDense(3, 2, []float64{
+					2, 1,
+					2, 2,
+					2, 3,
+				}),
+				mat.NewDense(3, 2, []float64{
+					3, 1,
+					3, 2,
+					3, 3,
+				}),
+			},
+			s: mat.NewDense(3, 2, []float64{
+				4, 1,
+				4, 2,
+				4, 3,
+			}),
+			want: []mat.Matrix{
+				mat.NewDense(3, 2, []float64{
+					1, 1,
+					1, 2,
+					4, 1,
+				}),
+				mat.NewDense(3, 2, []float64{
+					2, 1,
+					2, 2,
+					4, 2,
+				}),
+				mat.NewDense(3, 2, []float64{
+					3, 1,
+					3, 2,
+					4, 3,
+				}),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got := matutils.Set3D(tt.x, tt.s, tt.t)
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("x:\nwant = %d\ngot = %d", tt.want, got)
 			}
 		})
@@ -537,6 +638,94 @@ func TestSort3DWithIDs(t *testing.T) {
 
 			if !reflect.DeepEqual(got, tt.notwant) {
 				t.Error("not sort")
+			}
+		})
+	}
+}
+
+func TestReshape3DTo2D(t *testing.T) {
+	tests := []struct {
+		name string
+		x    []mat.Matrix
+		want mat.Matrix
+	}{
+		{
+			name: "3 dimention",
+			x: []mat.Matrix{
+				mat.NewDense(2, 3, []float64{
+					1, 1, 1,
+					2, 2, 2,
+				}),
+				mat.NewDense(2, 3, []float64{
+					3, 3, 3,
+					4, 4, 4,
+				}),
+				mat.NewDense(2, 3, []float64{
+					5, 5, 5,
+					6, 6, 6,
+				}),
+			},
+			want: mat.NewDense(6, 3, []float64{
+				1, 1, 1,
+				2, 2, 2,
+				3, 3, 3,
+				4, 4, 4,
+				5, 5, 5,
+				6, 6, 6,
+			}),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got := matutils.Reshape3DTo2D(tt.x)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("x:\nwant = %v\ngot = %v", tt.want, got)
+			}
+		})
+	}
+}
+
+func Reshape2DTo3D(t *testing.T) {
+	tests := []struct {
+		name string
+		s    int
+		x    mat.Matrix
+		want []mat.Matrix
+	}{
+		{
+			name: "3 dimention",
+			s:    3,
+			x: mat.NewDense(6, 3, []float64{
+				1, 1, 1,
+				2, 2, 2,
+				3, 3, 3,
+				4, 4, 4,
+				5, 5, 5,
+				6, 6, 6,
+			}),
+			want: []mat.Matrix{
+				mat.NewDense(3, 3, []float64{
+					1, 1, 1,
+					2, 2, 2,
+					3, 3, 3,
+				}),
+				mat.NewDense(3, 3, []float64{
+					4, 4, 4,
+					5, 5, 5,
+					6, 6, 6,
+				}),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got := matutils.Reshape2DTo3D(tt.x, tt.s)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("x:\nwant = %v\ngot = %v", tt.want, got)
 			}
 		})
 	}
