@@ -11,13 +11,16 @@ import (
 
 // SumCol calcurates sum each of columns.
 func SumCol(x mat.Matrix) mat.Vector {
-	r, c := x.Dims()
+	_, c := x.Dims()
 	A := mat.NewVecDense(c, nil)
-	for i := 0; i < r; i++ {
-		for j := 0; j < c; j++ {
-			sum := A.AtVec(j) + x.At(i, j)
-			A.SetVec(j, sum)
-		}
+
+	d, ok := x.(*mat.Dense)
+	if !ok {
+		panic("gonnp: failed to transpose matrix to dense")
+	}
+
+	for i := 0; i < c; i++ {
+		A.SetVec(i, mat.Sum(d.ColView(i)))
 	}
 	return A
 }
@@ -61,13 +64,21 @@ func Mat2VecWithColMax(x mat.Matrix) mat.Vector {
 
 // AddMatVec add mat + vec.
 func AddMatVec(x mat.Matrix, v mat.Vector) *mat.Dense {
-	r, c := x.Dims()
-	f := func(i, j int, n float64) float64 {
-		return n + v.AtVec(j)
+	d, ok := x.(*mat.Dense)
+	if !ok {
+		panic("gonnp: failed to transpose matrix to dense")
 	}
-	d := mat.NewDense(r, c, nil)
-	d.Apply(f, x)
-	return d
+
+	r, c := x.Dims()
+	result := mat.NewDense(r, c, nil)
+	for i := 0; i < r; i++ {
+		vd := mat.NewVecDense(c, nil)
+		rv := d.RowView(i)
+		vd.AddVec(rv, v)
+		result.SetRow(i, vd.RawVector().Data)
+	}
+
+	return result
 }
 
 // SubMatVec sub mat by vec.
@@ -105,13 +116,11 @@ func DivMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 
 // NewRandMatrixWithSND creates random matrix according to standard normal distribution.
 func NewRandMatrixWithSND(r, c int) mat.Matrix {
-	a := make([]float64, 0, r*c)
-	for i := 0; i < r; i++ {
-		for j := 0; j < c; j++ {
-			a = append(a, rand.NormFloat64()*DsiredStdDev+DesiredMean)
-		}
-	}
-	return mat.NewDense(r, c, a)
+	a := mat.NewDense(r, c, nil)
+	a.Apply(func(i, j int, v float64) float64 {
+		return rand.NormFloat64()*DsiredStdDev + DesiredMean
+	}, a)
+	return a
 }
 
 // NewRandVecWithSND creates random vector according to standard normal distribution.
@@ -272,25 +281,11 @@ func Reshape2DTo3D(x mat.Matrix, s int) []mat.Matrix {
 
 // JoinC join matrix.
 func JoinC(x mat.Matrix, y mat.Matrix) mat.Matrix {
-	xr, xc := x.Dims()
-	yr, yc := y.Dims()
-
-	if xr != yr {
-		panic("gonnp: row length mismatch")
-	}
-
-	yd := mat.DenseCopyOf(y)
-	xd := mat.DenseCopyOf(x)
-	expanded := xd.Grow(0, yc)
-	ed := mat.DenseCopyOf(expanded)
-
-	for i := 0; i < yc; i++ {
-		v := yd.ColView(i)
-		vd := mat.VecDenseCopyOf(v)
-		ed.SetCol(xc+i, vd.RawVector().Data)
-	}
-
-	return ed
+	r, xc := x.Dims()
+	_, yc := y.Dims()
+	d := mat.NewDense(r, xc+yc, nil)
+	d.Augment(x, y)
+	return d
 }
 
 // NormoalizeVec normalizes matrix.

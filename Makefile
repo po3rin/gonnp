@@ -1,4 +1,4 @@
-all: test e2e staticcheck
+all: test e2e
 
 .PHONY: test
 test:

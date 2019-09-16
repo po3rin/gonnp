@@ -50,16 +50,7 @@ func (e *Embedding) Backward(x mat.Matrix) mat.Matrix {
 
 		add := mat.NewDense(c, 1, nil)
 		add.Add(wv, xv)
-
-		// TODO: refactoring...
-		ar, ac := add.Dims()
-		fs := make([]float64, 0, ar)
-		for i := 0; i < ar; i++ {
-			for j := 0; j < ac; j++ {
-				fs = append(fs, add.At(i, j))
-			}
-		}
-		gw.SetRow(id, fs)
+		gw.SetRow(id, add.RawMatrix().Data)
 	}
 	e.Grad.Weight = gw
 	return nil
