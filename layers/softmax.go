@@ -50,7 +50,7 @@ func softmax(x mat.Matrix) mat.Matrix {
 		return &result
 	}
 	d := mat.NewDense(r, c, nil)
-	m := matutils.SubMatVec(x, matutils.Mat2VecWithColMax(x))
+	m := matutils.SubMatVec(x, matutils.Mat2VecDenseWithColMax(x))
 	f := func(i, j int, v float64) float64 {
 		return math.Exp(v)
 	}

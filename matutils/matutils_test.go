@@ -37,7 +37,7 @@ func TestSumCol(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.SumCol(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d", tt.want, got)
+				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})
 	}
@@ -70,13 +70,13 @@ func TestSumRow(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.SumRow(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d", tt.want, got)
+				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})
 	}
 }
 
-func TestMat2VecWithColMax(t *testing.T) {
+func TestMat2VecDenseWithColMax(t *testing.T) {
 	tests := []struct {
 		name  string
 		input mat.Matrix
@@ -97,8 +97,8 @@ func TestMat2VecWithColMax(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.Mat2VecWithColMax(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d", tt.want, got)
+			if got := matutils.Mat2VecDenseWithColMax(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
+				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})
 	}
@@ -148,7 +148,7 @@ func TestSubMatVec(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.SubMatVec(tt.mat, tt.vec); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d", tt.want, got)
+				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})
 	}
@@ -205,7 +205,7 @@ func TestSetColToRow(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.SetColToRow(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
 	}
@@ -233,7 +233,7 @@ func TestExtractFromEachRows(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.ExtractFromEachRows(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
 	}
@@ -257,7 +257,7 @@ func TestThinRowWithMat(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.ThinRowWithMat(tt.input1, tt.input2); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
 	}
@@ -279,7 +279,7 @@ func TestOneHotVec2Index(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.OneHotVec2Index(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
 	}
@@ -303,7 +303,7 @@ func TestMulMatVec(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.MulMatVec(tt.inputMat, tt.inputVec); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
 	}
@@ -327,7 +327,7 @@ func TestDivMatVec(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.DivMatVec(tt.inputMat, tt.inputVec); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
 	}
@@ -572,7 +572,7 @@ func TestSet3D(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := matutils.Set3D(tt.x, tt.s, tt.t)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("x:\nwant = %d\ngot = %d", tt.want, got)
+				t.Errorf("x:\nwant = %v\ngot = %v", tt.want, got)
 			}
 		})
 	}
@@ -749,7 +749,7 @@ func TestJoinC(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := matutils.JoinC(tt.x, tt.y); !mat.EqualApprox(got, tt.want, 1e-14) {
-				t.Fatalf("want = %d, got = %d\n", tt.want, got)
+				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
 	}

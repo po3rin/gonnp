@@ -10,7 +10,7 @@ import (
 )
 
 // SumCol calcurates sum each of columns.
-func SumCol(x mat.Matrix) mat.Vector {
+func SumCol(x mat.Matrix) *mat.VecDense {
 	_, c := x.Dims()
 	A := mat.NewVecDense(c, nil)
 
@@ -26,7 +26,7 @@ func SumCol(x mat.Matrix) mat.Vector {
 }
 
 // SumRow calcurates sum each of rows.
-func SumRow(x mat.Matrix) mat.Vector {
+func SumRow(x mat.Matrix) *mat.VecDense {
 	r, c := x.Dims()
 	var fs []float64
 	for i := 0; i < r; i++ {
@@ -46,8 +46,8 @@ var (
 	DesiredMean = 0.0
 )
 
-// Mat2VecWithColMax mat to vec with column's max value.
-func Mat2VecWithColMax(x mat.Matrix) mat.Vector {
+// Mat2VecDenseWithColMax mat to vec with column's max value.
+func Mat2VecDenseWithColMax(x mat.Matrix) *mat.VecDense {
 	r, _ := x.Dims()
 	d, ok := x.(*mat.Dense)
 	if !ok {
@@ -82,7 +82,7 @@ func AddMatVec(x mat.Matrix, v mat.Vector) *mat.Dense {
 }
 
 // SubMatVec sub mat by vec.
-func SubMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
+func SubMatVec(x mat.Matrix, v mat.Vector) *mat.Dense {
 	r, c := x.Dims()
 	f := func(i, j int, n float64) float64 {
 		return n - v.AtVec(i)
@@ -93,7 +93,7 @@ func SubMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 }
 
 // MulMatVec mul mat by vec.
-func MulMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
+func MulMatVec(x mat.Matrix, v mat.Vector) *mat.Dense {
 	r, c := x.Dims()
 	f := func(i, j int, n float64) float64 {
 		return n * v.AtVec(i)
@@ -104,7 +104,7 @@ func MulMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 }
 
 // DivMatVec divids mat by vec.
-func DivMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
+func DivMatVec(x mat.Matrix, v mat.Vector) *mat.Dense {
 	r, c := x.Dims()
 	f := func(i, j int, n float64) float64 {
 		return n / v.AtVec(i)
@@ -115,7 +115,7 @@ func DivMatVec(x mat.Matrix, v mat.Vector) mat.Matrix {
 }
 
 // NewRandMatrixWithSND creates random matrix according to standard normal distribution.
-func NewRandMatrixWithSND(r, c int) mat.Matrix {
+func NewRandMatrixWithSND(r, c int) *mat.Dense {
 	a := mat.NewDense(r, c, nil)
 	a.Apply(func(i, j int, v float64) float64 {
 		return rand.NormFloat64()*DsiredStdDev + DesiredMean
@@ -149,7 +149,7 @@ func ThinRow(x mat.Matrix, targets []int) *mat.Dense {
 }
 
 // SetColToRow set row to row using targets.
-func SetColToRow(x mat.Matrix, targets []int) mat.Matrix {
+func SetColToRow(x mat.Matrix, targets []int) *mat.Dense {
 	r, _ := x.Dims()
 	result := mat.NewDense(r, len(targets), nil)
 	d := mat.DenseCopyOf(x)
@@ -165,7 +165,7 @@ func SetColToRow(x mat.Matrix, targets []int) mat.Matrix {
 }
 
 // ExtractFromEachRows extracts from row from targets.
-func ExtractFromEachRows(x mat.Matrix, targets []int) mat.Matrix {
+func ExtractFromEachRows(x mat.Matrix, targets []int) *mat.Dense {
 	result := mat.NewDense(1, len(targets), nil)
 	for i, v := range targets {
 		result.Set(0, i, x.At(i, v))
@@ -174,7 +174,7 @@ func ExtractFromEachRows(x mat.Matrix, targets []int) mat.Matrix {
 }
 
 // ThinRowWithMat thins out rows.
-func ThinRowWithMat(x mat.Matrix, thin mat.Matrix) mat.Matrix {
+func ThinRowWithMat(x mat.Matrix, thin mat.Matrix) *mat.Dense {
 	_, c := x.Dims()
 	r, _ := thin.Dims()
 	result := mat.NewDense(r, c, nil)
@@ -191,7 +191,7 @@ func ThinRowWithMat(x mat.Matrix, thin mat.Matrix) mat.Matrix {
 }
 
 // OneHotVec2Index converts one-hot vector to index.
-func OneHotVec2Index(x mat.Matrix) mat.Matrix {
+func OneHotVec2Index(x mat.Matrix) *mat.VecDense {
 	r, c := x.Dims()
 	a := make([]float64, 0, r)
 	for i := 0; i < r; i++ {
@@ -280,7 +280,7 @@ func Reshape2DTo3D(x mat.Matrix, s int) []mat.Matrix {
 }
 
 // JoinC join matrix.
-func JoinC(x mat.Matrix, y mat.Matrix) mat.Matrix {
+func JoinC(x mat.Matrix, y mat.Matrix) *mat.Dense {
 	r, xc := x.Dims()
 	_, yc := y.Dims()
 	d := mat.NewDense(r, xc+yc, nil)
