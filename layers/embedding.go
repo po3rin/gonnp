@@ -1,8 +1,8 @@
 package layers
 
 import (
-	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -104,7 +104,6 @@ func (t *TimeEmbedding) Forward(xs mat.Matrix) []mat.Matrix {
 
 	t.Layers = layers
 	return out
-
 }
 
 func (t *TimeEmbedding) Backward(dout []mat.Matrix) mat.Matrix {
