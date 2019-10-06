@@ -5,7 +5,7 @@ package trainer_test
 import (
 	"testing"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/matutils"
 	"github.com/po3rin/gonnp/nn"
 	"github.com/po3rin/gonnp/optimizers"
@@ -17,15 +17,15 @@ import (
 func TestRmDuplicate(t *testing.T) {
 	tests := []struct {
 		name       string
-		params     []entity.Param
-		grads      []entity.Grad
-		wantParams []entity.Param
-		wantGrads  []entity.Grad
+		params     []params.Param
+		grads      []params.Grad
+		wantParams []params.Param
+		wantGrads  []params.Grad
 	}{
 		{
 			name: "real value",
-			params: []entity.Param{
-				entity.Param{
+			params: []params.Param{
+				params.Param{
 					Weight: mat.NewDense(7, 5, []float64{
 						0.00071247, -0.00751074, 0.0051788, -0.00163169, 0.01683916,
 						-0.00305428, -0.01006934, 0.00135434, 0.01265921, -0.00022962,
@@ -36,7 +36,7 @@ func TestRmDuplicate(t *testing.T) {
 						0.00625184, 0.00085856, 0.0048198, 0.00350936, -0.00547352,
 					}),
 				},
-				entity.Param{
+				params.Param{
 					Weight: mat.NewDense(7, 5, []float64{
 						0.00071247, -0.00751074, 0.0051788, -0.00163169, 0.01683916,
 						-0.00305428, -0.01006934, 0.00135434, 0.01265921, -0.00022962,
@@ -47,7 +47,7 @@ func TestRmDuplicate(t *testing.T) {
 						0.00625184, 0.00085856, 0.0048198, 0.00350936, -0.00547352,
 					}),
 				},
-				entity.Param{
+				params.Param{
 					Weight: mat.NewDense(5, 7, []float64{
 						-1.18317632e-02, -2.08208330e-05, -1.87874207e-02, 1.16085364e-02, -2.41277339e-03, -4.38692343e-03, 1.33268259e-02,
 						-3.21541505e-03, -2.33280253e-03, -8.06818734e-03, -1.03148615e-02, 1.07880447e-02, 1.84751983e-02, 3.45306110e-04,
@@ -57,8 +57,8 @@ func TestRmDuplicate(t *testing.T) {
 					}),
 				},
 			},
-			grads: []entity.Grad{
-				entity.Grad{
+			grads: []params.Grad{
+				params.Grad{
 					Weight: mat.NewDense(7, 5, []float64{
 						-0.00021922, 0.00025485, -0.00131402, 0.00151378, -0.00061075,
 						0.00259923, 0.00153943, 0.00176951, -0.0017144, 0.00022873,
@@ -69,7 +69,7 @@ func TestRmDuplicate(t *testing.T) {
 						0., 0., 0., 0., 0.,
 					}),
 				},
-				entity.Grad{
+				params.Grad{
 					Weight: mat.NewDense(7, 5, []float64{
 						0., 0., 0., 0., 0.,
 						0., 0., 0., 0., 0.,
@@ -80,7 +80,7 @@ func TestRmDuplicate(t *testing.T) {
 						0., 0., 0., 0., 0.,
 					}),
 				},
-				entity.Grad{
+				params.Grad{
 					Weight: mat.NewDense(5, 7, []float64{
 						-7.23263197e-04, -1.88345180e-05, 1.94964953e-03, 9.62016851e-04, -7.23232408e-04, -7.23225987e-04, -7.23110269e-04,
 						-1.64165643e-05, 7.89892226e-04, -1.26347251e-04, -5.97862361e-04, -1.63935278e-05, -1.64230318e-05, -1.64494897e-05,
@@ -90,8 +90,8 @@ func TestRmDuplicate(t *testing.T) {
 					}),
 				},
 			},
-			wantParams: []entity.Param{
-				entity.Param{
+			wantParams: []params.Param{
+				params.Param{
 					Weight: mat.NewDense(7, 5, []float64{
 						-2.7330520e-04, -6.5229959e-03, 4.1811997e-03, -6.3376984e-04, 1.5844310e-02,
 						-2.0554923e-03, -9.0713920e-03, 2.3525597e-03, 1.1661050e-02, 7.5674366e-04,
@@ -102,7 +102,7 @@ func TestRmDuplicate(t *testing.T) {
 						6.2518441e-03, 8.5856044e-04, 4.8197974e-03, 3.5093622e-03, -5.4735183e-03,
 					}),
 				},
-				entity.Param{
+				params.Param{
 					Weight: mat.NewDense(5, 7, []float64{
 						-0.01282741, -0.00087706, -0.01778904, 0.01260526, -0.00340842, -0.00538257, 0.01233118,
 						-0.0040539, -0.00133679, -0.00904377, -0.0113096, 0.00994975, 0.01763666, -0.00049345,
@@ -112,8 +112,8 @@ func TestRmDuplicate(t *testing.T) {
 					}),
 				},
 			},
-			wantGrads: []entity.Grad{
-				entity.Grad{
+			wantGrads: []params.Grad{
+				params.Grad{
 					Weight: mat.NewDense(7, 5, []float64{
 						-0.00021922, 0.00025485, -0.00131402, 0.00151378, -0.00061075,
 						0.00259923, 0.00153943, 0.00176951, -0.0017144, 0.00022873,
@@ -124,7 +124,7 @@ func TestRmDuplicate(t *testing.T) {
 						0., 0., 0., 0., 0.,
 					}),
 				},
-				entity.Grad{
+				params.Grad{
 					Weight: mat.NewDense(5, 7, []float64{
 						-7.23263197e-04, -1.88345180e-05, 1.94964953e-03, 9.62016851e-04, -7.23232408e-04, -7.23225987e-04, -7.23110269e-04,
 						-1.64165643e-05, 7.89892226e-04, -1.26347251e-04, -5.97862361e-04, -1.63935278e-05, -1.64230318e-05, -1.64494897e-05,

@@ -4,7 +4,7 @@ import (
 	"math"
 	"math/rand"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/matutils"
 	"github.com/po3rin/gonnp/word"
 	"gonum.org/v1/gonum/mat"
@@ -57,15 +57,15 @@ func (e *EmbeddingDot) Backward(x mat.Matrix) mat.Matrix {
 	return dh
 }
 
-func (e *EmbeddingDot) GetParam() entity.Param {
+func (e *EmbeddingDot) GetParam() params.Param {
 	return e.Embed.GetParam()
 }
 
-func (e *EmbeddingDot) GetGrad() entity.Grad {
+func (e *EmbeddingDot) GetGrad() params.Grad {
 	return e.Embed.GetGrad()
 }
 
-func (e *EmbeddingDot) SetParam(p entity.Param) {
+func (e *EmbeddingDot) SetParam(p params.Param) {
 	e.Embed.SetParam(p)
 }
 
@@ -253,8 +253,8 @@ func (n *NegativeSamplingLoss) Backward() mat.Matrix {
 }
 
 // GetParams gets params that layers have.
-func (n *NegativeSamplingLoss) GetParams() []entity.Param {
-	params := make([]entity.Param, 0, len(n.EmbedDotLayers))
+func (n *NegativeSamplingLoss) GetParams() []params.Param {
+	params := make([]params.Param, 0, len(n.EmbedDotLayers))
 	for _, l := range n.EmbedDotLayers {
 		// ignore if weight is empty.
 		if l.GetParam().Weight == nil {
@@ -266,8 +266,8 @@ func (n *NegativeSamplingLoss) GetParams() []entity.Param {
 }
 
 // GetGrads gets gradient that layers have.
-func (n *NegativeSamplingLoss) GetGrads() []entity.Grad {
-	grads := make([]entity.Grad, 0, len(n.EmbedDotLayers))
+func (n *NegativeSamplingLoss) GetGrads() []params.Grad {
+	grads := make([]params.Grad, 0, len(n.EmbedDotLayers))
 	for _, l := range n.EmbedDotLayers {
 		// ignore if weight is empty.
 		if l.GetGrad().Weight == nil {
@@ -279,7 +279,7 @@ func (n *NegativeSamplingLoss) GetGrads() []entity.Grad {
 }
 
 // UpdateParams updates lyaers params using args.
-func (n *NegativeSamplingLoss) UpdateParams(params []entity.Param) {
+func (n *NegativeSamplingLoss) UpdateParams(params []params.Param) {
 	var i int
 	for j, l := range n.EmbedDotLayers {
 		p := l.GetParam()

@@ -22,8 +22,8 @@ type CBOW struct {
 	WordVecs mat.Matrix
 }
 
-// NewCBOW new CBOW output for encoding.
-func NewCBOW(w2id map[string]float64, id2w map[float64]string, wordVecs mat.Matrix) *CBOW {
+// NewCBOWEncoder new CBOW output for encoding.
+func NewCBOWEncoder(w2id map[string]float64, id2w map[float64]string, wordVecs mat.Matrix) *CBOW {
 	return &CBOW{
 		W2ID:     w2id,
 		ID2W:     id2w,

@@ -5,7 +5,7 @@ package layers_test
 import (
 	"testing"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/layers"
 	"gonum.org/v1/gonum/mat"
 )
@@ -313,7 +313,7 @@ func TestTimeAffineBackward(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			aff := layers.InitTimeAffineLayer(tt.input.weight, tt.input.bias)
-			aff.Param = entity.Param{
+			aff.Param = params.Param{
 				Weight: tt.input.weight,
 				Bias:   tt.input.bias,
 			}

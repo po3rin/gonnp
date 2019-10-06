@@ -2,7 +2,7 @@
 package nn
 
 import (
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
@@ -16,7 +16,7 @@ var (
 type Layer interface {
 	Forward(x mat.Matrix) mat.Matrix
 	Backward(x mat.Matrix) mat.Matrix
-	entity.ParamManager
+	params.Manager
 }
 
 type LossLayer interface {
@@ -27,5 +27,5 @@ type LossLayer interface {
 type LossLayerWithParams interface {
 	Forward(x mat.Matrix, teacher mat.Matrix) float64
 	Backward() mat.Matrix
-	entity.ParamsManager
+	params.SetManager
 }

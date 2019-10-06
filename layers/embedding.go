@@ -1,7 +1,7 @@
 package layers
 
 import (
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
@@ -9,8 +9,8 @@ import (
 // Embedding has Embedding layer param.
 type Embedding struct {
 	IDx   mat.Matrix
-	Param entity.Param
-	Grad  entity.Grad
+	Param params.Param
+	Grad  params.Grad
 }
 
 // InitEmbeddingLayer inits Embedding layer.
@@ -18,10 +18,10 @@ func InitEmbeddingLayer(weight mat.Matrix) *Embedding {
 	r, c := weight.Dims()
 	grad := mat.NewDense(r, c, nil)
 	return &Embedding{
-		Param: entity.Param{
+		Param: params.Param{
 			Weight: weight,
 		},
-		Grad: entity.Grad{
+		Grad: params.Grad{
 			Weight: grad,
 		},
 	}
@@ -56,29 +56,29 @@ func (e *Embedding) Backward(x mat.Matrix) mat.Matrix {
 	return nil
 }
 
-func (e *Embedding) GetParam() entity.Param {
+func (e *Embedding) GetParam() params.Param {
 	return e.Param
 }
 
-func (e *Embedding) GetGrad() entity.Grad {
+func (e *Embedding) GetGrad() params.Grad {
 	return e.Grad
 }
 
-func (e *Embedding) SetParam(p entity.Param) {
+func (e *Embedding) SetParam(p params.Param) {
 	e.Param = p
 }
 
 // TimeEmbedding run embedding in bulk.
 type TimeEmbedding struct {
-	Param  entity.Param
-	Grad   entity.Grad
+	Param  params.Param
+	Grad   params.Grad
 	Layers []*Embedding
 }
 
 // InitTimeEmbeddingLayer inits TimeEmbedding layer.
 func InitTimeEmbeddingLayer(weight mat.Matrix) *TimeEmbedding {
 	return &TimeEmbedding{
-		Param: entity.Param{
+		Param: params.Param{
 			Weight: weight,
 		},
 	}

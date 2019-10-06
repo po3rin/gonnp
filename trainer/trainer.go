@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/matutils"
 	"github.com/po3rin/gonnp/optimizers"
 	"gonum.org/v1/gonum/mat"
@@ -16,7 +16,7 @@ import (
 type NeuralNet interface {
 	Forward(teacher mat.Matrix, x ...mat.Matrix) float64
 	Backward() mat.Matrix
-	entity.ParamsManager
+	params.SetManager
 }
 
 // Train has trainer config.

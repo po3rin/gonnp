@@ -1,22 +1,22 @@
 package layers
 
 import (
-	"github.com/po3rin/gonnp/entity"
 	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
 
 // Affine layers perform the linear transformation
 type Affine struct {
 	X     mat.Matrix
-	Param entity.Param
-	Grad  entity.Grad
+	Param params.Param
+	Grad  params.Grad
 }
 
 // InitAffineLayer inits affine layer.
 func InitAffineLayer(weight mat.Matrix, bias mat.Vector) *Affine {
 	return &Affine{
-		Param: entity.Param{
+		Param: params.Param{
 			Weight: weight,
 			Bias:   bias,
 		},
@@ -55,30 +55,30 @@ func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
 }
 
 // GetParam gets param.
-func (a *Affine) GetParam() entity.Param {
+func (a *Affine) GetParam() params.Param {
 	return a.Param
 }
 
 // GetGrad gets gradient.
-func (a *Affine) GetGrad() entity.Grad {
+func (a *Affine) GetGrad() params.Grad {
 	return a.Grad
 }
 
-func (a *Affine) SetParam(p entity.Param) {
+func (a *Affine) SetParam(p params.Param) {
 	a.Param = p
 }
 
 // TimeAffine layers perform the linear transformation.
 type TimeAffine struct {
 	X     []mat.Matrix
-	Param entity.Param
-	Grad  entity.Grad
+	Param params.Param
+	Grad  params.Grad
 }
 
 // InitTimeAffineLayer inits affine layer.
 func InitTimeAffineLayer(weight mat.Matrix, bias mat.Vector) *TimeAffine {
 	return &TimeAffine{
-		Param: entity.Param{
+		Param: params.Param{
 			Weight: weight,
 			Bias:   bias,
 		},

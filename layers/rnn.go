@@ -3,7 +3,7 @@ package layers
 import (
 	"math"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
@@ -16,15 +16,15 @@ type rnnCache struct {
 
 // RNN is RNN's layer.
 type RNN struct {
-	Param entity.Param
-	Grad  entity.Grad
+	Param params.Param
+	Grad  params.Grad
 	cache rnnCache
 }
 
 // InitRNNLayer inits RNN layer.
 func InitRNNLayer(wx, wh mat.Matrix, b mat.Vector) *RNN {
 	return &RNN{
-		Param: entity.Param{
+		Param: params.Param{
 			Weight:  wx,
 			WeightH: wh,
 			Bias:    b,
@@ -102,8 +102,8 @@ func (r *RNN) Backward(dhNext mat.Matrix) (dx, dhPrev mat.Matrix) {
 
 // TimeRNN is Time TNN layer
 type TimeRNN struct {
-	Param    entity.Param
-	Grad     entity.Grad
+	Param    params.Param
+	Grad     params.Grad
 	Layers   []*RNN
 	H        mat.Matrix
 	Dh       mat.Matrix
@@ -113,7 +113,7 @@ type TimeRNN struct {
 // InitTimeRNNLayer inits time RNN layer.
 func InitTimeRNNLayer(wx, wh mat.Matrix, b mat.Vector, stateful bool) *TimeRNN {
 	return &TimeRNN{
-		Param: entity.Param{
+		Param: params.Param{
 			Weight:  wx,
 			WeightH: wh,
 			Bias:    b,

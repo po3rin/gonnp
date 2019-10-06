@@ -5,7 +5,7 @@ package optimizers_test
 import (
 	"testing"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/optimizers"
 	"gonum.org/v1/gonum/mat"
 )
@@ -14,39 +14,39 @@ func TestSDGUpdate(t *testing.T) {
 	tests := []struct {
 		name       string
 		lr         float64
-		params     []entity.Param
-		grads      []entity.Grad
-		wantParams []entity.Param
+		params     []params.Param
+		grads      []params.Grad
+		wantParams []params.Param
 	}{
 		{
 			name: "lr=1",
 			lr:   1,
-			params: []entity.Param{
-				entity.Param{
+			params: []params.Param{
+				params.Param{
 					Weight: mat.NewDense(2, 2, []float64{1, 2, 3, 4}),
 					Bias:   mat.NewVecDense(4, []float64{5, 6, 7, 8}),
 				},
-				entity.Param{
+				params.Param{
 					Weight: mat.NewDense(2, 2, []float64{2, 3, 4, 5}),
 					Bias:   mat.NewVecDense(4, []float64{6, 7, 8, 9}),
 				},
 			},
-			grads: []entity.Grad{
-				entity.Grad{
+			grads: []params.Grad{
+				params.Grad{
 					Weight: mat.NewDense(2, 2, []float64{1, 1, 1, 1}),
 					Bias:   mat.NewVecDense(4, []float64{2, 2, 2, 2}),
 				},
-				entity.Grad{
+				params.Grad{
 					Weight: mat.NewDense(2, 2, []float64{1, 2, 3, 4}),
 					Bias:   mat.NewVecDense(4, []float64{5, 6, 7, 8}),
 				},
 			},
-			wantParams: []entity.Param{
-				entity.Param{
+			wantParams: []params.Param{
+				params.Param{
 					Weight: mat.NewDense(2, 2, []float64{0, 1, 2, 3}),
 					Bias:   mat.NewVecDense(4, []float64{3, 4, 5, 6}),
 				},
-				entity.Param{
+				params.Param{
 					Weight: mat.NewDense(2, 2, []float64{1, 1, 1, 1}),
 					Bias:   mat.NewVecDense(4, []float64{1, 1, 1, 1}),
 				},
@@ -55,32 +55,32 @@ func TestSDGUpdate(t *testing.T) {
 		{
 			name: "lr=0.1",
 			lr:   0.1,
-			params: []entity.Param{
-				entity.Param{
+			params: []params.Param{
+				params.Param{
 					Weight: mat.NewDense(2, 2, []float64{1, 2, 3, 4}),
 					Bias:   mat.NewVecDense(4, []float64{5, 6, 7, 8}),
 				},
-				entity.Param{
+				params.Param{
 					Weight: mat.NewDense(2, 2, []float64{2, 3, 4, 5}),
 					Bias:   mat.NewVecDense(4, []float64{6, 7, 8, 9}),
 				},
 			},
-			grads: []entity.Grad{
-				entity.Grad{
+			grads: []params.Grad{
+				params.Grad{
 					Weight: mat.NewDense(2, 2, []float64{1, 1, 1, 1}),
 					Bias:   mat.NewVecDense(4, []float64{2, 2, 2, 2}),
 				},
-				entity.Grad{
+				params.Grad{
 					Weight: mat.NewDense(2, 2, []float64{1, 2, 3, 4}),
 					Bias:   mat.NewVecDense(4, []float64{5, 6, 7, 8}),
 				},
 			},
-			wantParams: []entity.Param{
-				entity.Param{
+			wantParams: []params.Param{
+				params.Param{
 					Weight: mat.NewDense(2, 2, []float64{0.9, 1.9, 2.9, 3.9}),
 					Bias:   mat.NewVecDense(4, []float64{4.8, 5.8, 6.8, 7.8}),
 				},
-				entity.Param{
+				params.Param{
 					Weight: mat.NewDense(2, 2, []float64{1.9, 2.8, 3.7, 4.6}),
 					Bias:   mat.NewVecDense(4, []float64{5.5, 6.4, 7.3, 8.2}),
 				},

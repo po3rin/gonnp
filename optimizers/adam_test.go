@@ -5,7 +5,7 @@ package optimizers_test
 import (
 	"testing"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/optimizers"
 	"gonum.org/v1/gonum/mat"
 )
@@ -20,9 +20,9 @@ func TestAdamUpdate(t *testing.T) {
 		Iter       float64
 		m          []mat.Matrix
 		v          []mat.Matrix
-		params     []entity.Param
-		grads      []entity.Grad
-		wantParams []entity.Param
+		params     []params.Param
+		grads      []params.Grad
+		wantParams []params.Param
 	}{
 		{
 			name:  "real value",
@@ -66,8 +66,8 @@ func TestAdamUpdate(t *testing.T) {
 					8.01798597e-05, 2.90550571e-03, 1.30312685e-02, 2.81218160e-03, 1.31320059e-02, 2.37426115e-03, 7.92823048e-05,
 				}),
 			},
-			params: []entity.Param{
-				entity.Param{
+			params: []params.Param{
+				params.Param{
 					Weight: mat.NewDense(7, 5, []float64{
 						-0.9310736, 1.3598018, 1.5747849, 0.87879294, -0.92997706,
 						1.160113, 0.2969906, 1.1542624, -1.1721987, 1.1808438,
@@ -78,7 +78,7 @@ func TestAdamUpdate(t *testing.T) {
 						1.0512303, -1.6471609, 1.3513477, -1.0230746, 1.0605339,
 					}),
 				},
-				entity.Param{
+				params.Param{
 					Weight: mat.NewDense(5, 7, []float64{
 						0.25506052, -0.970362, 0.64586055, -0.9080978, 0.6517141, 0.7960724, 0.25100636,
 						-1.1342931, 1.268895, 0.86125946, -1.5132158, 0.8563066, -2.1796303, -1.1416876,
@@ -88,8 +88,8 @@ func TestAdamUpdate(t *testing.T) {
 					}),
 				},
 			},
-			grads: []entity.Grad{
-				entity.Grad{
+			grads: []params.Grad{
+				params.Grad{
 					Weight: mat.NewDense(7, 5, []float64{
 						0.00275694, -0.01826525, -0.0225004, -0.002323, 0.003049,
 						-0.00422985, -0.04826664, 0.00551606, 0.00452217, -0.00413453,
@@ -100,7 +100,7 @@ func TestAdamUpdate(t *testing.T) {
 						0., 0., 0., 0., 0.,
 					}),
 				},
-				entity.Grad{
+				params.Grad{
 					Weight: mat.NewDense(5, 7, []float64{
 						0.00223061, 0.02254175, -0.02280207, -0.01217709, -0.02287244, 0.03086405, 0.0022152,
 						0.00312585, -0.00161311, -0.02096735, 0.00668951, -0.02104925, 0.03070584, 0.0031085,
@@ -110,8 +110,8 @@ func TestAdamUpdate(t *testing.T) {
 					}),
 				},
 			},
-			wantParams: []entity.Param{
-				entity.Param{
+			wantParams: []params.Param{
+				params.Param{
 					Weight: mat.NewDense(7, 5, []float64{
 						-0.93116872, 1.36011147, 1.57514612, 0.87888499, -0.93007456,
 						1.16032754, 0.29702398, 1.15435832, -1.17240636, 1.18106857,
@@ -122,7 +122,7 @@ func TestAdamUpdate(t *testing.T) {
 						1.05141384, -1.64753477, 1.35165176, -1.02324535, 1.06072188,
 					}),
 				},
-				entity.Param{
+				params.Param{
 					Weight: mat.NewDense(5, 7, []float64{
 						0.25508858, -0.97047276, 0.64589604, -0.90818429, 0.65175126, 0.79611555, 0.25103444,
 						-1.1343927, 1.26914375, 0.86138948, -1.51372807, 0.8564399, -2.18016116, -1.14178573,

@@ -1,7 +1,7 @@
 package optimizers
 
 import (
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -19,7 +19,7 @@ func InitSDG(lr float64) *SDG {
 }
 
 // Update updates prams using gradient.
-func (s *SDG) Update(params []entity.Param, grads []entity.Grad) []entity.Param {
+func (s *SDG) Update(params []params.Param, grads []params.Grad) []params.Param {
 	for n := 0; n < len(params); n++ {
 		wr, wc := grads[n].Weight.Dims()
 		l := grads[n].Bias.Len()

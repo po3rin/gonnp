@@ -1,8 +1,8 @@
 package nn
 
 import (
-	"github.com/po3rin/gonnp/entity"
 	"github.com/po3rin/gonnp/layers"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/word"
 	"gonum.org/v1/gonum/mat"
 )
@@ -60,8 +60,8 @@ func (s *CBOW) Backward() mat.Matrix {
 }
 
 // GetParams gets params that layers have.
-func (s *CBOW) GetParams() []entity.Param {
-	params := make([]entity.Param, 0, len(s.Layers))
+func (s *CBOW) GetParams() []params.Param {
+	params := make([]params.Param, 0, len(s.Layers))
 	for _, l := range s.Layers {
 		// ignore if weight is empty.
 		if l.GetParam().Weight == nil {
@@ -74,8 +74,8 @@ func (s *CBOW) GetParams() []entity.Param {
 }
 
 // GetGrads gets gradient that layers have.
-func (s *CBOW) GetGrads() []entity.Grad {
-	grads := make([]entity.Grad, 0, len(s.Layers))
+func (s *CBOW) GetGrads() []params.Grad {
+	grads := make([]params.Grad, 0, len(s.Layers))
 	for _, l := range s.Layers {
 		// ignore if weight is empty.
 		if l.GetGrad().Weight == nil {
@@ -88,16 +88,16 @@ func (s *CBOW) GetGrads() []entity.Grad {
 }
 
 // UpdateParams updates lyaers params using TwoLayerMet's params.
-func (s *CBOW) UpdateParams(params []entity.Param) {
+func (s *CBOW) UpdateParams(ps []params.Param) {
 	for j, l := range s.Layers {
 		p := l.GetParam()
 		// ignore if weight is nil.
 		if p.Weight == nil {
 			continue
 		}
-		l.SetParam(params[0])
+		l.SetParam(ps[0])
 		s.Layers[j] = l
 	}
 
-	s.LossLayer.UpdateParams([]entity.Param{params[1]})
+	s.LossLayer.UpdateParams([]params.Param{ps[1]})
 }

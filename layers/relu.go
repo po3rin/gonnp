@@ -1,14 +1,14 @@
 package layers
 
 import (
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
 
 type Relu struct {
 	X     mat.Matrix
-	Param entity.Param
-	Grad  entity.Grad
+	Param params.Param
+	Grad  params.Grad
 }
 
 // InitReluLayer inits Relu layer.
@@ -43,14 +43,14 @@ func (r *Relu) Backward(x mat.Matrix) mat.Matrix {
 	return dense
 }
 
-func (r *Relu) GetParam() entity.Param {
+func (r *Relu) GetParam() params.Param {
 	return r.Param
 }
 
-func (r *Relu) GetGrad() entity.Grad {
+func (r *Relu) GetGrad() params.Grad {
 	return r.Grad
 }
 
-func (r *Relu) SetParam(p entity.Param) {
+func (r *Relu) SetParam(p params.Param) {
 	r.Param = p
 }

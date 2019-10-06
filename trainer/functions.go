@@ -3,11 +3,11 @@ package trainer
 import (
 	"reflect"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
 
-func rmDuplicate(params []entity.Param, grads []entity.Grad) ([]entity.Param, []entity.Grad) {
+func rmDuplicate(params []params.Param, grads []params.Grad) ([]params.Param, []params.Grad) {
 	for {
 		var findFlg bool
 		L := len(params)

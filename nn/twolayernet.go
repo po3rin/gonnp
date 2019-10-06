@@ -1,7 +1,7 @@
 package nn
 
 import (
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/layers"
 	"gonum.org/v1/gonum/mat"
 )
@@ -61,8 +61,8 @@ func (t *TwoLayerNet) Backward() mat.Matrix {
 }
 
 // GetParams gets params that layers have.
-func (t *TwoLayerNet) GetParams() []entity.Param {
-	params := make([]entity.Param, 0, len(t.Layers))
+func (t *TwoLayerNet) GetParams() []params.Param {
+	params := make([]params.Param, 0, len(t.Layers))
 	for _, l := range t.Layers {
 		// ignore if weight is empty.
 		if l.GetParam().Weight == nil {
@@ -74,8 +74,8 @@ func (t *TwoLayerNet) GetParams() []entity.Param {
 }
 
 // GetGrads gets gradient that layers have.
-func (t *TwoLayerNet) GetGrads() []entity.Grad {
-	grads := make([]entity.Grad, 0, len(t.Layers))
+func (t *TwoLayerNet) GetGrads() []params.Grad {
+	grads := make([]params.Grad, 0, len(t.Layers))
 	for _, l := range t.Layers {
 		// ignore if weight is empty.
 		if l.GetGrad().Weight == nil {
@@ -87,7 +87,7 @@ func (t *TwoLayerNet) GetGrads() []entity.Grad {
 }
 
 // UpdateParams updates lyaers params using TwoLayerMet's params.
-func (t *TwoLayerNet) UpdateParams(params []entity.Param) {
+func (t *TwoLayerNet) UpdateParams(params []params.Param) {
 	var i int
 	for j, l := range t.Layers {
 		p := l.GetParam()

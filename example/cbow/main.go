@@ -34,7 +34,7 @@ func main() {
 	trainer.Fit(contexts, target, maxEpoch, batchSize)
 
 	dist := trainer.GetWordDist()
-	err := store.NewCBOW(w2id, id2w, dist).Encode("cbow.gob")
+	err := store.NewCBOWEncoder(w2id, id2w, dist).Encode("cbow.gob")
 	if err != nil {
 		log.Fatal(err)
 	}

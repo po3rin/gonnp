@@ -4,7 +4,7 @@ import (
 	"math"
 	"sync"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -38,9 +38,9 @@ func sqrtWithMin(i, j int, v float64) float64 {
 }
 
 // Update updates params using Adam argolism. supports weight only.
-func (a *Adam) Update(params []entity.Param, grads []entity.Grad) []entity.Param {
+func (a *Adam) Update(ps []params.Param, grads []params.Grad) []params.Param {
 	if len(a.M) == 0 {
-		for _, p := range params {
+		for _, p := range ps {
 			r, c := p.Weight.Dims()
 			a.M = append(a.M, mat.NewDense(r, c, nil))
 			a.V = append(a.V, mat.NewDense(r, c, nil))
@@ -51,9 +51,9 @@ func (a *Adam) Update(params []entity.Param, grads []entity.Grad) []entity.Param
 	lrT := a.LR * math.Sqrt(1.0-math.Pow(a.Beta2, a.Iter)) / (1.0 - math.Pow(a.Beta1, a.Iter))
 
 	var wg sync.WaitGroup
-	result := make([]entity.Param, len(params))
+	result := make([]params.Param, len(ps))
 
-	for i := range params {
+	for i := range ps {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
@@ -82,7 +82,7 @@ func (a *Adam) Update(params []entity.Param, grads []entity.Grad) []entity.Param
 			d.Apply(sqrtWithMin, a.V[i])
 			d.DivElem(a.M[i], d)
 			d.Scale(lrT, d)
-			d.Sub(params[i].Weight, d)
+			d.Sub(ps[i].Weight, d)
 			result[i].Weight = d
 		}(i)
 	}

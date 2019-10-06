@@ -3,15 +3,15 @@ package layers
 import (
 	"math"
 
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/matutils"
 	"gonum.org/v1/gonum/mat"
 )
 
 type Sigmoid struct {
 	X     mat.Matrix
-	Param entity.Param
-	Grad  entity.Grad
+	Param params.Param
+	Grad  params.Grad
 }
 
 // InitSigmoidLayer inits sigmoid layer.
@@ -35,15 +35,15 @@ func (s *Sigmoid) Backward(x mat.Matrix) mat.Matrix {
 	return result
 }
 
-func (s *Sigmoid) GetParam() entity.Param {
+func (s *Sigmoid) GetParam() params.Param {
 	return s.Param
 }
 
-func (s *Sigmoid) GetGrad() entity.Grad {
+func (s *Sigmoid) GetGrad() params.Grad {
 	return s.Grad
 }
 
-func (s *Sigmoid) SetParam(p entity.Param) {
+func (s *Sigmoid) SetParam(p params.Param) {
 	s.Param = p
 }
 

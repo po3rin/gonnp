@@ -1,21 +1,21 @@
 package layers
 
 import (
-	"github.com/po3rin/gonnp/entity"
+	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
 
 // MatMul layers perform the linear transformation
 type MatMul struct {
 	X     mat.Matrix
-	Param entity.Param
-	Grad  entity.Grad
+	Param params.Param
+	Grad  params.Grad
 }
 
 // InitMatMulLayer inits matmul layer.
 func InitMatMulLayer(weight mat.Matrix) *MatMul {
 	return &MatMul{
-		Param: entity.Param{
+		Param: params.Param{
 			Weight: weight,
 		},
 	}
@@ -42,15 +42,15 @@ func (m *MatMul) Backward(x mat.Matrix) mat.Matrix {
 }
 
 // GetParam gets param.
-func (m *MatMul) GetParam() entity.Param {
+func (m *MatMul) GetParam() params.Param {
 	return m.Param
 }
 
 // GetGrad gets gradient.
-func (m *MatMul) GetGrad() entity.Grad {
+func (m *MatMul) GetGrad() params.Grad {
 	return m.Grad
 }
 
-func (m *MatMul) SetParam(p entity.Param) {
+func (m *MatMul) SetParam(p params.Param) {
 	m.Param = p
 }

@@ -1,5 +1,5 @@
-// Package entity has common parametors type.
-package entity
+// Package params has common parametors type.
+package params
 
 import (
 	"gonum.org/v1/gonum/mat"
@@ -19,15 +19,15 @@ type Grad struct {
 	Bias    mat.Vector
 }
 
-// ParamsManager manages params.
-type ParamsManager interface {
+// SetManager manages params.
+type SetManager interface {
 	GetParams() []Param
 	GetGrads() []Grad
 	UpdateParams([]Param)
 }
 
-// ParamManager manages param.
-type ParamManager interface {
+// Manager manages param.
+type Manager interface {
 	GetParam() Param
 	GetGrad() Grad
 	SetParam(p Param)
