@@ -1,9 +1,9 @@
 package models
 
 import (
-	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/layers"
 	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
 
