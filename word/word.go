@@ -1,4 +1,4 @@
-// Package word is functions of processing text.
+// Package word is functions of text processing.
 package word
 
 import (

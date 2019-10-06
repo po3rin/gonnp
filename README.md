@@ -40,6 +40,22 @@ The number of components will increase in the future.
 
 Unigram Sampler
 
+## Directory
+
+```
+.
+├── layers ---( Package layers impliments various layer for neural network. )
+├── matutils ---( Package matutils has utility functions of gonum matrix. )
+├── models ---( Package models has some of neural netwark models. )
+├── optimizers ---( Package optimizers updates prams (ex. weight, bias ...) using various algorism. )
+├── params ---( Package params has common parametors type. )
+├── store ---( Package store lets you to store trained data. )
+├── testdata
+│   ├── ptb ---( Package ptb provides load PTB data functions. )
+├── trainer ---( Package trainer impliments shorhand of training for deep lerning. )
+└── word ---( Package word is functions of text processing. )
+```
+
 ## Example
 
 ### Word2Vec

@@ -1,4 +1,4 @@
-// Package models is some of neural netwark models.
+// Package models has some of neural netwark models.
 package models
 
 import (

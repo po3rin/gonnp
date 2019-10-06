@@ -1,4 +1,4 @@
-// Package optimizers updates prams (ex. weight, bias ...) using various algorism.
+// Package optimizers updates params (ex. weight, bias ...) using various algorism.
 package optimizers
 
 import "github.com/po3rin/gonnp/params"

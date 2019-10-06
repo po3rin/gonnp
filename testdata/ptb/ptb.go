@@ -1,3 +1,4 @@
+// Package ptb provides load PTB data functions.
 package ptb
 
 import (
