@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/po3rin/gonnp/nn"
+	"github.com/po3rin/gonnp/models"
 	"github.com/po3rin/gonnp/optimizers"
 	"github.com/po3rin/gonnp/store"
 	"github.com/po3rin/gonnp/testdata/ptb"
@@ -27,7 +27,7 @@ func main() {
 
 	contexts, target := word.CreateContextsAndTarget(corpus, windowSize)
 
-	model := nn.InitCBOW(vocabSize, hiddenSize, windowSize, corpus)
+	model := models.InitCBOW(vocabSize, hiddenSize, windowSize, corpus)
 	optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
 	trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(20))
 

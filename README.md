@@ -56,7 +56,7 @@ import (
 	"os"
 
 	"github.com/po3rin/gonnp/matutils"
-	"github.com/po3rin/gonnp/nn"
+	"github.com/po3rin/gonnp/models"
 	"github.com/po3rin/gonnp/optimizers"
 	"github.com/po3rin/gonnp/trainer"
 	"github.com/po3rin/gonnp/word"
@@ -83,7 +83,7 @@ func main() {
 	contexts, target := word.CreateContextsAndTarget(corpus, windowSize)
 
         // Inits model
-        model := nn.InitCBOW(vocabSize, hiddenSize, windowSize, corpus)
+        model := models.InitCBOW(vocabSize, hiddenSize, windowSize, corpus)
         // choses optimizer
         optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
         // inits trainer with model & optimizer.
@@ -122,13 +122,13 @@ package main
 
 import (
         "github.com/po3rin/gomnist"
-        "github.com/po3rin/gonnp/nn"
+        "github.com/po3rin/gonnp/models"
         "github.com/po3rin/gonnp/optimizers"
         "github.com/po3rin/gonnp/trainer"
 )
 
 func main() {
-        model := nn.NewTwoLayerNet(784, 100, 10)
+        model := models.NewTwoLayerNet(784, 100, 10)
         optimizer := optimizers.InitSDG(0.01)
         trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(20))
 

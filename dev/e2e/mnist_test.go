@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/po3rin/gomnist"
-	"github.com/po3rin/gonnp/nn"
+	"github.com/po3rin/gonnp/models"
 	"github.com/po3rin/gonnp/optimizers"
 	"github.com/po3rin/gonnp/trainer"
 )
@@ -16,7 +16,7 @@ import (
 func TestMNIST(t *testing.T) {
 	rand.Seed(time.Now().UnixNano())
 
-	model := nn.NewTwoLayerNet(784, 100, 10)
+	model := models.NewTwoLayerNet(784, 100, 10)
 	optimizer := optimizers.InitSDG(0.01)
 	trainer := trainer.InitTrainer(model, optimizer, trainer.EvalInterval(20))
 

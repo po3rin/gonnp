@@ -1,5 +1,5 @@
-// Package nn is some of neural netwark models.
-package nn
+// Package models is some of neural netwark models.
+package models
 
 import (
 	"github.com/po3rin/gonnp/params"

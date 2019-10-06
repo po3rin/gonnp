@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/po3rin/gonnp/matutils"
-	"github.com/po3rin/gonnp/nn"
+	"github.com/po3rin/gonnp/models"
 	"github.com/po3rin/gonnp/optimizers"
 	"github.com/po3rin/gonnp/trainer"
 	"github.com/po3rin/gonnp/word"
@@ -40,7 +40,7 @@ func TestCBOW(t *testing.T) {
 
 	contexts, target := word.CreateContextsAndTarget(corpus, windowSize)
 
-	model := nn.InitCBOW(vocabSize, hiddenSize, windowSize, corpus)
+	model := models.InitCBOW(vocabSize, hiddenSize, windowSize, corpus)
 	optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
 	trainer := trainer.InitTrainer(model, optimizer)
 	trainer.Fit(contexts, target, maxEpoch, batchSize)

@@ -1,4 +1,4 @@
-package nn
+package models
 
 import (
 	"github.com/po3rin/gonnp/params"

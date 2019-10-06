@@ -7,7 +7,7 @@ import (
 
 	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/matutils"
-	"github.com/po3rin/gonnp/nn"
+	"github.com/po3rin/gonnp/models"
 	"github.com/po3rin/gonnp/optimizers"
 	"github.com/po3rin/gonnp/trainer"
 	"github.com/po3rin/gonnp/word"
@@ -178,7 +178,7 @@ func Test3DFit(t *testing.T) {
 	te := word.ConvertOneHot(target, vocabSize)
 	co := word.ConvertOneHot(contexts, vocabSize)
 
-	model := nn.InitSimpleCBOW(vocabSize, hiddenSize)
+	model := models.InitSimpleCBOW(vocabSize, hiddenSize)
 	optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
 	trainer := trainer.InitTrainer(model, optimizer)
 
