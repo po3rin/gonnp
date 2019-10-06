@@ -10,7 +10,6 @@ import (
 var (
 	weightGenerator = matutils.NewRandMatrixWithSND
 	biasGenerator   = matutils.NewRandVecWithSND
-	// biasGenerator = mat.NewVecDense
 )
 
 type Layer interface {
