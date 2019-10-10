@@ -216,7 +216,7 @@ func TestExtractFromEachRows(t *testing.T) {
 		name   string
 		input  mat.Matrix
 		target []int
-		want   mat.Matrix
+		want   *mat.VecDense
 	}{
 		{
 			name: "4*2",
@@ -226,7 +226,7 @@ func TestExtractFromEachRows(t *testing.T) {
 				8, 9, 10,
 			}),
 			target: []int{0, 2, 2},
-			want:   mat.NewDense(1, 3, []float64{0, 6, 10}),
+			want:   mat.NewVecDense(3, []float64{0, 6, 10}),
 		},
 	}
 

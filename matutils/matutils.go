@@ -165,10 +165,10 @@ func SetColToRow(x mat.Matrix, targets []int) *mat.Dense {
 }
 
 // ExtractFromEachRows extracts from row from targets.
-func ExtractFromEachRows(x mat.Matrix, targets []int) *mat.Dense {
-	result := mat.NewDense(1, len(targets), nil)
+func ExtractFromEachRows(x mat.Matrix, targets []int) *mat.VecDense {
+	result := mat.NewVecDense(len(targets), nil)
 	for i, v := range targets {
-		result.Set(0, i, x.At(i, v))
+		result.SetVec(i, x.At(i, v))
 	}
 	return result
 }
@@ -179,11 +179,12 @@ func ThinRowWithMat(x mat.Matrix, thin mat.Matrix) *mat.Dense {
 	r, _ := thin.Dims()
 	result := mat.NewDense(r, c, nil)
 
+	d, ok := x.(*mat.Dense)
+	if !ok {
+		panic("gonnp: x does not support other than *mat.Dense")
+	}
+
 	for i := 0; i < r; i++ {
-		d, ok := x.(*mat.Dense)
-		if !ok {
-			panic("gonnp: failed to transpose matrix to dense")
-		}
 		v := thin.At(i, 0)
 		result.SetRow(i, d.RawRowView(int(v)))
 	}
@@ -221,7 +222,7 @@ func At3D(x []mat.Matrix, i int) *mat.Dense {
 	for n, m := range x {
 		d, ok := m.(*mat.Dense)
 		if !ok {
-			panic("gonnp: failed to transpose matrix to dense")
+			panic("gonnp: x's element does not support other than *mat.Dense")
 		}
 		result.SetRow(n, d.RawRowView(i))
 	}
@@ -232,7 +233,7 @@ func At3D(x []mat.Matrix, i int) *mat.Dense {
 func Set3D(x []mat.Matrix, s mat.Matrix, t int) []mat.Matrix {
 	sd, ok := s.(*mat.Dense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: s does not support other than *mat.Dense")
 	}
 	for i, m := range x {
 		md := mat.DenseCopyOf(m)
@@ -289,14 +290,14 @@ func JoinC(x mat.Matrix, y mat.Matrix) *mat.Dense {
 }
 
 // NormoalizeVec normalizes matrix.
-func NormoalizeVec(x *mat.VecDense) *mat.VecDense {
+func NormoalizeVec(x mat.Vector) *mat.VecDense {
 	r, _ := x.Dims()
 	d := mat.NewVecDense(r, nil)
 	d.MulElemVec(x, x)
 	div := math.Sqrt(mat.Sum(d))
 
-	x.ScaleVec(1/div, x)
-	return x
+	d.ScaleVec(1/div, x)
+	return d
 }
 
 // PrintDims prints dimensions for debug.

@@ -23,7 +23,6 @@ func NewTwoLayerNet(inputSize, hiddenSize, outputSize int) *TwoLayerNet {
 	ls := []Layer{
 		layers.InitAffineLayer(w1, b1),
 		layers.InitReluLayer(),
-		// layers.InitSigmoidLayer(),
 		layers.InitAffineLayer(w2, b2),
 	}
 
