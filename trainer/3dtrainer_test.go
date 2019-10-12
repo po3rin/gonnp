@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/po3rin/gonnp/params"
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"github.com/po3rin/gonnp/models"
 	"github.com/po3rin/gonnp/optimizers"
 	"github.com/po3rin/gonnp/trainer"
@@ -183,6 +183,6 @@ func Test3DFit(t *testing.T) {
 	trainer := trainer.InitTrainer(model, optimizer)
 
 	// checks no panic ...
-	trainer.Fit3D(co, matutils.At3D(te, 0), maxEpoch, batchSize)
+	trainer.Fit3D(co, matutil.At3D(te, 0), maxEpoch, batchSize)
 	_ = trainer.GetWordDist()
 }

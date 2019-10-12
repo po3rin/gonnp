@@ -3,7 +3,7 @@ package layers
 import (
 	"math"
 
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -50,13 +50,13 @@ func softmax(x mat.Matrix) mat.Matrix {
 		return &result
 	}
 	d := mat.NewDense(r, c, nil)
-	m := matutils.SubMatVec(x, matutils.Mat2VecDenseWithColMax(x))
+	m := matutil.SubMatVec(x, matutil.Mat2VecDenseWithColMax(x))
 	f := func(i, j int, v float64) float64 {
 		return math.Exp(v)
 	}
 	d.Apply(f, m)
-	v := matutils.SumRow(d)
-	result := matutils.DivMatVec(d, v)
+	v := matutil.SumRow(d)
+	result := matutil.DivMatVec(d, v)
 	return result
 }
 
@@ -74,7 +74,7 @@ func crossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
 	}
 
 	if batchSize == tr && dc == tc {
-		oh := matutils.OneHotVec2Index(t)
+		oh := matutil.OneHotVec2Index(t)
 		t = mat.DenseCopyOf(oh)
 	}
 
@@ -92,9 +92,9 @@ func crossEntropyErr(data mat.Matrix, teacher mat.Matrix) float64 {
 	tr, tc = t.Dims()
 	var sd mat.Matrix
 	if tc == 1 {
-		sd = matutils.SetColToRow(d, ints)
+		sd = matutil.SetColToRow(d, ints)
 	} else if tr == 1 {
-		sd = matutils.ExtractFromEachRows(d, ints)
+		sd = matutil.ExtractFromEachRows(d, ints)
 	}
 
 	crossEnrtopy := func(i, j int, v float64) float64 {

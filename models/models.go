@@ -2,14 +2,14 @@
 package models
 
 import (
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
 
 var (
-	weightGenerator = matutils.NewRandMatrixWithSND
-	biasGenerator   = matutils.NewRandVecWithSND
+	weightGenerator = matutil.NewRandMatrixWithSND
+	biasGenerator   = matutil.NewRandVecWithSND
 )
 
 type Layer interface {

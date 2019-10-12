@@ -1,12 +1,12 @@
 // +build !e2e
 
-package matutils_test
+package matutil_test
 
 import (
 	"reflect"
 	"testing"
 
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -36,7 +36,7 @@ func TestSumCol(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.SumCol(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.SumCol(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})
@@ -69,7 +69,7 @@ func TestSumRow(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.SumRow(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.SumRow(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})
@@ -97,7 +97,7 @@ func TestMat2VecDenseWithColMax(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.Mat2VecDenseWithColMax(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.Mat2VecDenseWithColMax(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})
@@ -122,7 +122,7 @@ func TestAddMatVec(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.AddMatVec(tt.mat, tt.vec); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.AddMatVec(tt.mat, tt.vec); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})
@@ -147,7 +147,7 @@ func TestSubMatVec(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.SubMatVec(tt.mat, tt.vec); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.SubMatVec(tt.mat, tt.vec); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v", tt.want, got)
 			}
 		})
@@ -177,7 +177,7 @@ func TestThinRow(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.ThinRow(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.ThinRow(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
@@ -204,7 +204,7 @@ func TestSetColToRow(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.SetColToRow(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.SetColToRow(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
@@ -232,7 +232,7 @@ func TestExtractFromEachRows(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.ExtractFromEachRows(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.ExtractFromEachRows(tt.input, tt.target); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
@@ -256,7 +256,7 @@ func TestThinRowWithMat(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.ThinRowWithMat(tt.input1, tt.input2); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.ThinRowWithMat(tt.input1, tt.input2); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
@@ -278,7 +278,7 @@ func TestOneHotVec2Index(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.OneHotVec2Index(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.OneHotVec2Index(tt.input); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
@@ -302,7 +302,7 @@ func TestMulMatVec(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.MulMatVec(tt.inputMat, tt.inputVec); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.MulMatVec(tt.inputMat, tt.inputVec); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
@@ -326,7 +326,7 @@ func TestDivMatVec(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.DivMatVec(tt.inputMat, tt.inputVec); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.DivMatVec(tt.inputMat, tt.inputVec); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
@@ -353,7 +353,7 @@ func TestNewRandMatrixWithSND(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got := matutils.NewRandMatrixWithSND(tt.r, tt.c)
+			got := matutil.NewRandMatrixWithSND(tt.r, tt.c)
 			if r, c := got.Dims(); r != tt.r || c != tt.c {
 				t.Fatalf("want = [%v, %v], got = [%v, %v]\n", tt.r, tt.c, r, c)
 			}
@@ -379,7 +379,7 @@ func TestNewRandVecWithSND(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got := matutils.NewRandVecWithSND(tt.r, nil)
+			got := matutil.NewRandVecWithSND(tt.r, nil)
 			if r, _ := got.Dims(); r != tt.r {
 				t.Fatalf("want = %v, got = %v\n", tt.r, r)
 			}
@@ -416,7 +416,7 @@ func TestNew3D(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got := matutils.New3D(tt.N, tt.T, tt.D)
+			got := matutil.New3D(tt.N, tt.T, tt.D)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Error("not expected")
 			}
@@ -506,7 +506,7 @@ func TestAt3D(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got := matutils.At3D(tt.x, tt.at)
+			got := matutil.At3D(tt.x, tt.at)
 			if !mat.EqualApprox(got, tt.want, 1e-7) {
 				t.Errorf("x:\nwant = %v\ngot = %v", tt.want, got)
 			}
@@ -570,7 +570,7 @@ func TestSet3D(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got := matutils.Set3D(tt.x, tt.s, tt.t)
+			got := matutil.Set3D(tt.x, tt.s, tt.t)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("x:\nwant = %v\ngot = %v", tt.want, got)
 			}
@@ -634,7 +634,7 @@ func TestSort3DWithIDs(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got := matutils.Sort3DWithIDs(tt.x, tt.ids)
+			got := matutil.Sort3DWithIDs(tt.x, tt.ids)
 
 			if !reflect.DeepEqual(got, tt.notwant) {
 				t.Error("not sort")
@@ -679,7 +679,7 @@ func TestReshape3DTo2D(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got := matutils.Reshape3DTo2D(tt.x)
+			got := matutil.Reshape3DTo2D(tt.x)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("x:\nwant = %v\ngot = %v", tt.want, got)
 			}
@@ -723,7 +723,7 @@ func Reshape2DTo3D(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got := matutils.Reshape2DTo3D(tt.x, tt.s)
+			got := matutil.Reshape2DTo3D(tt.x, tt.s)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("x:\nwant = %v\ngot = %v", tt.want, got)
 			}
@@ -748,7 +748,7 @@ func TestJoinC(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.JoinC(tt.x, tt.y); !mat.EqualApprox(got, tt.want, 1e-14) {
+			if got := matutil.JoinC(tt.x, tt.y); !mat.EqualApprox(got, tt.want, 1e-14) {
 				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
@@ -770,7 +770,7 @@ func TestNormoalizeVec(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := matutils.NormoalizeVec(tt.x); !mat.EqualApprox(got, tt.want, 1e-7) {
+			if got := matutil.NormoalizeVec(tt.x); !mat.EqualApprox(got, tt.want, 1e-7) {
 				t.Fatalf("want = %v, got = %v\n", tt.want, got)
 			}
 		})
@@ -779,7 +779,7 @@ func TestNormoalizeVec(t *testing.T) {
 
 func TestPrint(t *testing.T) {
 	d := mat.NewDense(1, 1, nil)
-	matutils.PrintMat(d)
-	matutils.PrintDims(d)
-	matutils.Print3D([]mat.Matrix{d})
+	matutil.PrintMat(d)
+	matutil.PrintDims(d)
+	matutil.Print3D([]mat.Matrix{d})
 }

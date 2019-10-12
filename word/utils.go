@@ -6,7 +6,7 @@ import (
 	"math"
 	"sort"
 
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -25,11 +25,11 @@ func (s similarList) Less(i, j int) bool { return s[i].score > s[j].score }
 func cosSimilarity(x, y mat.Vector) float64 {
 	xd, ok := x.(*mat.VecDense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 	yd, ok := y.(*mat.VecDense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 
 	r, _ := x.Dims()
@@ -62,7 +62,7 @@ func WriteMostSimilar(w io.Writer, query string, w2id Word2ID, id2w ID2Word, wor
 
 	d, ok := wordMatrix.(*mat.Dense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 	fmt.Printf("[query] %s\n", query)
 	queryID := w2id[query]
@@ -120,7 +120,7 @@ func Analogy(a, b, c string, w2id Word2ID, id2w ID2Word, wordMatrix mat.Matrix) 
 
 	wm, ok := wordMatrix.(*mat.Dense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 
 	av := wm.RowView(int(aID))
@@ -129,22 +129,22 @@ func Analogy(a, b, c string, w2id Word2ID, id2w ID2Word, wordMatrix mat.Matrix) 
 
 	avd, ok := av.(*mat.VecDense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 	bvd, ok := bv.(*mat.VecDense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 	cvd, ok := cv.(*mat.VecDense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 
 	r, _ := avd.Dims()
 	queryVec := mat.NewVecDense(r, nil)
 	queryVec.SubVec(bvd, avd)
 	queryVec.AddVec(queryVec, cvd)
-	queryVec = matutils.NormoalizeVec(queryVec)
+	queryVec = matutil.NormoalizeVec(queryVec)
 
 	mr, _ := wordMatrix.Dims()
 	similarity := mat.NewDense(mr, 1, nil)

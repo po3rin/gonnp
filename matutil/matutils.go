@@ -1,5 +1,5 @@
-// Package matutils has utility functions of gonum matrix.
-package matutils
+// Package matutil has utility functions of gonum matrix.
+package matutil
 
 import (
 	"fmt"
@@ -12,17 +12,21 @@ import (
 // SumCol calcurates sum each of columns.
 func SumCol(x mat.Matrix) *mat.VecDense {
 	_, c := x.Dims()
-	A := mat.NewVecDense(c, nil)
 
-	d, ok := x.(*mat.Dense)
-	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
-	}
+	switch m := x.(type) {
+	case *mat.Dense:
+		d := mat.NewVecDense(c, nil)
+		for i := 0; i < c; i++ {
+			d.SetVec(i, mat.Sum(m.ColView(i)))
+		}
+		return d
 
-	for i := 0; i < c; i++ {
-		A.SetVec(i, mat.Sum(d.ColView(i)))
+	case *mat.VecDense:
+		return mat.NewVecDense(1, []float64{mat.Sum(m)})
+
+	default:
+		panic("gonnp: not yet support type")
 	}
-	return A
 }
 
 // SumRow calcurates sum each of rows.
@@ -51,7 +55,7 @@ func Mat2VecDenseWithColMax(x mat.Matrix) *mat.VecDense {
 	r, _ := x.Dims()
 	d, ok := x.(*mat.Dense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 	maxs := make([]float64, 0, r)
 	for i := 0; i < r; i++ {
@@ -66,7 +70,7 @@ func Mat2VecDenseWithColMax(x mat.Matrix) *mat.VecDense {
 func AddMatVec(x mat.Matrix, v mat.Vector) *mat.Dense {
 	d, ok := x.(*mat.Dense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 
 	r, c := x.Dims()

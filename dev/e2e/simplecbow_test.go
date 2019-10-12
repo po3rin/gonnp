@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"github.com/po3rin/gonnp/models"
 	"github.com/po3rin/gonnp/optimizers"
 	"github.com/po3rin/gonnp/trainer"
@@ -36,11 +36,11 @@ func TestSimpleCBOW(t *testing.T) {
 	optimizer := optimizers.InitAdam(0.001, 0.9, 0.999)
 	trainer := trainer.InitTrainer(model, optimizer)
 
-	trainer.Fit3D(co, matutils.At3D(te, 0), maxEpoch, batchSize)
+	trainer.Fit3D(co, matutil.At3D(te, 0), maxEpoch, batchSize)
 	dist := trainer.GetWordDist()
 	w2v := word.GetWord2VecFromDist(dist, id2w)
 	for w, v := range w2v {
 		fmt.Printf("=== %v ===\n", w)
-		matutils.PrintMat(v)
+		matutil.PrintMat(v)
 	}
 }

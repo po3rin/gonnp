@@ -4,7 +4,7 @@ import (
 	"math"
 
 	"github.com/po3rin/gonnp/params"
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -44,7 +44,7 @@ func (r *RNN) Forward(x, hPrev mat.Matrix) mat.Matrix {
 	d2.Product(x, r.Param.Weight)
 
 	d1.Add(d1, d2)
-	t := matutils.AddMatVec(d1, r.Param.Bias)
+	t := matutil.AddMatVec(d1, r.Param.Bias)
 
 	t.Apply(func(i, j int, v float64) float64 {
 		return math.Tanh(v)
@@ -68,7 +68,7 @@ func (r *RNN) Backward(dhNext mat.Matrix) (dx, dhPrev mat.Matrix) {
 	}, dhNext)
 
 	// db
-	db := matutils.SumCol(dt)
+	db := matutil.SumCol(dt)
 
 	// dwh
 	mr, _ = r.cache.hPrev.T().Dims()
@@ -139,8 +139,8 @@ func (t *TimeRNN) Forward(xs []mat.Matrix) []mat.Matrix {
 
 	for i := 0; i < T; i++ {
 		l := InitRNNLayer(t.Param.Weight, t.Param.WeightH, t.Param.Bias)
-		t.H = l.Forward(matutils.At3D(xs, i), t.H)
-		matutils.Set3D(hs, t.H, i)
+		t.H = l.Forward(matutil.At3D(xs, i), t.H)
+		matutil.Set3D(hs, t.H, i)
 		t.Layers = append(t.Layers, l)
 	}
 
@@ -167,12 +167,12 @@ func (t *TimeRNN) Backward(dhs []mat.Matrix) []mat.Matrix {
 
 	for i := len(t.Layers) - 1; i >= 0; i-- {
 		l := t.Layers[i]
-		a := matutils.At3D(dhs, i)
+		a := matutil.At3D(dhs, i)
 		if dh != nil {
 			a.Add(a, dh)
 		}
 		dx, dh = l.Backward(a)
-		matutils.Set3D(dxs, dx, i)
+		matutil.Set3D(dxs, dx, i)
 
 		wGrad.Add(wGrad, l.Grad.Weight)
 		whGrad.Add(whGrad, l.Grad.WeightH)

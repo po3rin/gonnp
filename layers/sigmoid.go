@@ -4,7 +4,7 @@ import (
 	"math"
 
 	"github.com/po3rin/gonnp/params"
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -69,7 +69,7 @@ func (s *SigmoidWithLoss) Forward(x mat.Matrix, teacher mat.Matrix) float64 {
 		return 1 - v
 	}
 	y.Apply(f, y)
-	return crossEntropyErr(matutils.JoinC(y, x), teacher)
+	return crossEntropyErr(matutil.JoinC(y, x), teacher)
 }
 
 // Backward for sigmoid loss layer.

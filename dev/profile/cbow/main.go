@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/pkg/profile"
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"github.com/po3rin/gonnp/models"
 	"github.com/po3rin/gonnp/optimizers"
 	"github.com/po3rin/gonnp/testdata/ptb"
@@ -35,6 +35,6 @@ func main() {
 	w2v := word.GetWord2VecFromDist(dist, id2w)
 	for w, v := range w2v {
 		fmt.Printf("=== %v ===\n", w)
-		matutils.PrintMat(v)
+		matutil.PrintMat(v)
 	}
 }

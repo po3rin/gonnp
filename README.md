@@ -5,7 +5,7 @@
 </p>
 
 ---
-<img src="https://img.shields.io/badge/go-v1.12-blue.svg"/> [![CircleCI](https://circleci.com/gh/po3rin/gonnp.svg?style=shield&circle-token=d2ad1b26978ffeb0f6aa43b9a517ec7e5180d474)](https://circleci.com/gh/po3rin/gonnp) <a href="https://codeclimate.com/github/po3rin/gonnp/maintainability"><img src="https://api.codeclimate.com/v1/badges/a0e4c5e4c1c04fafb73a/maintainability" /></a> [![GolangCI](https://golangci.com/badges/github.com/po3rin/gonnp.svg)](https://golangci.com) [![Go Report Card](https://goreportcard.com/badge/github.com/po3rin/gonnp)](https://goreportcard.com/report/github.com/po3rin/gonnp) [![codecov](https://codecov.io/gh/po3rin/gonnp/branch/master/graph/badge.svg)](https://codecov.io/gh/po3rin/gonnp) [![GoDoc](https://godoc.org/github.com/po3rin/gonnp?status.svg)](https://godoc.org/github.com/po3rin/gonnp)
+<img src="https://img.shields.io/badge/go-v1.13-blue.svg"/> [![CircleCI](https://circleci.com/gh/po3rin/gonnp.svg?style=shield&circle-token=d2ad1b26978ffeb0f6aa43b9a517ec7e5180d474)](https://circleci.com/gh/po3rin/gonnp) <a href="https://codeclimate.com/github/po3rin/gonnp/maintainability"><img src="https://api.codeclimate.com/v1/badges/a0e4c5e4c1c04fafb73a/maintainability" /></a> [![GolangCI](https://golangci.com/badges/github.com/po3rin/gonnp.svg)](https://golangci.com) [![Go Report Card](https://goreportcard.com/badge/github.com/po3rin/gonnp)](https://goreportcard.com/report/github.com/po3rin/gonnp) [![codecov](https://codecov.io/gh/po3rin/gonnp/branch/master/graph/badge.svg)](https://codecov.io/gh/po3rin/gonnp) [![GoDoc](https://godoc.org/github.com/po3rin/gonnp?status.svg)](https://godoc.org/github.com/po3rin/gonnp)
 
 ## What
 
@@ -45,7 +45,7 @@ Unigram Sampler
 ```
 .
 ├── layers ---( Package layers impliments various layer for neural network. )
-├── matutils ---( Package matutils has utility functions of gonum matrix. )
+├── matutil ---( Package matutil has utility functions of gonum matrix. )
 ├── models ---( Package models has some of neural netwark models. )
 ├── optimizers ---( Package optimizers updates prams (ex. weight, bias ...) using various algorism. )
 ├── params ---( Package params has common parametors type. )
@@ -71,7 +71,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"github.com/po3rin/gonnp/models"
 	"github.com/po3rin/gonnp/optimizers"
 	"github.com/po3rin/gonnp/trainer"
@@ -113,7 +113,7 @@ func main() {
 	w2v := word.GetWord2VecFromDist(dist, id2w)
 	for w, v := range w2v {
 		fmt.Printf("=== %v ===\n", w)
-		matutils.PrintMat(v)
+		matutil.PrintMat(v)
 	}
 }
 ```

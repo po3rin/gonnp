@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -22,10 +22,10 @@ func (t *Train) Fit3D(x []mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize in
 		idx := rand.Perm(dataSize)
 
 		// shuffle x
-		tx := matutils.Sort3DWithIDs(x, idx)
+		tx := matutil.Sort3DWithIDs(x, idx)
 
 		// shuffle t
-		dt := matutils.ThinRow(teacher, idx)
+		dt := matutil.ThinRow(teacher, idx)
 
 		for j := 0; j < maxIters; j++ {
 			bx := tx[j*batchSize : (j+1)*batchSize]

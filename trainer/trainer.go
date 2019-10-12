@@ -6,23 +6,27 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/po3rin/gonnp/matutil"
 	"github.com/po3rin/gonnp/params"
-	"github.com/po3rin/gonnp/matutils"
-	"github.com/po3rin/gonnp/optimizers"
 	"gonum.org/v1/gonum/mat"
 )
 
-// NeuralNet is neural network interface.
-type NeuralNet interface {
+// Model is neural network interface.
+type Model interface {
 	Forward(teacher mat.Matrix, x ...mat.Matrix) float64
 	Backward() mat.Matrix
 	params.SetManager
 }
 
+// Optimizer updates prams.
+type Optimizer interface {
+	Update(params []params.Param, grads []params.Grad) []params.Param
+}
+
 // Train has trainer config.
 type Train struct {
-	Model        NeuralNet
-	Optimizer    optimizers.Optimizer
+	Model        Model
+	Optimizer    Optimizer
 	LossList     []float64
 	EvalInterval int
 	CurrentEpoch float64
@@ -39,7 +43,7 @@ func EvalInterval(i int) func(*Train) {
 }
 
 // InitTrainer inits Trainer.
-func InitTrainer(model NeuralNet, opt optimizers.Optimizer, options ...OptionFunc) *Train {
+func InitTrainer(model Model, opt Optimizer, options ...OptionFunc) *Train {
 	t := &Train{
 		Model:     model,
 		Optimizer: opt,
@@ -68,8 +72,8 @@ func (t *Train) Fit(x mat.Matrix, teacher mat.Matrix, maxEpoch, batchSize int) {
 		rand.Seed(time.Now().UnixNano())
 		idx := rand.Perm(dataSize)
 
-		dx := matutils.ThinRow(x, idx)
-		dt := matutils.ThinRow(teacher, idx)
+		dx := matutil.ThinRow(x, idx)
+		dt := matutil.ThinRow(teacher, idx)
 
 		for j := 0; j < maxIters; j++ {
 			bx := dx.Slice(j*batchSize, (j+1)*batchSize, 0, c)

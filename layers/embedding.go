@@ -1,7 +1,7 @@
 package layers
 
 import (
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
@@ -29,7 +29,7 @@ func InitEmbeddingLayer(weight mat.Matrix) *Embedding {
 
 func (e *Embedding) Forward(x mat.Matrix) mat.Matrix {
 	e.IDx = x
-	dout := matutils.ThinRowWithMat(e.Param.Weight, x)
+	dout := matutil.ThinRowWithMat(e.Param.Weight, x)
 	return dout
 }
 
@@ -39,7 +39,7 @@ func (e *Embedding) Backward(x mat.Matrix) mat.Matrix {
 
 	d, ok := x.(*mat.Dense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 
 	r, _ = e.IDx.Dims()
@@ -88,7 +88,7 @@ func (t *TimeEmbedding) Forward(xs mat.Matrix) []mat.Matrix {
 	N, T := xs.Dims()
 	_, D := t.Param.Weight.Dims()
 
-	out := matutils.New3D(N, T, D)
+	out := matutil.New3D(N, T, D)
 	layers := make([]*Embedding, T)
 
 	var md mat.Dense
@@ -98,7 +98,7 @@ func (t *TimeEmbedding) Forward(xs mat.Matrix) []mat.Matrix {
 		l := InitEmbeddingLayer(t.Param.Weight)
 		in := md.ColView(i)
 		o := l.Forward(in)
-		matutils.Set3D(out, o, i)
+		matutil.Set3D(out, o, i)
 		layers[i] = l
 	}
 
@@ -113,7 +113,7 @@ func (t *TimeEmbedding) Backward(dout []mat.Matrix) mat.Matrix {
 	grad := mat.NewDense(r, c, nil)
 	for i := 0; i < T; i++ {
 		l := t.Layers[i]
-		l.Backward(matutils.At3D(dout, i))
+		l.Backward(matutil.At3D(dout, i))
 		grad.Add(grad, l.GetGrad().Weight)
 	}
 

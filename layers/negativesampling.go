@@ -4,7 +4,7 @@ import (
 	"math"
 	"math/rand"
 
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"github.com/po3rin/gonnp/params"
 	"github.com/po3rin/gonnp/word"
 	"gonum.org/v1/gonum/mat"
@@ -33,7 +33,7 @@ func (e *EmbeddingDot) Forward(h mat.Matrix, idx mat.Matrix) mat.Matrix {
 	r, c := targetW.Dims()
 	mul := mat.NewDense(r, c, nil)
 	mul.MulElem(targetW, h)
-	got := matutils.SumRow(mul)
+	got := matutil.SumRow(mul)
 
 	e.cache.h = h
 	e.cache.targetW = targetW
@@ -49,11 +49,11 @@ func (e *EmbeddingDot) Backward(x mat.Matrix) mat.Matrix {
 	r, _ := d.Dims()
 	dout := mat.NewDense(r, 1, d.RawMatrix().Data)
 	dv := mat.NewVecDense(r, dout.RawMatrix().Data)
-	x = matutils.MulMatVec(h, dv)
+	x = matutil.MulMatVec(h, dv)
 
 	_ = e.Embed.Backward(x)
 
-	dh := matutils.MulMatVec(targetW, dv)
+	dh := matutil.MulMatVec(targetW, dv)
 	return dh
 }
 

@@ -1,7 +1,7 @@
 package layers
 
 import (
-	"github.com/po3rin/gonnp/matutils"
+	"github.com/po3rin/gonnp/matutil"
 	"github.com/po3rin/gonnp/params"
 	"gonum.org/v1/gonum/mat"
 )
@@ -46,7 +46,7 @@ func (a *Affine) Backward(x mat.Matrix) mat.Matrix {
 
 	dx.Product(x, a.Param.Weight.T())
 	dw.Product(a.X.T(), x)
-	db := matutils.SumCol(x)
+	db := matutil.SumCol(x)
 
 	a.Grad.Weight = &dw
 	a.Grad.Bias = db
@@ -90,7 +90,7 @@ func (a *TimeAffine) Forward(x []mat.Matrix) []mat.Matrix {
 	a.X = x
 	T, _ := x[0].Dims()
 
-	rx := matutils.Reshape3DTo2D(x)
+	rx := matutil.Reshape3DTo2D(x)
 
 	r, _ := rx.Dims()
 	_, c := a.Param.Weight.Dims()
@@ -101,14 +101,14 @@ func (a *TimeAffine) Forward(x []mat.Matrix) []mat.Matrix {
 		return v + a.Param.Bias.AtVec(j)
 	}, b)
 
-	return matutils.Reshape2DTo3D(b, T)
+	return matutil.Reshape2DTo3D(b, T)
 }
 
 // Backward for time affine layer.
 func (a *TimeAffine) Backward(dout []mat.Matrix) []mat.Matrix {
 	T, _ := a.X[0].Dims()
-	m := matutils.Reshape3DTo2D(dout)
-	rx := matutils.Reshape3DTo2D(a.X)
+	m := matutil.Reshape3DTo2D(dout)
+	rx := matutil.Reshape3DTo2D(a.X)
 
 	// dw
 	r, _ := rx.T().Dims()
@@ -117,14 +117,14 @@ func (a *TimeAffine) Backward(dout []mat.Matrix) []mat.Matrix {
 	dw.Product(rx.T(), m)
 
 	// db
-	db := matutils.SumCol(m)
+	db := matutil.SumCol(m)
 
 	// dx
 	r, _ = m.Dims()
 	_, c = a.Param.Weight.T().Dims()
 	d := mat.NewDense(r, c, nil)
 	d.Product(m, a.Param.Weight.T())
-	dx := matutils.Reshape2DTo3D(d, T)
+	dx := matutil.Reshape2DTo3D(d, T)
 
 	a.Grad.Weight = dw
 	a.Grad.Bias = db

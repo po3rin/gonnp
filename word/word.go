@@ -83,7 +83,7 @@ func GetWord2VecFromDist(dist mat.Matrix, id2w ID2Word) map[string]mat.Vector {
 	w2v := make(map[string]mat.Vector, r)
 	d, ok := dist.(*mat.Dense)
 	if !ok {
-		panic("gonnp: failed to transpose matrix to dense")
+		panic("gonnp: failed to gonnp: not yet supported type matrix to dense")
 	}
 	for i := 0; i < r; i++ {
 		w2v[id2w[float64(i)]] = d.RowView(i)
