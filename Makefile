@@ -29,6 +29,10 @@ simplecbow:
 cbow:
 	go test -v --tags=e2e ./... -run TestCBOW
 
+.PHONY: xcbow
+xcbow:
+	go test -v --tags=e2e ./... -run TestXCBOW
+
 .PHONY: profile
 profile:
 	# should change loop num. maxIters=10, maxEpoch=10.

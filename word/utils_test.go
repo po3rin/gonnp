@@ -1,3 +1,5 @@
+// +build !e2e
+
 package word_test
 
 import (

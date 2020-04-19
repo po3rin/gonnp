@@ -1,8 +1,6 @@
-package layers
+package xlayers
 
 import (
-	"math"
-	"math/rand"
 	"time"
 
 	"github.com/po3rin/gonnp/matutil"
@@ -29,33 +27,45 @@ func InitEmbeddingDotLayer(weight mat.Matrix) *EmbeddingDot {
 	}
 }
 
-func (e *EmbeddingDot) Forward(h mat.Matrix, idx mat.Matrix) mat.Matrix {
-	targetW := e.Embed.Forward(idx)
+func (e *EmbeddingDot) Forward(out chan<- mat.Matrix, in ...<-chan mat.Matrix) {
+	tw := make(chan mat.Matrix, 1)
+	e.Embed.Forward(tw, in[1])
+	targetW := <-tw
 	r, c := targetW.Dims()
 	mul := mat.NewDense(r, c, nil)
+	h := <-in[0]
+
 	mul.MulElem(targetW, h)
 	got := matutil.SumRow(mul)
 
+	out <- got
+
 	e.cache.h = h
 	e.cache.targetW = targetW
-
-	return got
 }
 
-func (e *EmbeddingDot) Backward(x mat.Matrix) mat.Matrix {
+func (e *EmbeddingDot) Backward(out chan<- mat.Matrix, in ...<-chan mat.Matrix) {
 	h := e.cache.h
 	targetW := e.cache.targetW
 
+	x := <-in[0]
+	r, _ := x.Dims()
 	d := mat.DenseCopyOf(x)
-	r, _ := d.Dims()
+
 	dout := mat.NewDense(r, 1, d.RawMatrix().Data)
 	dv := mat.NewVecDense(r, dout.RawMatrix().Data)
 	x = matutil.MulMatVec(h, dv)
 
-	_ = e.Embed.Backward(x)
+	o := make(chan mat.Matrix, 1)
+	i := make(chan mat.Matrix, 1)
+
+	go e.Embed.Backward(o, i)
+
+	i <- x
+	<-o
 
 	dh := matutil.MulMatVec(targetW, dv)
-	return dh
+	out <- dh
 }
 
 func (e *EmbeddingDot) GetParam() params.Param {
@@ -72,109 +82,6 @@ func (e *EmbeddingDot) SetParam(p params.Param) {
 
 type Sampler interface {
 	GetNegativeSample(target mat.Vector) mat.Matrix
-}
-
-// UnigramSampler makes probability distribution of words from corpus
-type UnigramSampler struct {
-	SampleSize int
-	VocabSize  int
-	WordP      mat.Vector
-}
-
-// InitUnigraSampler inits UnigramSampler for Negative-Sampling.
-func InitUnigraSampler(corpus word.Corpus, power float64, sampleSize int) *UnigramSampler {
-
-	counts := make(map[int]float64, len(corpus))
-	for _, id := range corpus {
-		counts[int(id)]++
-	}
-
-	vocabSize := len(counts)
-	wordP := mat.NewVecDense(vocabSize, nil)
-
-	for i := 0; i < vocabSize; i++ {
-		wordP.SetVec(i, counts[i])
-	}
-
-	w := mat.NewDense(vocabSize, 1, nil)
-
-	pow := func(i, j int, v float64) float64 {
-		return math.Pow(v, power)
-	}
-	w.Apply(pow, wordP)
-	w.Scale(1/mat.Sum(w), w)
-
-	s := &UnigramSampler{
-		SampleSize: sampleSize,
-		VocabSize:  vocabSize,
-		WordP:      w.ColView(0),
-	}
-
-	return s
-}
-
-// GetNegativeSample gets negative sampling.
-func (u *UnigramSampler) GetNegativeSample(target mat.Vector) mat.Matrix {
-	batchSize, _ := target.Dims()
-	negativeSample := mat.NewDense(batchSize, u.SampleSize, nil)
-
-	p := u.WordP
-	for i := 0; i < batchSize; i++ {
-		v := mat.VecDenseCopyOf(p)
-		targetIDx := target.AtVec(i)
-
-		v.SetVec(int(targetIDx), 0)
-		v.ScaleVec(1/mat.Sum(v), v)
-
-		fs, err := weightedChoice(u.VocabSize, u.SampleSize, v.RawVector().Data)
-		if err != nil {
-			panic(err)
-		}
-
-		negativeSample.SetRow(i, fs)
-	}
-	return negativeSample
-}
-
-var randGenerator = func(max float64) float64 {
-	r := rand.Float64() * max
-	return r
-}
-
-// weightedChoice choice num wirh weight. Deduplication is default.
-// ref: https://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/
-// TODO: refacts deduplication & error.
-func weightedChoice(v, size int, w []float64) ([]float64, error) {
-	// convert v to slice.
-	vs := make([]int, 0, v)
-	for i := 0; i < v; i++ {
-		vs = append(vs, i)
-	}
-
-	result := make([]float64, 0, size)
-	for i := 0; i < size; i++ {
-		var sum float64
-		for _, v := range w {
-			sum += v
-		}
-
-		r := randGenerator(sum)
-
-		for j, v := range vs {
-			r -= w[j]
-			if r < 0 {
-				result = append(result, float64(v))
-
-				// delete choiced item.
-				// https://github.com/golang/go/wiki/SliceTricks#delete
-				w = append(w[:j], w[j+1:]...)
-				vs = append(vs[:j], vs[j+1:]...)
-
-				break
-			}
-		}
-	}
-	return result, nil
 }
 
 // NegativeSamplingLoss is layer for negative sampling.
@@ -209,7 +116,8 @@ func InitNegativeSamplingLoss(
 }
 
 // Forward calicurates loss with negative sampling.
-func (n *NegativeSamplingLoss) Forward(h, target mat.Matrix) float64 {
+func (n *NegativeSamplingLoss) Forward(out chan<- float64, in ...<-chan mat.Matrix) {
+	target := <-in[1]
 	batchSize, _ := target.Dims()
 	td := mat.DenseCopyOf(target)
 	vt := td.ColView(0)
@@ -217,43 +125,82 @@ func (n *NegativeSamplingLoss) Forward(h, target mat.Matrix) float64 {
 	negativeSample := n.Sampler.GetNegativeSample(vt)
 	nsd := mat.DenseCopyOf(negativeSample)
 
-	// correct forward
-	score := n.EmbedDotLayers[0].Forward(h, target)
 	s := make([]float64, batchSize)
 	for i := 0; i < batchSize; i++ {
 		s[i] = 1
 	}
-	correctLabel := mat.NewDense(batchSize, 1, s)
-	loss := n.LossLayers[0].Forward(score, correctLabel)
+
+	// correct forward
+	scoreC := make(chan mat.Matrix, 1)
+	hC := make(chan mat.Matrix, 1)
+	targetC := make(chan mat.Matrix, 1)
+	lossC := make(chan float64, 1)
+	correctLabelC := make(chan mat.Matrix, 1)
+
+	go n.EmbedDotLayers[0].Forward(scoreC, hC, targetC)
+	go n.LossLayers[0].Forward(lossC, scoreC, correctLabelC)
+
+	h := <-in[0]
+
+	hC <- h
+	targetC <- target
+	correctLabelC <- mat.NewDense(batchSize, 1, s)
+
+	loss := <-lossC
 
 	// negative forward
+	lossStream := make(chan float64, n.SampleSize)
 	negativeLabel := mat.NewDense(batchSize, 1, nil)
-	for i := 0; i < n.SampleSize; i++ {
 
-		time.Sleep(3 * time.Second)
+	go func() {
+		defer close(lossStream)
+		for i := 0; i < n.SampleSize; i++ {
 
-		negativeTarget := nsd.ColView(i)
-		score := n.EmbedDotLayers[1+i].Forward(h, negativeTarget)
-		negativeLoss := n.LossLayers[1+i].Forward(score, negativeLabel)
+			time.Sleep(3 * time.Second)
+
+			nt := nsd.ColView(i)
+
+			scoreC := make(chan mat.Matrix, 1)
+			hC := make(chan mat.Matrix, 1)
+			negativeTargetC := make(chan mat.Matrix, 1)
+			negativeLabelC := make(chan mat.Matrix, 1)
+			lossC := make(chan float64, 1)
+
+			go n.EmbedDotLayers[i+1].Forward(scoreC, hC, negativeTargetC)
+			go n.LossLayers[i+1].Forward(lossC, scoreC, negativeLabelC)
+
+			hC <- h
+			negativeTargetC <- nt
+			negativeLabelC <- negativeLabel
+			lossStream <- <-lossC
+		}
+	}()
+
+	for negativeLoss := range lossStream {
 		loss += negativeLoss
 	}
 
-	return loss
+	out <- loss
 }
 
-func (n *NegativeSamplingLoss) Backward() mat.Matrix {
+func (n *NegativeSamplingLoss) Backward(out chan<- mat.Matrix) {
 	var dh *mat.Dense
 	for i, l := range n.LossLayers {
-		dscore := l.Backward()
-		r := n.EmbedDotLayers[i].Backward(dscore)
+		dscore := make(chan mat.Matrix, 1)
+		r := make(chan mat.Matrix, 1)
+
+		go l.Backward(dscore)
+		go n.EmbedDotLayers[i].Backward(r, dscore)
+
+		m := <-r
 		if dh == nil {
-			dr, dc := r.Dims()
+			dr, dc := m.Dims()
 			dh = mat.NewDense(dr, dc, nil)
 		}
-		dh.Add(dh, r)
+		dh.Add(dh, m)
 		n.LossLayers[i] = l
 	}
-	return dh
+	out <- dh
 }
 
 // GetParams gets params that layers have.
